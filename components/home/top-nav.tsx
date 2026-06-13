@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { forwardRef } from "react";
 
 const navItems = [
   { href: "/work", label: "Work" },
@@ -17,11 +18,15 @@ type TopNavProps = {
   variant?: "default" | "work";
 };
 
-export function TopNav({ variant = "default" }: TopNavProps) {
+export const TopNav = forwardRef<HTMLElement, TopNavProps>(function TopNav(
+  { variant = "default" },
+  ref,
+) {
   const pathname = usePathname();
 
   return (
     <header
+      ref={ref}
       className={`top-nav${variant === "work" ? " top-nav--work" : ""}`}
     >
       <Link href="/" className="top-nav__logo" aria-label="Home">
@@ -71,4 +76,4 @@ export function TopNav({ variant = "default" }: TopNavProps) {
       </div>
     </header>
   );
-}
+});

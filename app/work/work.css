@@ -3,23 +3,32 @@
   --work-bg: #0a0a0a;
   --work-text-dim: rgba(255, 255, 255, 0.32);
   --work-text-muted: rgba(255, 255, 255, 0.45);
+  --work-nav-inset: 0px;
 
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.work-experience {
+  position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: var(--work-bg);
   color: #ffffff;
 }
 
-.work-experience {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 3.75rem)
-    clamp(0.75rem, 2vw, 1.5rem);
+.work-experience .top-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 3.75rem) 0;
+  pointer-events: auto;
 }
 
 /* Nav variant on dark work page */
@@ -50,10 +59,11 @@
 }
 
 .work-stage {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  margin-top: clamp(0.5rem, 2vh, 1.5rem);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  --work-nav-inset: 0px;
 }
 
 .work-background {
@@ -67,17 +77,24 @@
 .work-background__layer {
   position: absolute;
   inset: 0;
-  will-change: transform, opacity;
+  overflow: hidden;
+  will-change: opacity;
   pointer-events: none;
 }
 
-.work-background__image {
+.work-background__scale {
   position: absolute;
-  inset: -5%;
-  width: 110%;
-  height: 110%;
-  object-fit: cover;
+  inset: 0;
   transform-origin: center center;
+  will-change: transform;
+}
+
+.work-background__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 
 .work-background__scrim {
@@ -89,8 +106,10 @@
 
 .work-filter {
   position: absolute;
-  left: 0;
-  top: 50%;
+  left: clamp(1.25rem, 4vw, 3.75rem);
+  top: calc(
+    var(--work-nav-inset) + (100% - var(--work-nav-inset)) / 2
+  );
   z-index: 3;
   transform: translateY(-50%);
   display: flex;
@@ -158,9 +177,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(1.25rem, 3.5vh, 2.75rem);
+  gap: 0;
   width: 100%;
-  padding-block: 0;
+  padding-block: clamp(1.5rem, 4vh, 3rem);
 }
 
 .work-row {
@@ -168,6 +187,7 @@
   display: grid;
   grid-template-areas: "title";
   width: 100%;
+  padding-block: 8px;
   text-decoration: none;
   text-align: center;
   pointer-events: auto;
@@ -178,11 +198,12 @@
   display: block;
   margin: 0;
   font-family: "PP Neue Corp Tight", "Arial Black", sans-serif;
-  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  font-size: clamp(2.5rem, calc(92px * (100vw / 1440px)), 500px);
   font-weight: 800;
   font-style: normal;
   line-height: 0.95;
   letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 .work-row__title--dim {
@@ -196,26 +217,32 @@
   pointer-events: none;
 }
 
+.work-row__accent-inner {
+  display: grid;
+  grid-template-areas: "title";
+  place-items: center;
+}
+
 .work-row__title--accent {
+  grid-area: title;
   color: var(--work-accent);
 }
 
-.work-band-meta {
-  position: absolute;
-  left: 50%;
-  z-index: 3;
-  transform: translate(-50%, calc(-100% - 0.75rem));
+.work-row__meta {
+  grid-area: title;
+  z-index: 1;
   margin: 0;
   padding: 0 1rem;
   font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
   font-size: clamp(0.625rem, 0.85vw, 0.75rem);
   font-weight: 500;
   letter-spacing: 0.16em;
+  line-height: 1.2;
   text-transform: uppercase;
   color: #ffffff;
   text-align: center;
-  pointer-events: none;
   white-space: nowrap;
+  pointer-events: none;
 }
 
 .work-empty {
@@ -232,14 +259,12 @@
 
 @media (max-width: 768px) {
   .work-filter {
-    position: relative;
-    top: auto;
+    top: calc(var(--work-nav-inset) + 1rem);
     transform: none;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem 1rem;
-    margin-bottom: 0.5rem;
   }
 
   .work-filter__list {
@@ -254,7 +279,8 @@
     will-change: auto;
   }
 
-  .work-background__layer {
+  .work-background__layer,
+  .work-background__scale {
     will-change: auto;
   }
 }

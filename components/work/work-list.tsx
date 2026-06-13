@@ -5,7 +5,7 @@ import { WorkRow } from "./work-row";
 type WorkListProps = {
   projects: CaseStudy[];
   getRowRef?: (index: number) => (node: HTMLElement | null) => void;
-  onRowHover?: (project: CaseStudy, clientY: number) => void;
+  onRowHover?: (project: CaseStudy) => void;
 };
 
 export function WorkList({ projects, getRowRef, onRowHover }: WorkListProps) {

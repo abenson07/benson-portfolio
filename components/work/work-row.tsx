@@ -9,7 +9,7 @@ import type { CaseStudy } from "@/content/case-studies";
 type WorkRowProps = {
   project: CaseStudy;
   rowRef?: (node: HTMLElement | null) => void;
-  onHover?: (project: CaseStudy, clientY: number) => void;
+  onHover?: (project: CaseStudy) => void;
 };
 
 export function WorkRow({ project, rowRef, onHover }: WorkRowProps) {
@@ -54,7 +54,7 @@ export function WorkRow({ project, rowRef, onHover }: WorkRowProps) {
     const rect = event.currentTarget.getBoundingClientRect();
     const fromBottom = event.clientY - rect.top > rect.height / 2;
     reveal(fromBottom);
-    onHover?.(project, event.clientY);
+    onHover?.(project);
   };
 
   return (
@@ -64,16 +64,19 @@ export function WorkRow({ project, rowRef, onHover }: WorkRowProps) {
       ref={rowRef}
       onMouseEnter={handleEnter}
       onMouseLeave={hide}
-      onFocus={(event) => {
+      onFocus={() => {
         reveal(true);
-        onHover?.(project, event.currentTarget.getBoundingClientRect().top);
+        onHover?.(project);
       }}
       onBlur={hide}
     >
       <span className="work-row__title work-row__title--dim">{project.title}</span>
       <span className="work-row__accent-mask" ref={maskRef} aria-hidden>
-        <span className="work-row__title work-row__title--accent">
-          {project.title}
+        <span className="work-row__accent-inner">
+          <span className="work-row__title work-row__title--accent">
+            {project.title}
+          </span>
+          <span className="work-row__meta">{project.categoryLabel}</span>
         </span>
       </span>
     </Link>

@@ -10,6 +10,8 @@ type WorkBackgroundProps = {
 export function WorkBackground({ imageUrl }: WorkBackgroundProps) {
   const layerARef = useRef<HTMLDivElement>(null);
   const layerBRef = useRef<HTMLDivElement>(null);
+  const scaleARef = useRef<HTMLDivElement>(null);
+  const scaleBRef = useRef<HTMLDivElement>(null);
   const imgARef = useRef<HTMLImageElement>(null);
   const imgBRef = useRef<HTMLImageElement>(null);
   const activeSlotRef = useRef<"a" | "b">("a");
@@ -17,14 +19,16 @@ export function WorkBackground({ imageUrl }: WorkBackgroundProps) {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
-    if (!layerARef.current || !imgARef.current || !imageUrl) return;
+    if (!layerARef.current || !scaleARef.current || !imgARef.current || !imageUrl) {
+      return;
+    }
 
     if (currentUrlRef.current === null) {
       imgARef.current.src = imageUrl;
       gsap.set(layerARef.current, { opacity: 1 });
-      gsap.set(imgARef.current, { scale: 1 });
+      gsap.set(scaleARef.current, { scale: 1 });
       if (layerBRef.current) gsap.set(layerBRef.current, { opacity: 0 });
-      if (imgBRef.current) gsap.set(imgBRef.current, { scale: 1.12 });
+      if (scaleBRef.current) gsap.set(scaleBRef.current, { scale: 1.08 });
       currentUrlRef.current = imageUrl;
       return;
     }
@@ -37,10 +41,12 @@ export function WorkBackground({ imageUrl }: WorkBackgroundProps) {
       incomingSlot === "a" ? layerARef.current : layerBRef.current!;
     const outgoingLayer =
       outgoingSlot === "a" ? layerARef.current! : layerBRef.current!;
+    const incomingScale =
+      incomingSlot === "a" ? scaleARef.current! : scaleBRef.current!;
+    const outgoingScale =
+      outgoingSlot === "a" ? scaleARef.current! : scaleBRef.current!;
     const incomingImg =
       incomingSlot === "a" ? imgARef.current! : imgBRef.current!;
-    const outgoingImg =
-      outgoingSlot === "a" ? imgARef.current! : imgBRef.current!;
 
     timelineRef.current?.kill();
 
@@ -50,30 +56,19 @@ export function WorkBackground({ imageUrl }: WorkBackgroundProps) {
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    timelineRef.current = gsap.timeline();
-    timelineRef.current
-      .set(incomingLayer, { opacity: 0 })
-      .set(incomingImg, { scale: reducedMotion ? 1 : 1.12 })
-      .to(
-        outgoingLayer,
-        { opacity: 0, duration: reducedMotion ? 0 : 0.5, ease: "power2.in" },
-        0,
-      )
-      .to(
-        incomingLayer,
-        { opacity: 1, duration: reducedMotion ? 0 : 0.5, ease: "power2.out" },
-        0,
-      )
-      .to(
-        incomingImg,
-        {
-          scale: 1,
-          duration: reducedMotion ? 0 : 1.1,
-          ease: "power2.out",
-        },
-        0,
-      )
-      .set(outgoingImg, { scale: 1.12 });
+    gsap.set(outgoingLayer, { opacity: 0 });
+    gsap.set(incomingLayer, { opacity: 1 });
+    gsap.set(incomingScale, { scale: reducedMotion ? 1 : 1.08 });
+    gsap.set(outgoingScale, { scale: 1.08 });
+
+    if (!reducedMotion) {
+      timelineRef.current = gsap.timeline();
+      timelineRef.current.to(incomingScale, {
+        scale: 1,
+        duration: 1.1,
+        ease: "power2.in",
+      });
+    }
 
     activeSlotRef.current = incomingSlot;
     currentUrlRef.current = imageUrl;
@@ -82,23 +77,27 @@ export function WorkBackground({ imageUrl }: WorkBackgroundProps) {
   return (
     <div className="work-background" aria-hidden>
       <div ref={layerARef} className="work-background__layer">
-        {/* eslint-disable-next-line @next/next/no-img-element -- GSAP crossfade requires raw img control */}
-        <img
-          ref={imgARef}
-          alt=""
-          className="work-background__image"
-          draggable={false}
-        />
+        <div ref={scaleARef} className="work-background__scale">
+          {/* eslint-disable-next-line @next/next/no-img-element -- GSAP crossfade requires raw img control */}
+          <img
+            ref={imgARef}
+            alt=""
+            className="work-background__image"
+            draggable={false}
+          />
+        </div>
         <div className="work-background__scrim" />
       </div>
       <div ref={layerBRef} className="work-background__layer">
-        {/* eslint-disable-next-line @next/next/no-img-element -- GSAP crossfade requires raw img control */}
-        <img
-          ref={imgBRef}
-          alt=""
-          className="work-background__image"
-          draggable={false}
-        />
+        <div ref={scaleBRef} className="work-background__scale">
+          {/* eslint-disable-next-line @next/next/no-img-element -- GSAP crossfade requires raw img control */}
+          <img
+            ref={imgBRef}
+            alt=""
+            className="work-background__image"
+            draggable={false}
+          />
+        </div>
         <div className="work-background__scrim" />
       </div>
     </div>

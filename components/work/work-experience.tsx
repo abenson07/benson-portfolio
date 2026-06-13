@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+
 import { TopNav } from "@/components/home/top-nav";
 import type { CaseStudy } from "@/content/case-studies";
 
@@ -10,10 +12,12 @@ type WorkExperienceProps = {
 };
 
 export function WorkExperience({ projects }: WorkExperienceProps) {
+  const navRef = useRef<HTMLElement>(null);
+
   return (
     <div className="work-experience">
-      <TopNav variant="work" />
-      <WorkStage projects={projects} />
+      <WorkStage projects={projects} navRef={navRef} />
+      <TopNav ref={navRef} variant="work" />
     </div>
   );
 }

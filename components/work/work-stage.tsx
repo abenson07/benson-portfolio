@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type RefObject,
 } from "react";
 import gsap from "gsap";
 
@@ -22,8 +23,14 @@ type MeasureBounds = {
   clipHeight: number;
 };
 
+type InteractiveZone = {
+  top: number;
+  height: number;
+};
+
 type WorkStageProps = {
   projects: CaseStudy[];
+  navRef: RefObject<HTMLElement | null>;
 };
 
 function clamp(value: number, min: number, max: number) {
@@ -38,43 +45,26 @@ function computeTargetY(bounds: MeasureBounds, progress: number) {
   return lerp(bounds.minY, bounds.maxY, progress);
 }
 
-function computeActiveIndex(
+function getRowIndexAtClientY(
   rows: HTMLElement[],
-  translateY: number,
-  pointerY: number,
+  clientY: number,
+  slop = 14,
 ) {
-  if (!rows.length) return -1;
-
   for (let index = 0; index < rows.length; index += 1) {
-    const top = rows[index].offsetTop + translateY;
-    const bottom = top + rows[index].offsetHeight;
+    const rect = rows[index].getBoundingClientRect();
 
-    if (pointerY >= top && pointerY <= bottom) {
+    if (clientY >= rect.top - slop && clientY <= rect.bottom + slop) {
       return index;
     }
   }
 
-  let bestIndex = 0;
-  let bestDistance = Infinity;
-
-  rows.forEach((row, index) => {
-    const center = row.offsetTop + row.offsetHeight / 2 + translateY;
-    const distance = Math.abs(center - pointerY);
-
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      bestIndex = index;
-    }
-  });
-
-  return bestIndex;
+  return -1;
 }
 
-export function WorkStage({ projects }: WorkStageProps) {
+export function WorkStage({ projects, navRef }: WorkStageProps) {
   const [activeCategory, setActiveCategory] =
     useState<WorkFilterCategory>("all");
   const [activeIndex, setActiveIndex] = useState(0);
-  const [metaTop, setMetaTop] = useState(0);
 
   const filteredProjects = useMemo(() => {
     if (activeCategory === "all") return projects;
@@ -89,8 +79,11 @@ export function WorkStage({ projects }: WorkStageProps) {
   const translateYRef = useRef(0);
   const pointerYRef = useRef(0);
   const boundsRef = useRef<MeasureBounds | null>(null);
+  const interactiveZoneRef = useRef<InteractiveZone | null>(null);
   const quickToYRef = useRef<gsap.QuickToFunc | null>(null);
   const rafRef = useRef<number | null>(null);
+  const activeIndexRef = useRef(0);
+  const pointerClientYRef = useRef(0);
 
   const getRows = useCallback(() => {
     return rowRefs.current.filter(Boolean) as HTMLElement[];
@@ -120,27 +113,47 @@ export function WorkStage({ projects }: WorkStageProps) {
     [applyListY],
   );
 
-  const updateActiveIndex = useCallback(() => {
-    const rows = getRows();
+  const setActiveIndexSafe = useCallback((index: number) => {
+    if (index < 0) return;
+    activeIndexRef.current = index;
+    setActiveIndex((prev) => (prev === index ? prev : index));
+  }, []);
 
-    if (!rows.length) {
-      setActiveIndex(-1);
-      return;
-    }
+  const resolveActiveIndex = useCallback(
+    (clientY: number) => {
+      const rows = getRows();
+      if (!rows.length) return;
 
-    const nextIndex = computeActiveIndex(
-      rows,
-      translateYRef.current,
-      pointerYRef.current,
-    );
+      const rowIndex = getRowIndexAtClientY(rows, clientY);
 
-    setActiveIndex((prev) => (prev === nextIndex ? prev : nextIndex));
-    setMetaTop(pointerYRef.current);
-  }, [getRows]);
+      if (rowIndex >= 0) {
+        setActiveIndexSafe(rowIndex);
+      }
+    },
+    [getRows, setActiveIndexSafe],
+  );
+
+  const updateInteractiveZone = useCallback(() => {
+    const stage = stageRef.current;
+    const nav = navRef.current;
+
+    if (!stage) return;
+
+    const stageRect = stage.getBoundingClientRect();
+    const navBottom = nav
+      ? nav.getBoundingClientRect().bottom - stageRect.top
+      : 0;
+    const zoneHeight = Math.max(stageRect.height - navBottom, 0);
+
+    stage.style.setProperty("--work-nav-inset", `${navBottom}px`);
+    interactiveZoneRef.current = { top: navBottom, height: zoneHeight };
+  }, [navRef]);
 
   const measureLayout = useCallback(() => {
     const clip = clipRef.current;
     const rows = getRows();
+
+    updateInteractiveZone();
 
     if (!clip || !rows.length) {
       boundsRef.current = null;
@@ -149,45 +162,63 @@ export function WorkStage({ projects }: WorkStageProps) {
 
     rowRefs.current.length = filteredProjects.length;
 
-    const firstTop = rows[0].offsetTop;
-    const lastBottom =
-      rows[rows.length - 1].offsetTop + rows[rows.length - 1].offsetHeight;
+    const firstRow = rows[0];
+    const lastRow = rows[rows.length - 1];
+    const firstTop = firstRow.offsetTop;
+    const lastBottom = lastRow.offsetTop + lastRow.offsetHeight;
     const clipHeight = clip.clientHeight;
+    const listEl = listTrackRef.current?.firstElementChild as HTMLElement | null;
+    const listStyles = listEl ? getComputedStyle(listEl) : null;
+    const listPadTop = listStyles ? parseFloat(listStyles.paddingTop) : 0;
+    const listPadBottom = listStyles ? parseFloat(listStyles.paddingBottom) : 0;
+
+    const navInset = interactiveZoneRef.current?.top ?? 0;
 
     boundsRef.current = {
-      minY: -firstTop,
-      maxY: clipHeight - lastBottom,
+      minY: navInset - listPadTop - firstTop,
+      maxY: clipHeight - listPadBottom - lastBottom,
       clipHeight,
     };
 
     pointerYRef.current = boundsRef.current.clipHeight * progressRef.current;
     applyProgress(progressRef.current);
-    updateActiveIndex();
     return true;
-  }, [applyProgress, filteredProjects.length, getRows, updateActiveIndex]);
+  }, [
+    applyProgress,
+    filteredProjects.length,
+    getRows,
+    updateInteractiveZone,
+  ]);
 
   const handlePointer = useCallback(
     (clientY: number) => {
       const stage = stageRef.current;
       const clip = clipRef.current;
-      if (!stage || !clip) return;
+      const zone = interactiveZoneRef.current;
+
+      if (!stage || !clip || !zone || zone.height <= 0) return;
 
       const stageRect = stage.getBoundingClientRect();
       const clipRect = clip.getBoundingClientRect();
+      const zoneTopViewport = stageRect.top + zone.top;
 
-      if (stageRect.height <= 0 || clipRect.height <= 0) return;
+      const progress = clamp(
+        (clientY - zoneTopViewport) / zone.height,
+        0,
+        1,
+      );
 
-      const progress = clamp((clientY - stageRect.top) / stageRect.height, 0, 1);
       pointerYRef.current = clamp(
         clientY - clipRect.top,
         0,
         clipRect.height,
       );
+      pointerClientYRef.current = clientY;
 
       applyProgress(progress);
-      updateActiveIndex();
+      resolveActiveIndex(clientY);
     },
-    [applyProgress, updateActiveIndex],
+    [applyProgress, resolveActiveIndex],
   );
 
   const handleRowRef = useCallback(
@@ -204,21 +235,14 @@ export function WorkStage({ projects }: WorkStageProps) {
   );
 
   const handleRowHover = useCallback(
-    (project: CaseStudy, clientY: number) => {
-      const clip = clipRef.current;
-      if (!clip) return;
-
-      const clipRect = clip.getBoundingClientRect();
+    (project: CaseStudy) => {
       const index = filteredProjects.findIndex((item) => item.slug === project.slug);
 
-      pointerYRef.current = clamp(clientY - clipRect.top, 0, clipRect.height);
-      setMetaTop(pointerYRef.current);
-
       if (index >= 0) {
-        setActiveIndex(index);
+        setActiveIndexSafe(index);
       }
     },
-    [filteredProjects],
+    [filteredProjects, setActiveIndexSafe],
   );
 
   useEffect(() => {
@@ -241,7 +265,7 @@ export function WorkStage({ projects }: WorkStageProps) {
         if (rafRef.current !== null) return;
         rafRef.current = requestAnimationFrame(() => {
           rafRef.current = null;
-          updateActiveIndex();
+          resolveActiveIndex(pointerClientYRef.current);
         });
       },
     });
@@ -249,7 +273,7 @@ export function WorkStage({ projects }: WorkStageProps) {
     return () => {
       quickToYRef.current = null;
     };
-  }, [applyListY, updateActiveIndex]);
+  }, [applyListY, resolveActiveIndex]);
 
   useLayoutEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -261,15 +285,39 @@ export function WorkStage({ projects }: WorkStageProps) {
 
   useEffect(() => {
     const clip = clipRef.current;
-    if (!clip) return;
+    const nav = navRef.current;
 
     const observer = new ResizeObserver(() => {
       measureLayout();
     });
-    observer.observe(clip);
+
+    if (clip) observer.observe(clip);
+    if (nav) observer.observe(nav);
 
     return () => observer.disconnect();
-  }, [measureLayout]);
+  }, [measureLayout, navRef]);
+
+  useEffect(() => {
+    const onMove = (event: MouseEvent) => {
+      handlePointer(event.clientY);
+    };
+
+    const onTouch = (event: TouchEvent) => {
+      if (event.touches[0]) {
+        handlePointer(event.touches[0].clientY);
+      }
+    };
+
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("touchstart", onTouch, { passive: true });
+    window.addEventListener("touchmove", onTouch, { passive: true });
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("touchmove", onTouch);
+    };
+  }, [handlePointer]);
 
   useEffect(() => {
     if (filteredProjects.length === 0) return;
@@ -289,17 +337,7 @@ export function WorkStage({ projects }: WorkStageProps) {
     activeIndex >= 0 ? filteredProjects[activeIndex] : filteredProjects[0];
 
   return (
-    <div
-      ref={stageRef}
-      className="work-stage"
-      onMouseMove={(event) => handlePointer(event.clientY)}
-      onTouchStart={(event) => {
-        if (event.touches[0]) handlePointer(event.touches[0].clientY);
-      }}
-      onTouchMove={(event) => {
-        if (event.touches[0]) handlePointer(event.touches[0].clientY);
-      }}
-    >
+    <div ref={stageRef} className="work-stage">
       <WorkBackground
         imageUrl={activeProject?.imageUrl ?? filteredProjects[0]?.imageUrl ?? ""}
       />
@@ -311,16 +349,6 @@ export function WorkStage({ projects }: WorkStageProps) {
           progressRef.current = 0.5;
         }}
       />
-
-      {activeProject ? (
-        <p
-          className="work-band-meta"
-          aria-live="polite"
-          style={{ top: `${metaTop}px` }}
-        >
-          {activeProject.categoryLabel}
-        </p>
-      ) : null}
 
       {filteredProjects.length === 0 ? (
         <p className="work-empty">No projects in this category.</p>
