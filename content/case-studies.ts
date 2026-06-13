@@ -121,7 +121,7 @@ export const caseStudies: CaseStudy[] = [
     "Payroll Aggregation",
     "product-design",
     "PRODUCT DESIGN",
-    "/work/08.png",
+    "/work/payroll-aggregation.png",
   ),
   study(
     "outcome-driven-signals-setup",
