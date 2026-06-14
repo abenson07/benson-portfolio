@@ -1,0 +1,351 @@
+.experiences-page {
+  --exp-timeline-width: clamp(3rem, 5vw, 5rem);
+  --exp-gutter-width: clamp(3.5rem, 6vw, 6.5rem);
+  --exp-sticky-top: clamp(5rem, 8vh, 7rem);
+  --exp-page-padding: clamp(1.25rem, 4vw, 3.75rem);
+
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-overflow-scrolling: touch;
+}
+
+.experiences-header-block {
+  position: relative;
+  z-index: 2;
+}
+
+.experiences-list-block {
+  position: relative;
+  z-index: 1;
+}
+
+/* Header */
+
+.experiences-header {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 6vh, 5rem);
+  padding: clamp(1.25rem, 3vw, 2.5rem) var(--exp-page-padding)
+    clamp(2rem, 5vh, 4rem);
+}
+
+.experiences-header .top-nav {
+  padding: 0;
+}
+
+.experiences-header__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.experiences-header__lead {
+  margin: 0;
+  font-family: "PP Migra", "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: clamp(1.75rem, 3.5vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--foreground);
+}
+
+.experiences-header__emphasis {
+  margin: 0;
+  font-family: "PP Neue Corp Tight", "Arial Black", sans-serif;
+  font-size: clamp(4rem, 14vw, 12rem);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--foreground);
+}
+
+/* Body layout */
+
+.experiences-body {
+  position: relative;
+  padding-inline: var(--exp-page-padding);
+  padding-bottom: clamp(4rem, 10vh, 8rem);
+}
+
+.experiences-body__timeline-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--exp-page-padding) + var(--exp-timeline-width) / 2);
+  width: 1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--foreground) 0,
+    var(--foreground) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.experiences-body__card-host {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: calc(var(--exp-timeline-width) + clamp(1rem, 2vw, 2rem));
+  pointer-events: none;
+}
+
+.experiences-body__grid {
+  display: grid;
+  grid-template-columns: var(--exp-timeline-width) var(--exp-gutter-width) 1fr;
+  column-gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* Section — children participate in parent grid */
+
+.experiences-section {
+  display: contents;
+}
+
+.experiences-section__timeline-cell {
+  padding-top: 1.25rem;
+  pointer-events: none;
+}
+
+.experiences-section:first-child .experiences-section__timeline-cell,
+.experiences-section:first-child .experiences-section__label {
+  padding-top: 0;
+}
+
+.experiences-section__year {
+  display: block;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(0.6875rem, 0.85vw, 0.8125rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+.experiences-section__gutter {
+  position: relative;
+  align-self: start;
+}
+
+.experiences-section__label {
+  position: sticky;
+  top: var(--exp-sticky-top);
+  display: block;
+  padding-top: 1.25rem;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(0.6875rem, 0.85vw, 0.8125rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.experiences-section__rows {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  grid-column: 3;
+}
+
+/* Row */
+
+.experiences-row {
+  display: grid;
+  grid-template-columns: minmax(6rem, 1.1fr) minmax(10rem, 2fr) auto;
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+  align-items: start;
+  padding-block: clamp(1.25rem, 2.5vh, 2rem);
+  border-bottom: 1px solid var(--foreground);
+  text-decoration: none;
+  color: inherit;
+}
+
+.experiences-row--hoverable {
+  cursor: default;
+}
+
+.experiences-row__title {
+  font-family: "PP Neue Corp Tight", "Arial Black", sans-serif;
+  font-size: clamp(1.5rem, 2.8vw, 2.75rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.experiences-row__description {
+  margin: 0;
+  max-width: 36rem;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(0.8125rem, 1vw, 0.9375rem);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--foreground);
+}
+
+.experiences-row__tags {
+  margin: 0;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(0.6875rem, 0.85vw, 0.8125rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+a.experiences-row {
+  transition: opacity 0.2s ease;
+}
+
+a.experiences-row:hover {
+  opacity: 0.72;
+}
+
+/* Hover card */
+
+.experiences-hover-card {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.8125rem;
+  width: var(--card-width);
+  height: var(--card-height);
+  min-width: 0;
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  text-align: left;
+  pointer-events: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.experiences-hover-card__eyebrow {
+  margin: 0;
+  max-width: 100%;
+  font-family: "PP Neue Corp Tight", "Arial Black", "Helvetica Neue", sans-serif;
+  font-size: var(--font-card-eyebrow);
+  font-weight: 800;
+  font-style: normal;
+  line-height: 0.8;
+  text-transform: uppercase;
+  color: #ffffff;
+  flex: none;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.experiences-hover-card__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.8125rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  align-self: stretch;
+  overflow: hidden;
+}
+
+.experiences-hover-card__title {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  font-family: "PP Neue Corp Tight", "Arial Black", "Helvetica Neue", sans-serif;
+  font-size: var(--font-card-title);
+  font-weight: 800;
+  font-style: normal;
+  line-height: 0.85;
+  text-transform: uppercase;
+  color: #ffffff;
+  flex: none;
+  align-self: stretch;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+  .experiences-body__timeline-line {
+    display: none;
+  }
+
+  .experiences-body__card-host {
+    left: 0;
+  }
+
+  .experiences-body__grid {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+
+  .experiences-section__timeline-cell {
+    padding-top: 1.5rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .experiences-section:first-child .experiences-section__timeline-cell {
+    padding-top: 0;
+  }
+
+  .experiences-section__year {
+    text-align: left;
+  }
+
+  .experiences-section__gutter {
+    padding-bottom: 0.25rem;
+  }
+
+  .experiences-section__label {
+    position: static;
+    padding-top: 0;
+  }
+
+  .experiences-section__rows {
+    grid-column: 1;
+  }
+
+  .experiences-row {
+    grid-template-columns: 1fr;
+    row-gap: 0.5rem;
+  }
+
+  .experiences-row__tags {
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.experiences-row {
+    transition: none;
+  }
+}

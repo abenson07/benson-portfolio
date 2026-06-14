@@ -6,6 +6,7 @@ import { forwardRef } from "react";
 
 const navItems = [
   { href: "/work", label: "Work" },
+  { href: "/experiences", label: "Experiences" },
   { href: "/expertise", label: "Expertise" },
   { href: "/skills", label: "Skills" },
 ] as const;
