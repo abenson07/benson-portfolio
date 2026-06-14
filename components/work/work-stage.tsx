@@ -65,6 +65,7 @@ export function WorkStage({ projects, navRef }: WorkStageProps) {
   const [activeCategory, setActiveCategory] =
     useState<WorkFilterCategory>("all");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [backgroundIndex, setBackgroundIndex] = useState(0);
 
   const filteredProjects = useMemo(() => {
     if (activeCategory === "all") return projects;
@@ -247,7 +248,18 @@ export function WorkStage({ projects, navRef }: WorkStageProps) {
 
   useEffect(() => {
     progressRef.current = 0.5;
+    setBackgroundIndex(0);
   }, [activeCategory]);
+
+  useEffect(() => {
+    if (activeIndex < 0 || filteredProjects.length === 0) return;
+
+    const timeout = window.setTimeout(() => {
+      setBackgroundIndex(activeIndex);
+    }, 180);
+
+    return () => window.clearTimeout(timeout);
+  }, [activeIndex, filteredProjects.length]);
 
   useLayoutEffect(() => {
     const reducedMotion = window.matchMedia(
@@ -333,13 +345,17 @@ export function WorkStage({ projects, navRef }: WorkStageProps) {
     });
   }, [filteredProjects]);
 
-  const activeProject =
-    activeIndex >= 0 ? filteredProjects[activeIndex] : filteredProjects[0];
+  const backgroundProject =
+    backgroundIndex >= 0
+      ? filteredProjects[backgroundIndex]
+      : filteredProjects[0];
 
   return (
     <div ref={stageRef} className="work-stage">
       <WorkBackground
-        imageUrl={activeProject?.imageUrl ?? filteredProjects[0]?.imageUrl ?? ""}
+        imageUrl={
+          backgroundProject?.imageUrl ?? filteredProjects[0]?.imageUrl ?? ""
+        }
       />
 
       <WorkFilter

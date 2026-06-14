@@ -1,0 +1,27 @@
+---
+description: Smooth GSAP/CSS motion standards — crossfades, debouncing, transition queues
+globs: components/work/**,components/home/**,app/**/*.css
+alwaysApply: false
+---
+
+# Smooth Motion
+
+Read `.cursor/skills/smooth-motion/SKILL.md` before adding or tuning animations.
+
+## Non-negotiables
+
+1. **Real crossfades animate opacity** on both layers (incoming 0→1, outgoing 1→0). Never pop a layer in at full opacity.
+2. **Don't kill timelines on every input tick.** Debounce slow visual state (~180ms) or queue pending targets during in-flight transitions.
+3. **Commit slot/url refs in `onComplete` only** — not when the effect fires.
+4. **Gate on asset load** before starting image crossfades.
+5. **Named constants** for durations (`FADE_DURATION`, etc.) — no inline magic numbers.
+6. **`prefers-reduced-motion`** → instant state commit, no long tweens.
+
+## Canonical references
+
+- Crossfade: `components/work/work-background.tsx`
+- Debounced background: `components/work/work-stage.tsx`
+
+## If duration tweaks "do nothing"
+
+Debouncing and transition queuing are usually the fix — not longer constants.
