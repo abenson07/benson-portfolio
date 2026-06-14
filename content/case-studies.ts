@@ -58,7 +58,7 @@ export const caseStudies: CaseStudy[] = [
     "Eclipse RX",
     "product-design",
     "PRODUCT DESIGN",
-    "/work/10.png",
+    "/work/eclipse-rx.png",
   ),
   study(
     "contextual-messaging",
@@ -93,7 +93,7 @@ export const caseStudies: CaseStudy[] = [
     "Journey Map",
     "strategy-research",
     "STRATEGY & RESEARCH",
-    "/work/07.png",
+    "/work/journey-map.png",
   ),
   study(
     "conversions-api",
@@ -107,7 +107,7 @@ export const caseStudies: CaseStudy[] = [
     "Nutrilyze",
     "product-design",
     "PRODUCT DESIGN",
-    "/work/12.png",
+    "/work/nutrilyze-cover.png",
   ),
   study(
     "event-setup-tool",
