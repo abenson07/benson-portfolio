@@ -50,6 +50,7 @@ export function WorkBackground({ imageUrl }: WorkBackgroundProps) {
         outgoingSlot === "a" ? scaleARef.current : scaleBRef.current;
       const incomingImg =
         incomingSlot === "a" ? imgARef.current : imgBRef.current;
+      if (!incomingImg) return;
 
       timelineRef.current?.kill();
 
