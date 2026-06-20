@@ -1,0 +1,423 @@
+.work-page:has(.case-study-page) {
+  --cs-bg: #f0ece4;
+  --cs-foreground: #1a1b1a;
+  --cs-muted: rgba(26, 27, 26, 0.55);
+  --cs-accent: #1f3d2b;
+  --cs-frame: #191919;
+  --cs-sticky-top: clamp(5rem, 8vh, 7rem);
+  --cs-page-padding: clamp(1.25rem, 4vw, 3.75rem);
+  --cs-column-gap: clamp(2rem, 5vw, 4.5rem);
+
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--cs-bg);
+  color: var(--cs-foreground);
+  -webkit-overflow-scrolling: touch;
+}
+
+.case-study-page {
+  position: relative;
+  width: 100%;
+  background: var(--cs-bg);
+  color: var(--cs-foreground);
+}
+
+.case-study-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: clamp(1.25rem, 3vw, 2.5rem) var(--cs-page-padding) 0;
+  background: linear-gradient(
+    to bottom,
+    var(--cs-bg) 70%,
+    rgba(240, 236, 228, 0)
+  );
+}
+
+.case-study-header .signature-header__logo-image {
+  filter: invert(1);
+}
+
+.case-study-scroll {
+  padding: clamp(1.5rem, 4vh, 3rem) var(--cs-page-padding)
+    clamp(4rem, 10vh, 7rem);
+}
+
+.case-study-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.48fr);
+  gap: var(--cs-column-gap);
+  align-items: start;
+}
+
+.case-study-sidebar,
+.case-study-media {
+  position: sticky;
+  top: var(--cs-sticky-top);
+}
+
+/* Sidebar */
+
+.case-study-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vh, 3rem);
+  max-width: 34rem;
+}
+
+.case-study-sidebar__intro {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.5vh, 1.75rem);
+}
+
+.case-study-sidebar__title {
+  margin: 0;
+  font-family: "PP Neue Corp Tight", "Arial Black", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.case-study-sidebar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.25rem;
+}
+
+.case-study-sidebar__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  background: var(--cs-accent);
+  color: #f0ece4;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.case-study-sidebar__cta:hover {
+  opacity: 0.88;
+}
+
+.case-study-sidebar__cta-arrow {
+  font-size: 1.05rem;
+}
+
+.case-study-sidebar__tag {
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--cs-muted);
+}
+
+.case-study-sidebar__lead {
+  margin: 0;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(1rem, 1.35vw, 1.125rem);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.case-study-sidebar__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.case-study-sidebar__paragraph {
+  margin: 0;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-weight: 500;
+  line-height: 1.55;
+  color: rgba(26, 27, 26, 0.82);
+}
+
+/* Services */
+
+.case-study-services {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.case-study-services__item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.case-study-services__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.case-study-services__icon--star {
+  color: #c45cff;
+}
+
+.case-study-services__icon--circle {
+  color: #4f8cff;
+}
+
+.case-study-services__icon--chevron {
+  color: #8b6cff;
+}
+
+.case-study-services__icon--cross {
+  color: #ff6b9d;
+}
+
+/* Awards */
+
+.case-study-awards__heading {
+  margin: 0 0 1.25rem;
+  font-family: "PP Migra", "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.case-study-awards__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.case-study-awards__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) auto;
+  gap: 1rem;
+  padding-block: 0.85rem;
+  border-top: 1px solid rgba(26, 27, 26, 0.12);
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(0.8125rem, 1vw, 0.9375rem);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.case-study-awards__row:last-child {
+  border-bottom: 1px solid rgba(26, 27, 26, 0.12);
+}
+
+.case-study-awards__category {
+  color: rgba(26, 27, 26, 0.72);
+}
+
+.case-study-awards__year {
+  text-align: right;
+  color: rgba(26, 27, 26, 0.72);
+}
+
+/* Media column */
+
+.case-study-media {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.case-study-media__duo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.case-study-media__frame {
+  overflow: hidden;
+  border-radius: clamp(1rem, 2vw, 1.75rem);
+  background: var(--cs-frame);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.case-study-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0) 55%
+    ),
+    #242424;
+}
+
+.case-study-placeholder__label {
+  padding: 1rem;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  text-align: center;
+}
+
+/* Quote */
+
+.case-study-quote {
+  margin: clamp(1rem, 3vh, 2rem) 0;
+  padding: 0;
+}
+
+.case-study-quote__text {
+  margin: 0;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(1.75rem, 3.2vw, 3rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.case-study-quote__line {
+  display: block;
+  overflow: hidden;
+}
+
+.case-study-quote__word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.case-study-quote__text::before,
+.case-study-quote__text::after {
+  content: none;
+}
+
+.case-study-quote__attribution {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--cs-muted);
+}
+
+.case-study-quote__dot {
+  font-size: 0.65rem;
+}
+
+/* Up next */
+
+.case-study-up-next {
+  margin-top: clamp(4rem, 10vh, 7rem);
+  max-width: min(100%, 72rem);
+}
+
+.case-study-up-next__eyebrow {
+  margin: 0 0 clamp(1.25rem, 3vh, 2rem);
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.case-study-up-next__card {
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.case-study-up-next__frame {
+  overflow: hidden;
+  border-radius: clamp(1rem, 2vw, 1.75rem);
+  background: var(--cs-frame);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.case-study-up-next__title {
+  position: absolute;
+  left: clamp(1rem, 2vw, 1.5rem);
+  bottom: clamp(1rem, 2vw, 1.5rem);
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 500;
+  color: #ffffff;
+}
+
+@media (max-width: 960px) {
+  .case-study-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .case-study-sidebar,
+  .case-study-media {
+    position: static;
+    top: auto;
+    max-width: none;
+  }
+
+  .case-study-awards__row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "name year"
+      "category category";
+  }
+
+  .case-study-awards__name {
+    grid-area: name;
+  }
+
+  .case-study-awards__category {
+    grid-area: category;
+  }
+
+  .case-study-awards__year {
+    grid-area: year;
+  }
+}
+
+@media (max-width: 640px) {
+  .case-study-media__duo {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-study-sidebar__cta {
+    transition: none;
+  }
+
+  .case-study-media__frame,
+  .case-study-up-next__frame {
+    opacity: 1;
+  }
+
+  .case-study-media__frame,
+  .case-study-up-next__frame,
+  .case-study-quote__word {
+    will-change: auto;
+  }
+}

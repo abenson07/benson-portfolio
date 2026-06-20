@@ -1,6 +1,5 @@
-import { WorkExperience } from "@/components/work/work-experience";
-import { caseStudies } from "@/content/case-studies";
+import { redirect } from "next/navigation";
 
 export default function WorkPage() {
-  return <WorkExperience projects={caseStudies} />;
+  redirect("/");
 }
