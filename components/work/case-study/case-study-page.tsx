@@ -1,7 +1,6 @@
 import type { WorkPageContent } from "@/content/work-page-template";
 
-import { SignatureHeader } from "@/components/home/signature-header";
-
+import { CaseStudyHeader } from "./case-study-header";
 import { CaseStudyMedia } from "./case-study-media";
 import { CaseStudyScrollMotion } from "./case-study-scroll-motion";
 import { CaseStudySidebar } from "./case-study-sidebar";
@@ -22,11 +21,7 @@ export function CaseStudyPage({
     <div
       className={`case-study-page${isModal ? " case-study-page--modal" : ""}`}
     >
-      {isModal ? null : (
-        <header className="case-study-header">
-          <SignatureHeader showStatus={false} />
-        </header>
-      )}
+      {isModal ? null : <CaseStudyHeader />}
 
       <CaseStudyScrollMotion>
         <div className="case-study-scroll">

@@ -64,9 +64,11 @@ function createWorkPage({
     media: overrides?.media ?? DEFAULT_MEDIA,
     upNext: overrides?.upNext ?? {
       eyebrow: "Up Next",
-      title: "Next project",
-      href: "#",
-      imageLabel: "Next project preview",
+      card: {
+        title: "Next project",
+        href: "#",
+        background: { type: "placeholder", label: "Next project preview" },
+      },
     },
   };
 }
@@ -277,9 +279,15 @@ function attachUpNext(pages: WorkPage[]): WorkPage[] {
       ...page,
       upNext: {
         eyebrow: "Up Next",
-        title: nextPage.title,
-        href: `/work/${nextPage.slug}`,
-        imageLabel: `${nextPage.title} preview`,
+        card: {
+          title: nextPage.title,
+          href: `/work/${nextPage.slug}`,
+          background: {
+            type: "image",
+            src: nextPage.coverImageUrl,
+            alt: `${nextPage.title} preview`,
+          },
+        },
       },
     };
   });

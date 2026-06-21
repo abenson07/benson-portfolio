@@ -89,23 +89,23 @@ function setupMediaReveals(
     });
   });
 
-  const upNextFrame = root.querySelector<HTMLElement>(".case-study-up-next__frame");
+  const upNextCard = root.querySelector<HTMLElement>(".case-study-up-next__card");
 
-  if (upNextFrame) {
+  if (upNextCard) {
     if (reducedMotion) {
-      gsap.set(upNextFrame, { opacity: 1, y: 0 });
+      gsap.set(upNextCard, { opacity: 1, y: 0 });
       return;
     }
 
-    gsap.set(upNextFrame, { opacity: 0, y: MEDIA_REVEAL_Y });
+    gsap.set(upNextCard, { opacity: 0, y: MEDIA_REVEAL_Y });
 
-    gsap.to(upNextFrame, {
+    gsap.to(upNextCard, {
       opacity: 1,
       y: 0,
       duration: MEDIA_REVEAL_DURATION,
       ease: "power3.out",
       scrollTrigger: {
-        trigger: upNextFrame,
+        trigger: upNextCard,
         scroller,
         start: SCROLL_START,
         once: true,

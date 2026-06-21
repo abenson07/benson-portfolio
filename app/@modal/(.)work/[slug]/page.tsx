@@ -5,6 +5,7 @@ import { WorkModalShell } from "@/components/work/work-modal-shell";
 import { getWorkPage } from "@/content/work-pages";
 
 import "@/app/work/case-study.css";
+import "@/app/work/work-card.css";
 
 type InterceptedWorkPageProps = {
   params: Promise<{ slug: string }>;

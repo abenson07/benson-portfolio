@@ -1,6 +1,6 @@
 import type { CaseStudyMediaBlock } from "@/content/work-page-template";
 
-import { CaseStudyPlaceholder } from "./case-study-placeholder";
+import { CaseStudyPreview } from "./case-study-preview";
 
 type CaseStudyMediaProps = {
   blocks: CaseStudyMediaBlock[];
@@ -32,28 +32,21 @@ export function CaseStudyMedia({ blocks }: CaseStudyMediaProps) {
         if (block.type === "single") {
           return (
             <div key={`single-${index}`} className="case-study-media__frame">
-              <CaseStudyPlaceholder
-                label={block.label}
-                aspect={block.aspect ?? "landscape"}
-              />
+              <CaseStudyPreview {...block.preview} />
             </div>
           );
         }
 
         return (
           <div key={`duo-${index}`} className="case-study-media__duo">
-            <div className="case-study-media__frame">
-              <CaseStudyPlaceholder
-                label={`${block.label} A`}
-                aspect={block.aspect ?? "portrait"}
-              />
-            </div>
-            <div className="case-study-media__frame">
-              <CaseStudyPlaceholder
-                label={`${block.label} B`}
-                aspect={block.aspect ?? "portrait"}
-              />
-            </div>
+            {block.previews.map((preview, previewIndex) => (
+              <div
+                key={`duo-${index}-${previewIndex}`}
+                className="case-study-media__frame"
+              >
+                <CaseStudyPreview {...preview} />
+              </div>
+            ))}
           </div>
         );
       })}

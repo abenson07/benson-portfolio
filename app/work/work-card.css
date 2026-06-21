@@ -1,0 +1,182 @@
+.work-card-wrapper {
+  --aspect-x: 1452;
+  --aspect-y: 890;
+
+  width: 100%;
+  aspect-ratio: var(--aspect-x) / var(--aspect-y);
+}
+
+.work-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: clamp(1rem, 2vw, 1.75rem);
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-card--landscape {
+  background: #242424;
+}
+
+.work-card__thumbnail-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.work-card__thumbnail-outer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.work-card__thumbnail-outer .work-card__media-frame {
+  position: absolute;
+  inset: 0;
+}
+
+.work-card__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-card__media--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0) 55%
+    ),
+    #242424;
+}
+
+.work-card__placeholder-label {
+  padding: 1rem;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  text-align: center;
+}
+
+.work-card__thumbnail-inner {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.work-card__thumbnail-inner--desktop {
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.work-card__foreground {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.work-card__foreground--desktop {
+  width: min(72%, 56rem);
+  aspect-ratio: 16 / 10;
+  border-radius: clamp(0.5rem, 1vw, 0.85rem);
+}
+
+.work-card__thumbnail-inner--phone {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.work-card__foreground--phone {
+  width: min(34%, 14rem);
+  aspect-ratio: 9 / 19.5;
+  border-radius: clamp(0.85rem, 1.5vw, 1.25rem);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+}
+
+.work-card__thumbnail-inner--phone-grid {
+  padding: clamp(1rem, 2.5vw, 2rem);
+}
+
+.work-card__phone-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  width: min(92%, 52rem);
+}
+
+.work-card__phone {
+  position: relative;
+  flex: 1 1 0;
+  max-width: 12rem;
+  aspect-ratio: 9 / 19.5;
+  border-radius: clamp(0.75rem, 1.2vw, 1.1rem);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
+}
+
+.work-card__phone .work-card__media-frame,
+.work-card__foreground .work-card__media-frame {
+  position: absolute;
+  inset: 0;
+}
+
+.work-card__content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.work-card__content-inner {
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.work-card__title {
+  margin: 0;
+  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.work-card__content--white .work-card__title {
+  color: #ffffff;
+}
+
+.work-card__content--dark .work-card__title {
+  color: #1a1b1a;
+}
+
+@media (max-width: 640px) {
+  .work-card__phone-grid {
+    gap: 0.5rem;
+  }
+
+  .work-card__phone {
+    max-width: 6.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card__thumbnail-outer {
+    will-change: auto;
+  }
+}

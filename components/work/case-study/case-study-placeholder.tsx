@@ -1,12 +1,9 @@
+import { CASE_STUDY_ASPECT_RATIOS, type CaseStudyAspect } from "@/content/work-page-template";
+
 type CaseStudyPlaceholderProps = {
   label: string;
-  aspect?: "landscape" | "portrait";
+  aspect?: CaseStudyAspect;
 };
-
-const aspectRatios = {
-  landscape: "16 / 10",
-  portrait: "3 / 4",
-} as const;
 
 export function CaseStudyPlaceholder({
   label,
@@ -15,7 +12,7 @@ export function CaseStudyPlaceholder({
   return (
     <div
       className="case-study-placeholder"
-      style={{ aspectRatio: aspectRatios[aspect] }}
+      style={{ aspectRatio: CASE_STUDY_ASPECT_RATIOS[aspect] }}
     >
       <span className="case-study-placeholder__label">{label}</span>
     </div>

@@ -19,31 +19,43 @@
   pointer-events: auto;
 }
 
-/* Lenis `.modal` equivalent — full-viewport scroll container */
+/* Lenis scroll container — full-viewport wrapper */
 .work-modal__panel {
   position: absolute;
   inset: 0;
   z-index: 1;
   padding-inline: 30px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-modal__panel {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .work-modal__panel--exiting {
   overflow: hidden;
 }
 
-/* `modal-inner` — top offset + slides on enter/exit; grows with content */
+/* Slides on enter/exit — separate from Lenis scroll content */
+.work-modal__enter {
+  position: relative;
+  width: 100%;
+  will-change: transform;
+  transform: translate3d(0, 100vh, 0);
+}
+
+/* `modal-inner` — top offset; grows with content (Lenis scroll content) */
 .work-modal__inner {
   position: relative;
   width: 100%;
   margin-top: var(--work-modal-top-offset);
   min-height: calc(100% - var(--work-modal-top-offset));
   overflow: visible;
-  will-change: transform;
-  transform: translate3d(0, 100vh, 0);
 }
 
 /* `modal-inner__bg` — cream surface; stretches with inner, expands on scroll */
@@ -179,7 +191,7 @@ body.work-modal-open .custom-cursor {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .work-modal__inner {
+  .work-modal__enter {
     transform: none;
     will-change: auto;
   }

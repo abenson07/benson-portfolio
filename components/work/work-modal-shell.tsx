@@ -13,6 +13,12 @@ import { useRouter } from "next/navigation";
 
 import { useWorkOverlay } from "./work-overlay-context";
 
+import {
+  createLenisScroller,
+  prefersReducedMotion,
+  type LenisScrollerHandle,
+} from "@/lib/motion/lenis-gsap";
+
 import "@/app/work/work-modal.css";
 
 type WorkModalShellProps = {
@@ -73,6 +79,7 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
   const { setOpen } = useWorkOverlay();
   const modalRootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const enterRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -80,7 +87,28 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
   const isClosingRef = useRef(false);
   const enterTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
+  const lenisRef = useRef<LenisScrollerHandle | null>(null);
   const chromeRef = useRef<ModalChrome>(getModalChrome());
+
+  const destroyLenis = useCallback(() => {
+    lenisRef.current?.destroy();
+    lenisRef.current = null;
+  }, []);
+
+  const initLenis = useCallback(() => {
+    const panel = panelRef.current;
+    const inner = innerRef.current;
+    if (!panel || !inner || prefersReducedMotion()) {
+      return;
+    }
+
+    destroyLenis();
+    lenisRef.current = createLenisScroller({
+      wrapper: panel,
+      content: inner,
+    });
+    lenisRef.current.scrollTo(0, true);
+  }, [destroyLenis]);
 
   const syncBgHeight = useCallback(() => {
     const inner = innerRef.current;
@@ -203,9 +231,10 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
 
     const backdrop = backdropRef.current;
     const panel = panelRef.current;
+    const enter = enterRef.current;
     const inner = innerRef.current;
 
-    if (!backdrop || !panel || !inner) {
+    if (!backdrop || !panel || !enter || !inner) {
       finish();
       return;
     }
@@ -214,12 +243,16 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
     scrollTriggerRef.current = null;
     panel.classList.add("work-modal__panel--exiting");
 
-    const exitY = chromeRef.current.enterOffset + panel.scrollTop;
+    const scrollY = lenisRef.current?.getScroll() ?? panel.scrollTop;
+    destroyLenis();
+    gsap.set(inner, { y: -scrollY });
+
+    const exitY = chromeRef.current.enterOffset + scrollY;
 
     gsap
       .timeline({ onComplete: finish })
       .to(
-        inner,
+        enter,
         { y: exitY, duration: EXIT_DURATION, ease: PANEL_EASE },
         0,
       )
@@ -228,7 +261,7 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
         { opacity: 0, duration: EXIT_DURATION, ease: BACKDROP_EASE },
         0,
       );
-  }, [clearChrome, router, setOpen]);
+  }, [clearChrome, destroyLenis, router, setOpen]);
 
   useLayoutEffect(() => {
     setOpen(true);
@@ -238,9 +271,10 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
     const modalRoot = modalRootRef.current;
     const backdrop = backdropRef.current;
     const panel = panelRef.current;
+    const enter = enterRef.current;
     const inner = innerRef.current;
 
-    if (!modalRoot || !backdrop || !panel || !inner) return;
+    if (!modalRoot || !backdrop || !panel || !enter || !inner) return;
 
     modalRoot.classList.add("work-modal--preparing");
 
@@ -255,13 +289,14 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
 
     if (reducedMotion) {
       gsap.set(backdrop, { opacity: BACKDROP_OPACITY });
-      gsap.set(inner, { y: 0 });
+      gsap.set(enter, { y: 0 });
       modalRoot.classList.remove("work-modal--preparing");
       syncBgHeight();
       setupScrollChrome();
       ScrollTrigger.refresh();
       return () => {
         scrollTriggerRef.current?.kill();
+        destroyLenis();
         setOpen(false);
         document.body.classList.remove("work-modal-open");
         clearChrome();
@@ -271,12 +306,13 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
     const { enterOffset } = chromeRef.current;
 
     gsap.set(backdrop, { opacity: 0 });
-    gsap.set(inner, { y: enterOffset });
+    gsap.set(enter, { y: enterOffset });
     modalRoot.classList.remove("work-modal--preparing");
 
     enterTimelineRef.current = gsap.timeline({
       onComplete: () => {
         syncBgHeight();
+        initLenis();
         setupScrollChrome();
         ScrollTrigger.refresh();
       },
@@ -284,7 +320,7 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
 
     enterTimelineRef.current
       .to(
-        inner,
+        enter,
         { y: 0, duration: INNER_ENTER_DURATION, ease: PANEL_EASE },
         0,
       )
@@ -301,11 +337,21 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
     return () => {
       enterTimelineRef.current?.kill();
       scrollTriggerRef.current?.kill();
+      destroyLenis();
       setOpen(false);
       document.body.classList.remove("work-modal-open");
       clearChrome();
     };
-  }, [applyScrollChrome, clearChrome, setOpen, setupScrollChrome, slug, syncBgHeight]);
+  }, [
+    applyScrollChrome,
+    clearChrome,
+    destroyLenis,
+    initLenis,
+    setOpen,
+    setupScrollChrome,
+    slug,
+    syncBgHeight,
+  ]);
 
   useEffect(() => {
     const inner = innerRef.current;
@@ -313,6 +359,7 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
 
     const observer = new ResizeObserver(() => {
       syncBgHeight();
+      lenisRef.current?.resize();
       ScrollTrigger.refresh();
     });
 
@@ -350,35 +397,37 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
       />
 
       <div ref={panelRef} className="work-modal__panel">
-        <div ref={innerRef} className="work-modal__inner">
-          <div ref={bgRef} className="work-modal__bg" aria-hidden />
+        <div ref={enterRef} className="work-modal__enter">
+          <div ref={innerRef} className="work-modal__inner">
+            <div ref={bgRef} className="work-modal__bg" aria-hidden />
 
-          <button
-            ref={closeRef}
-            type="button"
-            className="work-modal__close"
-            aria-label="Close project"
-            onClick={closeModal}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              fill="none"
-              viewBox="0 0 18 18"
-              aria-hidden
+            <button
+              ref={closeRef}
+              type="button"
+              className="work-modal__close"
+              aria-label="Close project"
+              onClick={closeModal}
             >
-              <path
-                stroke="currentColor"
-                strokeLinecap="square"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M2.332 15.667 15.665 2.333m0 13.334L2.332 2.333"
-              />
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                fill="none"
+                viewBox="0 0 18 18"
+                aria-hidden
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="square"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M2.332 15.667 15.665 2.333m0 13.334L2.332 2.333"
+                />
+              </svg>
+            </button>
 
-          <div className="work-modal__content">{children}</div>
+            <div className="work-modal__content">{children}</div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 # Work modal
 
-Smooth case-study overlay opened from the homepage (and anywhere linking to `/work/[slug]`). Reference implementation studied: Humaan `SmoothModal` (Framer Motion + Lenis). Ours uses **GSAP + ScrollTrigger** with the same DOM layering idea.
+Smooth case-study overlay opened from the homepage (and anywhere linking to `/work/[slug]`). Reference implementation studied: Humaan `SmoothModal` (Framer Motion + Lenis). Ours uses **Lenis + GSAP ScrollTrigger** with the same DOM layering idea.
 
 ## Routing
 
@@ -23,7 +23,9 @@ app/
 
 | File | Role |
 |------|------|
-| `components/work/work-modal-shell.tsx` | Portal, GSAP enter/exit, scroll chrome |
+| `components/work/work-modal-shell.tsx` | Portal, GSAP enter/exit, Lenis scroll, scroll chrome |
+| `components/work/work-page-shell.tsx` | Lenis on full-page case studies (`.work-page`) |
+| `lib/motion/lenis-gsap.ts` | Lenis + ScrollTrigger scrollerProxy wiring |
 | `app/work/work-modal.css` | Layout, header chrome, cream bg layer |
 | `components/work/work-overlay-context.tsx` | `isOpen` for hero cursor + body state |
 | `app/@modal/(.)work/[slug]/page.tsx` | Intercepted route → shell + `CaseStudyPage variant="modal"` |
@@ -34,14 +36,15 @@ app/
 ```
 .work-modal (fixed, full viewport, portal to body)
 ├── .work-modal__backdrop          ← fades 0 → 0.5
-└── .work-modal__panel             ← scroll container (full viewport, padding-inline 30px)
-    └── .work-modal__inner         ← slides on y; margin-top: max(20vh, 200px)
+└── .work-modal__panel             ← Lenis wrapper / scroll container (full viewport, padding-inline 30px)
+    └── .work-modal__enter         ← slides on y for enter/exit (GSAP only)
+        └── .work-modal__inner     ← Lenis content; margin-top card offset
         ├── .work-modal__bg        ← cream surface; expands on scroll (not the panel)
         ├── .work-modal__close
         └── .work-modal__content   → CaseStudyPage
 ```
 
-**Important:** animate **`inner`**, not `panel`. Panel stays fixed as the scroller. The rounded “card” look is the bg layer + top margin, not inset positioning on the panel.
+**Important:** animate **`enter`**, not `inner` or `panel`. Panel stays fixed as the Lenis wrapper. Inner is Lenis scroll content only — GSAP and Lenis must not share the same transform target.
 
 Do **not** put `display: flex` on the panel — it pins inner to viewport height and the cream bg stops at ~100vh.
 
@@ -88,6 +91,15 @@ When `body.work-modal-open`:
 - Custom cursor hidden on homepage
 
 Modal case study uses `variant="modal"` — no duplicate `SignatureHeader` inside content.
+
+## Lenis + ScrollTrigger
+
+Case studies use Lenis on `.work-modal__panel` (modal) and `.work-page:has(.case-study-page)` (direct load). GSAP still drives enter/exit, scroll chrome, and content reveals.
+
+- `lib/motion/lenis-gsap.ts` creates Lenis, wires `lenis.on("scroll", ScrollTrigger.update)`, drives `lenis.raf` from `gsap.ticker`, and sets `ScrollTrigger.scrollerProxy` on the wrapper.
+- Modal: Lenis initializes **after** the enter slide completes. GSAP animates `.work-modal__enter`; Lenis scrolls `.work-modal__inner`.
+- Exit: read `lenis.scroll`, destroy Lenis, preserve scroll offset on `inner`, then GSAP exit on `enter`.
+- `prefers-reduced-motion`: native overflow scroll, no Lenis.
 
 ## Case study scroll animations
 

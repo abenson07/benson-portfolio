@@ -1,3 +1,5 @@
+import type { WorkCardContent } from "@/content/work-card";
+
 export type CaseStudyService = {
   icon: "*" | "o" | "^" | "x";
   iconClass: "star" | "circle" | "chevron" | "cross";
@@ -10,16 +12,29 @@ export type CaseStudyAward = {
   year: string;
 };
 
+export type CaseStudyAspect = "landscape" | "portrait";
+
+export const CASE_STUDY_ASPECT_RATIOS: Record<CaseStudyAspect, string> = {
+  landscape: "16 / 10",
+  portrait: "3 / 4",
+};
+
+/** Frame content for case study previews — placeholder until `imageUrl` is set. */
+export type CaseStudyPreview = {
+  /** Center placeholder copy, or alt text when an image is shown. */
+  label: string;
+  aspect?: CaseStudyAspect;
+  imageUrl?: string;
+};
+
 export type CaseStudyMediaBlock =
-  | { type: "single"; label: string; aspect?: "landscape" | "portrait" }
-  | { type: "duo"; label: string; aspect?: "landscape" | "portrait" }
+  | { type: "single"; preview: CaseStudyPreview }
+  | { type: "duo"; previews: [CaseStudyPreview, CaseStudyPreview] }
   | { type: "quote"; quote: string; attribution: string };
 
 export type CaseStudyUpNext = {
   eyebrow: string;
-  title: string;
-  href: string;
-  imageLabel: string;
+  card: WorkCardContent;
 };
 
 export type WorkPageContent = {
@@ -104,24 +119,50 @@ export const workPageTemplate: WorkPageContent = {
     },
   ],
   media: [
-    { type: "single", label: "Hero image", aspect: "landscape" },
-    { type: "duo", label: "Detail", aspect: "portrait" },
-    { type: "single", label: "Feature screenshot", aspect: "landscape" },
-    { type: "duo", label: "Social embed", aspect: "portrait" },
+    { type: "single", preview: { label: "Hero image", aspect: "landscape" } },
+    {
+      type: "duo",
+      previews: [
+        { label: "Detail A", aspect: "portrait" },
+        { label: "Detail B", aspect: "portrait" },
+      ],
+    },
+    {
+      type: "single",
+      preview: { label: "Feature screenshot", aspect: "landscape" },
+    },
+    {
+      type: "duo",
+      previews: [
+        { label: "Social embed A", aspect: "portrait" },
+        { label: "Social embed B", aspect: "portrait" },
+      ],
+    },
     {
       type: "quote",
       quote:
         "We came to Humaan with an idea and a massive datasheet. They supported us through every step of the creative process, helping us understand the reasoning behind each decision, and we couldn't be happier with the result.",
       attribution: "Surveillance Watch Team",
     },
-    { type: "duo", label: "Mobile views", aspect: "portrait" },
-    { type: "single", label: "Closing screenshot", aspect: "landscape" },
+    {
+      type: "duo",
+      previews: [
+        { label: "Mobile views A", aspect: "portrait" },
+        { label: "Mobile views B", aspect: "portrait" },
+      ],
+    },
+    {
+      type: "single",
+      preview: { label: "Closing screenshot", aspect: "landscape" },
+    },
   ],
   upNext: {
     eyebrow: "Up Next",
-    title: "Ferox",
-    href: "#",
-    imageLabel: "Next project image",
+    card: {
+      title: "Ferox",
+      href: "#",
+      background: { type: "placeholder", label: "Next project image" },
+    },
   },
 };
 
@@ -140,7 +181,13 @@ export const workPageTemplateLongCopy: WorkPageContent = {
     "Launch was only the beginning. Usage analytics and journalist feedback shaped a roadmap of filters, export tools, and embeddable views that extended the reach of the original research far beyond the core site.",
   ],
   media: [
-    { type: "single", label: "Hero image", aspect: "landscape" },
-    { type: "duo", label: "Detail", aspect: "portrait" },
+    { type: "single", preview: { label: "Hero image", aspect: "landscape" } },
+    {
+      type: "duo",
+      previews: [
+        { label: "Detail A", aspect: "portrait" },
+        { label: "Detail B", aspect: "portrait" },
+      ],
+    },
   ],
 };
