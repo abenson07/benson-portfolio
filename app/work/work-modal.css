@@ -6,6 +6,11 @@
   --work-modal-top-offset: max(20vh, 200px);
 }
 
+/* Hidden until useLayoutEffect sets GSAP start state (prevents enter flash) */
+.work-modal--preparing {
+  visibility: hidden;
+}
+
 .work-modal__backdrop {
   position: absolute;
   inset: 0;
@@ -38,6 +43,7 @@
   min-height: calc(100% - var(--work-modal-top-offset));
   overflow: visible;
   will-change: transform;
+  transform: translate3d(0, 100vh, 0);
 }
 
 /* `modal-inner__bg` — cream surface; stretches with inner, expands on scroll */
@@ -174,6 +180,7 @@ body.work-modal-open .custom-cursor {
 
 @media (prefers-reduced-motion: reduce) {
   .work-modal__inner {
+    transform: none;
     will-change: auto;
   }
 }

@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
@@ -65,6 +71,7 @@ function lerp(start: number, end: number, progress: number) {
 export function WorkModalShell({ slug, children }: WorkModalShellProps) {
   const router = useRouter();
   const { setOpen } = useWorkOverlay();
+  const modalRootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -223,20 +230,23 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
       );
   }, [clearChrome, router, setOpen]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setOpen(true);
     document.body.classList.add("work-modal-open");
     document.body.style.setProperty("--work-modal-chrome-progress", "0");
 
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
+    const modalRoot = modalRootRef.current;
     const backdrop = backdropRef.current;
     const panel = panelRef.current;
     const inner = innerRef.current;
 
-    if (!backdrop || !panel || !inner) return;
+    if (!modalRoot || !backdrop || !panel || !inner) return;
+
+    modalRoot.classList.add("work-modal--preparing");
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     chromeRef.current = getModalChrome();
     panel.scrollTop = 0;
@@ -246,16 +256,23 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
     if (reducedMotion) {
       gsap.set(backdrop, { opacity: BACKDROP_OPACITY });
       gsap.set(inner, { y: 0 });
+      modalRoot.classList.remove("work-modal--preparing");
       syncBgHeight();
       setupScrollChrome();
       ScrollTrigger.refresh();
-      return;
+      return () => {
+        scrollTriggerRef.current?.kill();
+        setOpen(false);
+        document.body.classList.remove("work-modal-open");
+        clearChrome();
+      };
     }
 
     const { enterOffset } = chromeRef.current;
 
     gsap.set(backdrop, { opacity: 0 });
     gsap.set(inner, { y: enterOffset });
+    modalRoot.classList.remove("work-modal--preparing");
 
     enterTimelineRef.current = gsap.timeline({
       onComplete: () => {
@@ -318,7 +335,8 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
 
   return (
     <div
-      className="work-modal"
+      ref={modalRootRef}
+      className="work-modal work-modal--preparing"
       data-work-modal
       data-work-modal-slug={slug}
       role="dialog"
