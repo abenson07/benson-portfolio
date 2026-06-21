@@ -16,6 +16,7 @@ import {
   HighlightGridRow,
   HighlightLabel,
   HighlightPackedRow,
+  HighlightSegment,
 } from "./hero-highlights-parts";
 
 type HeroHighlightsProps = {
@@ -54,23 +55,14 @@ function HeroHighlightsGap({
   highlights,
   onHover,
 }: Omit<HeroHighlightsProps, "layout">) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const rows = useHeroHighlightRows(highlights, containerRef, "gap");
-
   return (
     <div
-      ref={containerRef}
       className="hero-highlights hero-highlights--gap"
       data-hero-load-flow
       onMouseLeave={() => onHover(null)}
     >
-      {rows.map((items, index) => (
-        <HighlightGapRow
-          key={`${items.map((item) => item.id).join("-")}-${index}`}
-          items={items}
-          rowIndex={index}
-          onHover={onHover}
-        />
+      {highlights.map((item) => (
+        <HighlightSegment key={item.id} item={item} onHover={onHover} />
       ))}
     </div>
   );
