@@ -21,7 +21,8 @@ type HeroStageProps = {
 };
 
 const BACKGROUND_DEBOUNCE_MS = 180;
-const PORTRAIT_FADE_DURATION = 0.5;
+const HOVER_TRANSITION_DURATION = 0.75;
+const BACKGROUND_CROSSFADE_DURATION = 1.25;
 
 export function HeroStage({ highlights }: HeroStageProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -36,7 +37,6 @@ export function HeroStage({ highlights }: HeroStageProps) {
 
   useEffect(() => {
     if (!activeId) {
-      setBackgroundUrl(null);
       prevActiveIdRef.current = null;
       return;
     }
@@ -68,7 +68,7 @@ export function HeroStage({ highlights }: HeroStageProps) {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const duration = reducedMotion ? 0 : PORTRAIT_FADE_DURATION;
+    const duration = reducedMotion ? 0 : HOVER_TRANSITION_DURATION;
     const isIdle = activeId === null;
 
     gsap.to(portrait, {
@@ -84,7 +84,12 @@ export function HeroStage({ highlights }: HeroStageProps) {
 
   return (
     <>
-      <HeroBackground imageUrl={backgroundUrl} visible={activeId !== null} />
+      <HeroBackground
+        imageUrl={backgroundUrl}
+        visible={activeId !== null}
+        enterExitDuration={HOVER_TRANSITION_DURATION}
+        crossfadeDuration={BACKGROUND_CROSSFADE_DURATION}
+      />
 
       <div ref={portraitRef} className="hero-portrait" aria-hidden>
         <Image

@@ -103,6 +103,12 @@ body {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  opacity: 0;
+}
+
+.hero-background__crossfade {
+  position: absolute;
+  inset: 0;
 }
 
 .hero-background__layer {
@@ -201,11 +207,16 @@ body {
   color: var(--muted);
 }
 
+.signature-header,
+.hero-highlights,
+.hero-title {
+  transition: opacity 0.75s ease-in-out;
+}
+
 .body-wrapper--item-active .signature-header,
 .body-wrapper--item-active .hero-highlights,
 .body-wrapper--item-active .hero-title {
   opacity: 0;
-  transition: opacity 0.4s ease;
 }
 
 .custom-cursor {
