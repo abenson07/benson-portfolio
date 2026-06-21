@@ -147,6 +147,21 @@ body {
   .hero-background__scale {
     will-change: auto;
   }
+
+  .hero-title {
+    opacity: 1;
+  }
+
+  .hero-title .char,
+  .signature-header,
+  .hero-highlights [data-hero-load-segment] {
+    opacity: 1;
+    will-change: auto;
+  }
+
+  .signature-header {
+    transform: none;
+  }
 }
 
 .body-wrapper {
@@ -350,12 +365,16 @@ body {
 .hero-highlights {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
   width: min(100%, 68rem);
   padding-inline: 1rem;
   overflow: visible;
 }
 
-.hero-highlights__flow {
+.hero-highlights__row {
   margin: 0;
   font-family: "PP Migra", "Iowan Old Style", "Palatino Linotype", serif;
   font-size: var(--font-hero-highlight);
@@ -368,7 +387,14 @@ body {
   display: inline;
 }
 
+.hero-highlights__bullet,
+.hero-highlights__label {
+  display: inline-block;
+  opacity: 0;
+}
+
 .hero-highlights__bullet {
+  padding-inline: 0.35em;
   color: var(--highlight);
 }
 
@@ -406,6 +432,17 @@ body {
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
+  opacity: 0;
+}
+
+.hero-title .char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.signature-header {
+  will-change: transform, opacity;
+  opacity: 0;
 }
 
 @media (max-width: 768px) {

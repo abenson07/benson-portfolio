@@ -11,6 +11,8 @@ import {
 
 import { useWorkOverlay } from "@/components/work/work-overlay-context";
 
+import { runHeroLoadAnimation } from "@/lib/motion/hero-load-animation";
+
 import { CustomCursor, useCustomCursorEnabled } from "./custom-cursor";
 import { HeroBackground } from "./hero-background";
 import { HeroHighlights } from "./hero-highlights";
@@ -28,6 +30,9 @@ export function HeroStage({ highlights }: HeroStageProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [backgroundUrl, setBackgroundUrl] = useState<string | null>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const highlightsRef = useRef<HTMLDivElement>(null);
   const prevActiveIdRef = useRef<string | null>(null);
   const cursorEnabled = useCustomCursorEnabled();
   const { isOpen: isWorkModalOpen } = useWorkOverlay();
@@ -61,6 +66,28 @@ export function HeroStage({ highlights }: HeroStageProps) {
 
     return () => window.clearTimeout(timeout);
   }, [activeId, highlights]);
+
+  useEffect(() => {
+    const titleEl = titleRef.current;
+    const headerEl = headerRef.current;
+    const highlightsEl = highlightsRef.current;
+    if (!titleEl || !headerEl || !highlightsEl) return;
+
+    const bottomRowEl = highlightsEl.querySelector<HTMLElement>(
+      '[data-hero-load-row="bottom"]',
+    );
+    const topRowEl = highlightsEl.querySelector<HTMLElement>(
+      '[data-hero-load-row="top"]',
+    );
+    if (!bottomRowEl || !topRowEl) return;
+
+    return runHeroLoadAnimation({
+      titleEl,
+      headerEl,
+      bottomRowEl,
+      topRowEl,
+    });
+  }, []);
 
   useEffect(() => {
     const portrait = portraitRef.current;
@@ -108,11 +135,13 @@ export function HeroStage({ highlights }: HeroStageProps) {
           activeId ? " body-wrapper--item-active" : ""
         }`}
       >
-        <SignatureHeader />
+        <SignatureHeader ref={headerRef} />
 
         <div className="hero-content-wrapper">
-          <HeroHighlights highlights={highlights} onHover={handleHover} />
-          <div className="hero-title" aria-hidden>
+          <div ref={highlightsRef}>
+            <HeroHighlights highlights={highlights} onHover={handleHover} />
+          </div>
+          <div ref={titleRef} className="hero-title" aria-hidden>
             BENSON
           </div>
         </div>
