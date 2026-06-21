@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 import { BackgroundCrossfade } from "@/components/shared/background-crossfade";
+import { heroHoverDebug } from "@/lib/debug/hero-hover-debug";
 
 type HeroBackgroundProps = {
   imageUrl: string | null;
@@ -25,12 +26,14 @@ export function HeroBackground({
   const [displayUrl, setDisplayUrl] = useState<string | null>(null);
 
   visibleRef.current = visible;
+  heroHoverDebug.setVisible(visible);
 
   useEffect(() => {
-    if (imageUrl) {
+    if (visible && imageUrl) {
+      heroHoverDebug.setDisplayUrl(imageUrl);
       setDisplayUrl(imageUrl);
     }
-  }, [imageUrl]);
+  }, [imageUrl, visible]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -43,11 +46,24 @@ export function HeroBackground({
 
     gsap.killTweensOf(container);
 
+    heroHoverDebug.logAnimationStart("background-container", {
+      visible,
+      displayUrl,
+      duration,
+    });
+
     if (visible) {
       gsap.to(container, {
         opacity: 1,
         duration,
         ease: "power2.inOut",
+        onComplete: () => {
+          heroHoverDebug.logAnimationStop("background-container", {
+            visible: true,
+            displayUrl,
+            opacity: 1,
+          });
+        },
       });
       return;
     }
@@ -57,7 +73,14 @@ export function HeroBackground({
       duration,
       ease: "power2.inOut",
       onComplete: () => {
+        heroHoverDebug.logAnimationStop("background-container", {
+          visible: false,
+          displayUrl,
+          opacity: 0,
+        });
+
         if (!visibleRef.current) {
+          heroHoverDebug.setDisplayUrl(null);
           setDisplayUrl(null);
         }
       },
@@ -79,6 +102,7 @@ export function HeroBackground({
         scaleClassName="hero-background__scale"
         imageClassName="hero-background__image"
         scrimClassName="hero-background__scrim"
+        debugNamespace="hero"
       />
     </div>
   );

@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
+import { heroHoverDebug } from "@/lib/debug/hero-hover-debug";
+
 type BackgroundCrossfadeProps = {
   imageUrl: string;
   fadeDuration?: number;
@@ -12,6 +14,7 @@ type BackgroundCrossfadeProps = {
   scaleClassName?: string;
   imageClassName?: string;
   scrimClassName?: string;
+  debugNamespace?: "hero";
 };
 
 const INCOMING_SCALE_START = 1.05;
@@ -26,7 +29,9 @@ export function BackgroundCrossfade({
   scaleClassName = "background-crossfade__scale",
   imageClassName = "background-crossfade__image",
   scrimClassName = "background-crossfade__scrim",
+  debugNamespace,
 }: BackgroundCrossfadeProps) {
+  const debug = debugNamespace === "hero";
   const layerARef = useRef<HTMLDivElement>(null);
   const layerBRef = useRef<HTMLDivElement>(null);
   const scaleARef = useRef<HTMLDivElement>(null);
@@ -50,6 +55,17 @@ export function BackgroundCrossfade({
 
       if (isTransitioningRef.current) {
         pendingUrlRef.current = nextUrl;
+        if (debug) {
+          heroHoverDebug.logCrossfadeState({
+            currentUrl: currentUrlRef.current,
+            pendingUrl: nextUrl,
+            transitioning: true,
+          });
+          console.log("[hero-hover] crossfade queued", {
+            currentUrl: currentUrlRef.current,
+            pendingUrl: nextUrl,
+          });
+        }
         return;
       }
 
@@ -79,6 +95,18 @@ export function BackgroundCrossfade({
           activeSlotRef.current = incomingSlot;
           currentUrlRef.current = nextUrl;
 
+          if (debug) {
+            heroHoverDebug.logCrossfadeState({
+              currentUrl: nextUrl,
+              pendingUrl: pendingUrlRef.current,
+              transitioning: false,
+            });
+            heroHoverDebug.logAnimationStop("crossfade", {
+              url: nextUrl,
+              incomingSlot,
+            });
+          }
+
           const pending = pendingUrlRef.current;
           pendingUrlRef.current = null;
 
@@ -97,6 +125,16 @@ export function BackgroundCrossfade({
         }
 
         isTransitioningRef.current = true;
+
+        if (debug) {
+          heroHoverDebug.logAnimationStart("crossfade", {
+            from: currentUrlRef.current,
+            to: nextUrl,
+            incomingSlot,
+            outgoingSlot,
+            fadeDuration,
+          });
+        }
 
         gsap.set(outgoingLayer, { opacity: 1, zIndex: 1 });
         gsap.set(outgoingScale, { scale: 1 });
@@ -127,23 +165,75 @@ export function BackgroundCrossfade({
         );
       };
 
-      const runWhenReady = () => {
+      const runWhenReady = (source: "load" | "error" | "cached" = "load") => {
         incomingImg.onload = null;
         incomingImg.onerror = null;
+
+        if (debug) {
+          const status =
+            source === "error"
+              ? "error"
+              : source === "cached"
+                ? "cached"
+                : incomingImg.naturalWidth > 0
+                  ? "loaded"
+                  : "error";
+
+          heroHoverDebug.logImageLoad(nextUrl, status, {
+            slot: incomingSlot,
+            naturalWidth: incomingImg.naturalWidth,
+            naturalHeight: incomingImg.naturalHeight,
+            complete: incomingImg.complete,
+            source,
+          });
+        }
+
         startTransition();
       };
 
-      incomingImg.onload = runWhenReady;
-      incomingImg.onerror = runWhenReady;
+      if (debug) {
+        heroHoverDebug.logImageLoad(nextUrl, "loading", { slot: incomingSlot });
+      }
+
+      incomingImg.onload = () => runWhenReady("load");
+      incomingImg.onerror = () => runWhenReady("error");
       incomingImg.src = nextUrl;
 
       if (incomingImg.complete && incomingImg.naturalWidth > 0) {
-        runWhenReady();
+        runWhenReady("cached");
       }
     };
 
     if (currentUrlRef.current === null) {
+      if (debug) {
+        heroHoverDebug.logImageLoad(imageUrl, "loading", {
+          slot: "a",
+          initial: true,
+        });
+      }
+
       imgARef.current.src = imageUrl;
+
+      if (debug) {
+        const initialCached =
+          imgARef.current.complete && imgARef.current.naturalWidth > 0;
+        heroHoverDebug.logImageLoad(
+          imageUrl,
+          initialCached ? "cached" : "loading",
+          {
+            slot: "a",
+            initial: true,
+            naturalWidth: imgARef.current.naturalWidth,
+            complete: imgARef.current.complete,
+          },
+        );
+        heroHoverDebug.logCrossfadeState({
+          currentUrl: imageUrl,
+          pendingUrl: null,
+          transitioning: false,
+        });
+      }
+
       gsap.set(layerARef.current, { opacity: 1, zIndex: 1 });
       gsap.set(scaleARef.current, { scale: 1 });
       gsap.set(layerBRef.current, { opacity: 0, zIndex: 0 });
@@ -153,7 +243,7 @@ export function BackgroundCrossfade({
     }
 
     runCrossfade(imageUrl);
-  }, [fadeDuration, imageUrl]);
+  }, [debug, fadeDuration, imageUrl]);
 
   const scrimStyle = { background: `rgba(0, 0, 0, ${scrimOpacity})` };
 
