@@ -6,16 +6,33 @@ type SegmentMeasurer = {
 };
 
 export type PackHeroHighlightRowsOptions = {
-  /** Pack against a fraction of container width to encourage more line breaks. */
+  /** Pack against a fraction of container width. */
   widthRatio?: number;
-  /** Steer toward at least this many rows when possible. */
-  minRows?: number;
-  balance?: boolean;
-  sortShortestFirst?: boolean;
 };
 
+/** Horizontal flex gap on gap rows (matches CSS). */
+export const GAP_ROW_ITEM_GAP_EM = 1.35;
+
 const DEFAULT_WIDTH_RATIO = 1;
-const MIN_ROWS_WIDTH_FLOOR = 0.58;
+
+function measureLabelWidth(probe: HTMLElement, label: string): number {
+  const link = document.createElement("span");
+  link.className = "hero-highlights__label";
+  link.textContent = label;
+  probe.appendChild(link);
+  const width = link.getBoundingClientRect().width;
+  probe.removeChild(link);
+  return width;
+}
+
+function createMeasurerProbe(containerEl: HTMLElement): HTMLElement {
+  const probe = document.createElement("div");
+  probe.setAttribute("aria-hidden", "true");
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;pointer-events:none;top:0;left:0;overflow:hidden;height:0;width:0";
+  containerEl.appendChild(probe);
+  return probe;
+}
 
 /** Greedy row pack — breaks lines by measured width. */
 export function packHeroHighlightRows(
@@ -53,111 +70,49 @@ export function packHeroHighlightRows(
   return rows;
 }
 
-/** Pull items off the previous row so the last line isn't a sparse orphan. */
-export function balanceHighlightRows(
-  rows: HeroHighlight[][],
-): HeroHighlight[][] {
-  if (rows.length < 2) {
-    return rows;
-  }
-
-  const next = rows.map((row) => [...row]);
-  const last = next[next.length - 1];
-  const prev = next[next.length - 2];
-  const total = next.reduce((count, row) => count + row.length, 0);
-  const targetLast = Math.max(3, Math.ceil(total / next.length));
-
-  while (last.length < targetLast && prev.length > 4) {
-    const moved = prev.pop();
-    if (!moved) break;
-    last.unshift(moved);
-  }
-
-  return next;
-}
-
-export function sortRowsShortestFirst(
-  rows: HeroHighlight[][],
-): HeroHighlight[][] {
-  return [...rows].sort((a, b) => a.length - b.length);
-}
-
 export function layoutHeroHighlightRows(
   highlights: HeroHighlight[],
   containerWidth: number,
   measureSegmentWidth: (label: string, isFirstInRow: boolean) => number,
   options: PackHeroHighlightRowsOptions = {},
 ): HeroHighlight[][] {
-  const {
-    widthRatio = DEFAULT_WIDTH_RATIO,
-    minRows = 0,
-    balance = false,
-    sortShortestFirst = false,
-  } = options;
+  const { widthRatio = DEFAULT_WIDTH_RATIO } = options;
 
-  let ratio = widthRatio;
-  let rows = packHeroHighlightRows(
+  return packHeroHighlightRows(
     highlights,
-    containerWidth * ratio,
+    containerWidth * widthRatio,
     measureSegmentWidth,
   );
-
-  if (minRows > 1) {
-    while (rows.length < minRows && ratio > MIN_ROWS_WIDTH_FLOOR) {
-      ratio -= 0.04;
-      rows = packHeroHighlightRows(
-        highlights,
-        containerWidth * ratio,
-        measureSegmentWidth,
-      );
-    }
-  }
-
-  if (balance) {
-    rows = balanceHighlightRows(rows);
-  }
-
-  if (sortShortestFirst) {
-    rows = sortRowsShortestFirst(rows);
-  }
-
-  return rows;
 }
 
 export function createHighlightSegmentMeasurer(
   containerEl: HTMLElement,
 ): SegmentMeasurer {
-  const probe = document.createElement("div");
-  probe.setAttribute("aria-hidden", "true");
-  probe.style.cssText =
-    "position:absolute;visibility:hidden;pointer-events:none;top:0;left:0;overflow:hidden;height:0;width:0";
-
-  containerEl.appendChild(probe);
-
-  const measure = (label: string, isFirstInRow: boolean): number => {
-    const segment = document.createElement("span");
-    segment.className = "hero-highlights__segment";
-
-    if (!isFirstInRow) {
-      const bullet = document.createElement("span");
-      bullet.className = "hero-highlights__bullet";
-      bullet.textContent = "•";
-      segment.appendChild(bullet);
-    }
-
-    const link = document.createElement("span");
-    link.className = "hero-highlights__label";
-    link.textContent = label;
-    segment.appendChild(link);
-
-    probe.appendChild(segment);
-    const width = segment.getBoundingClientRect().width;
-    probe.removeChild(segment);
-    return width;
-  };
+  const probe = createMeasurerProbe(containerEl);
 
   return {
-    measure,
+    measure: (label: string) => measureLabelWidth(probe, label),
+    destroy: () => {
+      probe.remove();
+    },
+  };
+}
+
+export function createHighlightGapRowMeasurer(
+  containerEl: HTMLElement,
+): SegmentMeasurer {
+  const probe = createMeasurerProbe(containerEl);
+
+  return {
+    measure: (label: string, isFirstInRow: boolean) => {
+      const labelWidth = measureLabelWidth(probe, label);
+      if (isFirstInRow) {
+        return labelWidth;
+      }
+
+      const fontSize = Number.parseFloat(getComputedStyle(containerEl).fontSize);
+      return labelWidth + GAP_ROW_ITEM_GAP_EM * fontSize;
+    },
     destroy: () => {
       probe.remove();
     },
@@ -171,7 +126,5 @@ export function isSparseHighlightRow(itemCount: number): boolean {
 export function buildGridRowTemplateColumns(itemCount: number): string {
   if (itemCount <= 0) return "";
 
-  return Array.from({ length: itemCount * 2 - 1 }, (_, index) =>
-    index % 2 === 0 ? "max-content" : "var(--hero-grid-bullet-fr, 0.22fr)",
-  ).join(" ");
+  return Array.from({ length: itemCount }, () => "max-content").join(" ");
 }

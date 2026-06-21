@@ -2,85 +2,68 @@
 
 import { useLayoutEffect, type RefObject } from "react";
 
-/** Reference font size (px) used to measure BENSON before scaling to the container. */
-export const HERO_TITLE_REFERENCE_FONT_SIZE = 350;
-
-function getTitlePlainText(titleEl: HTMLElement): string {
-  return (
-    titleEl.dataset.titleText ??
-    titleEl.textContent?.replace(/\s+/g, "") ??
-    ""
-  );
-}
-
-function measureTitleTextWidth(
+export function getHeroTitleChars(
   titleEl: HTMLElement,
-  fontSizePx: number,
-): number {
-  const text = getTitlePlainText(titleEl);
-  if (!text) return 0;
-
-  const style = getComputedStyle(titleEl);
-  const probe = document.createElement("span");
-  probe.textContent = text;
-  probe.setAttribute("aria-hidden", "true");
-  probe.style.cssText =
-    "position:absolute;visibility:hidden;pointer-events:none;white-space:nowrap;";
-  probe.style.fontFamily = style.fontFamily;
-  probe.style.fontWeight = style.fontWeight;
-  probe.style.fontStyle = style.fontStyle;
-  probe.style.fontSize = `${fontSizePx}px`;
-  probe.style.letterSpacing = style.letterSpacing;
-
-  document.body.appendChild(probe);
-  const width = probe.getBoundingClientRect().width;
-  probe.remove();
-  return width;
+): NodeListOf<HTMLElement> {
+  return titleEl.querySelectorAll<HTMLElement>(".hero-title__char");
 }
 
-export function fitHeroTitle(
+export function layoutHeroTitle(
   titleEl: HTMLElement,
   containerEl: HTMLElement,
+  highlightsEl: HTMLElement | null,
 ): void {
-  const containerWidth = containerEl.clientWidth;
-  if (containerWidth <= 0) return;
+  syncHighlightsToTitleBounds(titleEl, containerEl, highlightsEl);
+}
 
-  const textWidth = measureTitleTextWidth(
-    titleEl,
-    HERO_TITLE_REFERENCE_FONT_SIZE,
-  );
-  if (textWidth <= 0) return;
+/** Match highlights horizontal bounds to rendered BENSON letter edges. */
+export function syncHighlightsToTitleBounds(
+  titleEl: HTMLElement,
+  containerEl: HTMLElement,
+  highlightsEl: HTMLElement | null,
+): void {
+  if (!highlightsEl) return;
 
-  const scale = containerWidth / textWidth;
-  titleEl.style.fontSize = `${HERO_TITLE_REFERENCE_FONT_SIZE * scale}px`;
+  const chars = getHeroTitleChars(titleEl);
+  if (!chars.length) {
+    containerEl.style.removeProperty("--hero-title-inset-left");
+    containerEl.style.removeProperty("--hero-title-inset-right");
+    return;
+  }
+
+  const containerRect = containerEl.getBoundingClientRect();
+  const first = chars[0].getBoundingClientRect();
+  const last = chars[chars.length - 1].getBoundingClientRect();
+
+  const insetLeft = Math.max(0, first.left - containerRect.left);
+  const insetRight = Math.max(0, containerRect.right - last.right);
+
+  containerEl.style.setProperty("--hero-title-inset-left", `${insetLeft}px`);
+  containerEl.style.setProperty("--hero-title-inset-right", `${insetRight}px`);
 }
 
 export function useFitHeroTitle(
   titleRef: RefObject<HTMLElement | null>,
   containerRef: RefObject<HTMLElement | null>,
+  highlightsRef: RefObject<HTMLElement | null>,
 ): void {
   useLayoutEffect(() => {
     const titleEl = titleRef.current;
     const containerEl = containerRef.current;
+    const highlightsEl = highlightsRef.current;
     if (!titleEl || !containerEl) return;
 
     let cancelled = false;
 
-    const fit = () => {
+    const layout = () => {
       if (cancelled) return;
-      fitHeroTitle(titleEl, containerEl);
+      layoutHeroTitle(titleEl, containerEl, highlightsEl);
     };
 
-    const run = async () => {
-      await document.fonts.ready;
-      if (cancelled) return;
-      fit();
-    };
-
-    run();
+    layout();
 
     const observer = new ResizeObserver(() => {
-      fit();
+      layout();
     });
     observer.observe(containerEl);
 
@@ -88,5 +71,5 @@ export function useFitHeroTitle(
       cancelled = true;
       observer.disconnect();
     };
-  }, [titleRef, containerRef]);
+  }, [titleRef, containerRef, highlightsRef]);
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { Fragment } from "react";
 import Link from "next/link";
 
 import type { HeroHighlight } from "@/content/hero-highlights";
@@ -29,36 +28,14 @@ export function HighlightLabel({ item, onHover }: HighlightLabelProps) {
   );
 }
 
-type HighlightBulletProps = {
-  className?: string;
-};
-
-export function HighlightBullet({ className }: HighlightBulletProps) {
-  return (
-    <span
-      className={className ?? "hero-highlights__bullet"}
-      data-hero-load-segment
-      aria-hidden
-    >
-      •
-    </span>
-  );
-}
-
 type HighlightSegmentProps = {
   item: HeroHighlight;
-  showBullet: boolean;
   onHover: (id: string | null) => void;
 };
 
-export function HighlightSegment({
-  item,
-  showBullet,
-  onHover,
-}: HighlightSegmentProps) {
+export function HighlightSegment({ item, onHover }: HighlightSegmentProps) {
   return (
     <span className="hero-highlights__segment">
-      {showBullet ? <HighlightBullet /> : null}
       <HighlightLabel item={item} onHover={onHover} />
     </span>
   );
@@ -84,13 +61,8 @@ export function HighlightPackedRow({
       }`}
       data-hero-load-row={rowIndex}
     >
-      {items.map((item, index) => (
-        <HighlightSegment
-          key={item.id}
-          item={item}
-          showBullet={index > 0}
-          onHover={onHover}
-        />
+      {items.map((item) => (
+        <HighlightSegment key={item.id} item={item} onHover={onHover} />
       ))}
     </div>
   );
@@ -103,13 +75,8 @@ export function HighlightGapRow({
 }: HighlightRowProps) {
   return (
     <div className="hero-highlights__gap-row" data-hero-load-row={rowIndex}>
-      {items.map((item, index) => (
-        <HighlightSegment
-          key={item.id}
-          item={item}
-          showBullet={index > 0}
-          onHover={onHover}
-        />
+      {items.map((item) => (
+        <HighlightLabel key={item.id} item={item} onHover={onHover} />
       ))}
     </div>
   );
@@ -128,13 +95,8 @@ export function HighlightGridRow({
         gridTemplateColumns: buildGridRowTemplateColumns(items.length),
       }}
     >
-      {items.map((item, index) => (
-        <Fragment key={item.id}>
-          {index > 0 ? (
-            <HighlightBullet className="hero-highlights__grid-bullet" />
-          ) : null}
-          <HighlightLabel item={item} onHover={onHover} />
-        </Fragment>
+      {items.map((item) => (
+        <HighlightLabel key={item.id} item={item} onHover={onHover} />
       ))}
     </div>
   );

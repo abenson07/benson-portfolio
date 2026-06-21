@@ -9,7 +9,7 @@ export const HERO_HIGHLIGHT_LAYOUTS = [
 
 export type HeroHighlightLayout = (typeof HERO_HIGHLIGHT_LAYOUTS)[number];
 
-export const DEFAULT_HERO_HIGHLIGHT_LAYOUT: HeroHighlightLayout = "packed";
+export const DEFAULT_HERO_HIGHLIGHT_LAYOUT: HeroHighlightLayout = "gap";
 
 export function parseHeroHighlightLayout(
   value: string | null | undefined,
@@ -32,6 +32,6 @@ export const HERO_HIGHLIGHT_LAYOUT_LABELS: Record<
   wrap: "Single flex wrap + space-between",
   justify: "Inline flow + text justify",
   manual: "Three fixed rows, centered gap",
-  gap: "Centered rows, short line on top",
+  gap: "Centered rows, measured wrap",
   grid: "Grid rows, bullets in own fr columns",
 };

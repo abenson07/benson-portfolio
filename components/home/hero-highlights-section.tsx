@@ -15,7 +15,7 @@ type HeroHighlightsSectionProps = {
 function HeroHighlightsFallback() {
   return (
     <div
-      className="hero-highlights hero-highlights--packed"
+      className="hero-highlights hero-highlights--gap"
       data-hero-load-flow
       aria-hidden
     />

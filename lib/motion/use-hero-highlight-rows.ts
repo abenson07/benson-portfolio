@@ -5,35 +5,12 @@ import { useLayoutEffect, useState, type RefObject } from "react";
 import type { HeroHighlight } from "@/content/hero-highlights";
 
 import {
+  createHighlightGapRowMeasurer,
   createHighlightSegmentMeasurer,
   layoutHeroHighlightRows,
-  type PackHeroHighlightRowsOptions,
 } from "@/lib/motion/pack-hero-highlight-rows";
 
 export type HeroHighlightRowPreset = "packed" | "gap" | "grid";
-
-const ROW_PRESET_OPTIONS: Record<
-  HeroHighlightRowPreset,
-  PackHeroHighlightRowsOptions
-> = {
-  packed: {
-    widthRatio: 0.92,
-    minRows: 3,
-    balance: true,
-  },
-  gap: {
-    widthRatio: 0.92,
-    minRows: 3,
-    balance: true,
-    sortShortestFirst: true,
-  },
-  grid: {
-    widthRatio: 0.92,
-    minRows: 3,
-    balance: true,
-    sortShortestFirst: true,
-  },
-};
 
 export function useHeroHighlightRows(
   highlights: HeroHighlight[],
@@ -46,7 +23,6 @@ export function useHeroHighlightRows(
     const containerEl = containerRef.current;
     if (!containerEl) return;
 
-    const options = ROW_PRESET_OPTIONS[preset];
     let cancelled = false;
 
     const runLayout = () => {
@@ -55,12 +31,15 @@ export function useHeroHighlightRows(
       const width = containerEl.clientWidth;
       if (width <= 0) return;
 
-      const measurer = createHighlightSegmentMeasurer(containerEl);
+      const measurer =
+        preset === "gap"
+          ? createHighlightGapRowMeasurer(containerEl)
+          : createHighlightSegmentMeasurer(containerEl);
+
       const nextRows = layoutHeroHighlightRows(
         highlights,
         width,
         measurer.measure,
-        options,
       );
       measurer.destroy();
 

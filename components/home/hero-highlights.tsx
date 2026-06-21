@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useRef } from "react";
+import { useRef } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { getHeroHighlightManualRows } from "@/content/hero-highlight-manual-rows";
@@ -12,7 +12,6 @@ import {
 import { useHeroHighlightRows } from "@/lib/motion/use-hero-highlight-rows";
 
 import {
-  HighlightBullet,
   HighlightGapRow,
   HighlightGridRow,
   HighlightLabel,
@@ -111,11 +110,8 @@ function HeroHighlightsWrap({
       data-hero-load-flow
       onMouseLeave={() => onHover(null)}
     >
-      {highlights.map((item, index) => (
-        <Fragment key={item.id}>
-          {index > 0 ? <HighlightBullet /> : null}
-          <HighlightLabel item={item} onHover={onHover} />
-        </Fragment>
+      {highlights.map((item) => (
+        <HighlightLabel key={item.id} item={item} onHover={onHover} />
       ))}
     </div>
   );
@@ -132,17 +128,8 @@ function HeroHighlightsJustify({
       onMouseLeave={() => onHover(null)}
     >
       <p className="hero-highlights__flow">
-        {highlights.map((item, index) => (
+        {highlights.map((item) => (
           <span key={item.id} className="hero-highlights__unit">
-            {index > 0 ? (
-              <span
-                className="hero-highlights__bullet"
-                data-hero-load-segment
-                aria-hidden
-              >
-                •
-              </span>
-            ) : null}
             <HighlightLabel item={item} onHover={onHover} />
           </span>
         ))}

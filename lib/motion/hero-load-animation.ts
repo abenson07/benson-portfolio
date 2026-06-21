@@ -1,7 +1,9 @@
 import gsap from "gsap";
-import SplitType from "split-type";
 
-import { fitHeroTitle } from "@/lib/motion/use-fit-hero-title";
+import {
+  getHeroTitleChars,
+  layoutHeroTitle,
+} from "@/lib/motion/use-fit-hero-title";
 import { prefersReducedMotion } from "@/lib/motion/lenis-gsap";
 
 export const HERO_LOAD_STAGGER = 0.2;
@@ -11,7 +13,12 @@ export const HERO_NAV_DURATION = 0.5;
 export const HERO_NAV_LEAD = 1;
 export const HERO_LOAD_EASE = "power3.out";
 
-const REVEAL_FROM = { opacity: 0, yPercent: 100 as number };
+const REVEAL_FROM = {
+  opacity: 0,
+  yPercent: 100 as number,
+  transformOrigin: "50% 100%",
+};
+
 const REVEAL_TO = {
   opacity: 1,
   yPercent: 0,
@@ -26,6 +33,7 @@ type HeroLoadTargets = {
   titleContainerEl: HTMLElement;
   headerEl: HTMLElement;
   highlightsFlowEl: HTMLElement;
+  highlightsWrapperEl: HTMLElement | null;
 };
 
 function getFlowSegments(flowEl: HTMLElement): HTMLElement[] {
@@ -43,9 +51,10 @@ function getBensonEndTime(charCount: number) {
 function commitFinalState(
   targets: HeroLoadTargets,
   titleChars: HTMLElement[],
+  onComplete?: () => void,
 ) {
   if (titleChars.length) {
-    gsap.set(titleChars, { yPercent: 0, opacity: 1 });
+    gsap.set(titleChars, { yPercent: 0, opacity: 1, clearProps: "transform" });
   } else {
     gsap.set(targets.titleEl, { opacity: 1 });
   }
@@ -56,10 +65,13 @@ function commitFinalState(
     opacity: 1,
   });
   gsap.set(targets.headerEl, { yPercent: 0, opacity: 1 });
+  onComplete?.();
 }
 
-export function runHeroLoadAnimation(targets: HeroLoadTargets): () => void {
-  let titleSplit: SplitType | null = null;
+export function runHeroLoadAnimation(
+  targets: HeroLoadTargets,
+  onComplete?: () => void,
+): () => void {
   let timeline: gsap.core.Timeline | null = null;
   let cancelled = false;
 
@@ -67,43 +79,34 @@ export function runHeroLoadAnimation(targets: HeroLoadTargets): () => void {
     cancelled = true;
     timeline?.kill();
     timeline = null;
-    titleSplit?.revert();
-    titleSplit = null;
   };
 
   const run = async () => {
     await document.fonts.ready;
     if (cancelled) return;
 
-    fitHeroTitle(targets.titleEl, targets.titleContainerEl);
+    layoutHeroTitle(
+      targets.titleEl,
+      targets.titleContainerEl,
+      targets.highlightsWrapperEl,
+    );
 
-    titleSplit = new SplitType(targets.titleEl, {
-      types: "chars",
-      tagName: "span",
-    });
-
-    fitHeroTitle(targets.titleEl, targets.titleContainerEl);
-
-    const titleChars = titleSplit.chars ?? [];
+    const titleChars = Array.from(getHeroTitleChars(targets.titleEl));
 
     if (prefersReducedMotion()) {
-      titleSplit.revert();
-      titleSplit = null;
       gsap.set(targets.titleEl, { opacity: 1 });
       gsap.set(targets.headerEl, { yPercent: 0, opacity: 1 });
-      commitFinalState(targets, []);
+      commitFinalState(targets, titleChars, onComplete);
       return;
     }
 
     if (!titleChars.length) {
-      titleSplit.revert();
-      titleSplit = null;
-      commitFinalState(targets, []);
+      commitFinalState(targets, [], onComplete);
       return;
     }
 
+    gsap.set(titleChars, REVEAL_FROM);
     gsap.set(targets.titleEl, { opacity: 1 });
-    gsap.set(titleChars, { display: "inline-block", ...REVEAL_FROM });
     gsap.set(targets.highlightsFlowEl, { ...REVEAL_FROM });
     gsap.set(getFlowSegments(targets.highlightsFlowEl), {
       opacity: 1,
@@ -112,7 +115,6 @@ export function runHeroLoadAnimation(targets: HeroLoadTargets): () => void {
     gsap.set(targets.headerEl, NAV_FROM);
 
     timeline = gsap.timeline();
-
     timeline.addLabel("loadStart", 0);
 
     timeline.to(
@@ -148,9 +150,13 @@ export function runHeroLoadAnimation(targets: HeroLoadTargets): () => void {
       },
       navStart,
     );
+
+    timeline.eventCallback("onComplete", () => {
+      onComplete?.();
+    });
   };
 
   void run();
 
   return cleanup;
-}
+};

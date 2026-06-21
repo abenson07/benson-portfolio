@@ -17,6 +17,7 @@ import { useFitHeroTitle } from "@/lib/motion/use-fit-hero-title";
 import { CustomCursor, useCustomCursorEnabled } from "./custom-cursor";
 import { HeroBackground } from "./hero-background";
 import { HeroHighlightsSection } from "./hero-highlights-section";
+import { HeroTitle } from "./hero-title";
 import { SignatureHeader } from "./signature-header";
 
 type HeroStageProps = {
@@ -25,10 +26,12 @@ type HeroStageProps = {
 
 const BACKGROUND_DEBOUNCE_MS = 180;
 const HOVER_TRANSITION_DURATION = 0.75;
+const CHROME_FADE_DURATION = 0.4;
 const BACKGROUND_CROSSFADE_DURATION = 1.25;
 
 export function HeroStage({ highlights }: HeroStageProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [loadComplete, setLoadComplete] = useState(false);
   const [backgroundUrl, setBackgroundUrl] = useState<string | null>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -36,10 +39,11 @@ export function HeroStage({ highlights }: HeroStageProps) {
   const titleContainerRef = useRef<HTMLDivElement>(null);
   const highlightsRef = useRef<HTMLDivElement>(null);
   const prevActiveIdRef = useRef<string | null>(null);
+  const hoverFadeReadyRef = useRef(false);
   const cursorEnabled = useCustomCursorEnabled();
   const { isOpen: isWorkModalOpen } = useWorkOverlay();
 
-  useFitHeroTitle(titleRef, titleContainerRef);
+  useFitHeroTitle(titleRef, titleContainerRef, highlightsRef);
 
   const activeHighlight = highlights.find((item) => item.id === activeId) ?? null;
   const activeLabel = activeHighlight?.label ?? null;
@@ -79,12 +83,16 @@ export function HeroStage({ highlights }: HeroStageProps) {
     if (!titleEl || !titleContainerEl || !headerEl || !highlightsEl) return;
 
     let cleanup: (() => void) | undefined;
+    let cancelled = false;
 
     const init = async () => {
       await document.fonts.ready;
+      if (cancelled) return;
 
       let flowEl: HTMLElement | null = null;
       for (let attempt = 0; attempt < 30; attempt += 1) {
+        if (cancelled) return;
+
         await new Promise<void>((resolve) => {
           requestAnimationFrame(() => resolve());
         });
@@ -101,19 +109,28 @@ export function HeroStage({ highlights }: HeroStageProps) {
         flowEl = null;
       }
 
-      if (!flowEl) return;
+      if (!flowEl || cancelled) return;
 
-      cleanup = runHeroLoadAnimation({
-        titleEl,
-        titleContainerEl,
-        headerEl,
-        highlightsFlowEl: flowEl,
-      });
+      cleanup = runHeroLoadAnimation(
+        {
+          titleEl,
+          titleContainerEl,
+          headerEl,
+          highlightsFlowEl: flowEl,
+          highlightsWrapperEl: highlightsEl,
+        },
+        () => {
+          setLoadComplete(true);
+        },
+      );
     };
 
     void init();
 
-    return () => cleanup?.();
+    return () => {
+      cancelled = true;
+      cleanup?.();
+    };
   }, []);
 
   useEffect(() => {
@@ -132,6 +149,34 @@ export function HeroStage({ highlights }: HeroStageProps) {
       ease: "power2.inOut",
     });
   }, [activeId]);
+
+  useEffect(() => {
+    if (!loadComplete) return;
+
+    if (!hoverFadeReadyRef.current) {
+      hoverFadeReadyRef.current = true;
+      if (activeId === null) return;
+    }
+
+    const highlightsFlowEl = highlightsRef.current?.querySelector<HTMLElement>(
+      "[data-hero-load-flow]",
+    );
+    const headerEl = headerRef.current;
+    const titleEl = titleRef.current;
+    if (!highlightsFlowEl || !headerEl || !titleEl) return;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const duration = reducedMotion ? 0 : CHROME_FADE_DURATION;
+
+    gsap.to([highlightsFlowEl, headerEl, titleEl], {
+      opacity: activeId ? 0 : 1,
+      duration,
+      ease: "power2.inOut",
+      overwrite: "auto",
+    });
+  }, [activeId, loadComplete]);
 
   const handleHover = useCallback((id: string | null) => {
     setActiveId(id);
@@ -168,14 +213,7 @@ export function HeroStage({ highlights }: HeroStageProps) {
           <div ref={highlightsRef} className="hero-highlights-wrapper">
             <HeroHighlightsSection highlights={highlights} onHover={handleHover} />
           </div>
-          <div
-            ref={titleRef}
-            className="hero-title"
-            data-title-text="BENSON"
-            aria-hidden
-          >
-            BENSON
-          </div>
+          <HeroTitle ref={titleRef} />
         </div>
 
         <CustomCursor
