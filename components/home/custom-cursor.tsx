@@ -23,7 +23,7 @@ function measureCircleSize(label: string): number {
     position: absolute;
     visibility: hidden;
     white-space: nowrap;
-    font-family: "PP Migra", "Iowan Old Style", "Palatino Linotype", serif;
+    font-family: var(--font-pp-migra), "Iowan Old Style", "Palatino Linotype", serif;
     font-size: clamp(1.25rem, 2.4vw, 2rem);
     font-weight: 400;
     line-height: 1.1;

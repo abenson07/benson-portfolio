@@ -58,7 +58,7 @@
   border-radius: 999px;
   background: transparent;
   color: var(--cs-foreground);
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: 0.9375rem;
   font-weight: 500;
   line-height: 1;
@@ -106,7 +106,7 @@
 
 .case-study-sidebar__title {
   margin: 0;
-  font-family: "PP Neue Corp Tight", "Arial Black", sans-serif;
+  font-family: var(--font-pp-neue-corp-tight), "Arial Black", sans-serif;
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 800;
   line-height: 0.88;
@@ -129,7 +129,7 @@
   border-radius: 999px;
   background: var(--cs-accent);
   color: #f0ece4;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: 0.9375rem;
   font-weight: 500;
   line-height: 1;
@@ -146,7 +146,7 @@
 }
 
 .case-study-sidebar__tag {
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--cs-muted);
@@ -154,7 +154,7 @@
 
 .case-study-sidebar__lead {
   margin: 0;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: clamp(1rem, 1.35vw, 1.125rem);
   font-weight: 500;
   line-height: 1.45;
@@ -168,7 +168,7 @@
 
 .case-study-sidebar__paragraph {
   margin: 0;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
   font-weight: 500;
   line-height: 1.55;
@@ -190,7 +190,7 @@
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
   font-weight: 500;
   line-height: 1.4;
@@ -225,7 +225,7 @@
 
 .case-study-awards__heading {
   margin: 0 0 1.25rem;
-  font-family: "PP Migra", "Iowan Old Style", "Palatino Linotype", serif;
+  font-family: var(--font-pp-migra), "Iowan Old Style", "Palatino Linotype", serif;
   font-size: clamp(1.75rem, 2.5vw, 2.25rem);
   font-weight: 400;
   line-height: 1.1;
@@ -245,7 +245,7 @@
   gap: 1rem;
   padding-block: 0.85rem;
   border-top: 1px solid rgba(26, 27, 26, 0.12);
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: clamp(0.8125rem, 1vw, 0.9375rem);
   font-weight: 500;
   line-height: 1.35;
@@ -302,7 +302,7 @@
 
 .case-study-placeholder__label {
   padding: 1rem;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -329,7 +329,7 @@
 
 .case-study-quote__text {
   margin: 0;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: clamp(1.75rem, 3.2vw, 3rem);
   font-weight: 500;
   line-height: 1.08;
@@ -356,7 +356,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-top: 1.5rem;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--cs-muted);
@@ -375,7 +375,7 @@
 
 .case-study-up-next__eyebrow {
   margin: 0 0 clamp(1.25rem, 3vh, 2rem);
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 500;
   line-height: 0.95;
@@ -423,6 +423,29 @@
   .case-study-media__duo {
     grid-template-columns: 1fr;
   }
+}
+
+.case-study-page--modal-mobile .case-study-mobile-modal {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vh, 3rem);
+}
+
+.case-study-page--modal-mobile .case-study-sidebar,
+.case-study-page--modal-mobile .case-study-media {
+  position: static;
+  top: auto;
+  max-width: none;
+}
+
+.case-study-mobile-modal__hero-media,
+.case-study-mobile-modal__rest-media {
+  width: 100%;
+}
+
+.case-study-mobile-modal__intro.case-study-sidebar,
+.case-study-mobile-modal__body.case-study-sidebar {
+  gap: clamp(1.5rem, 3vh, 2.5rem);
 }
 
 @media (prefers-reduced-motion: reduce) {

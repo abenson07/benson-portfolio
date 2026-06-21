@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 
+import { ppMigra } from "@/lib/fonts/pp-migra";
+import { ppNeueCorpCompact } from "@/lib/fonts/pp-neue-corp-compact";
+import { ppNeueCorpTight } from "@/lib/fonts/pp-neue-corp-tight";
+import { rockSalt } from "@/lib/fonts/rock-salt";
 import { WorkOverlayProvider } from "@/components/work/work-overlay-context";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -20,7 +24,10 @@ export default function RootLayout({
   modal: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html
+      lang="en"
+      className={`h-full ${ppMigra.variable} ${ppNeueCorpCompact.variable} ${ppNeueCorpTight.variable} ${rockSalt.variable}`}
+    >
       <body className="min-h-full">
         <WorkOverlayProvider>
           {children}

@@ -121,7 +121,7 @@
 
 .work-filter__label {
   margin: 0;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.14em;
@@ -142,7 +142,7 @@
   border: 0;
   padding: 0;
   background: transparent;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -198,7 +198,7 @@
   grid-area: title;
   display: block;
   margin: 0;
-  font-family: "PP Neue Corp Tight", "Arial Black", sans-serif;
+  font-family: var(--font-pp-neue-corp-tight), "Arial Black", sans-serif;
   font-size: clamp(2.5rem, calc(92px * (100vw / 1440px)), 500px);
   font-weight: 800;
   font-style: normal;
@@ -234,7 +234,7 @@
   z-index: 1;
   margin: 0;
   padding: 0 1rem;
-  font-family: "PP Neue Corp Compact", "Helvetica Neue", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
   font-size: clamp(0.625rem, 0.85vw, 0.75rem);
   font-weight: 500;
   letter-spacing: 0.16em;
@@ -253,7 +253,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "PP Neue Corp Compact", sans-serif;
+  font-family: var(--font-pp-neue-corp-compact), sans-serif;
   font-size: 0.875rem;
   color: var(--work-text-muted);
 }

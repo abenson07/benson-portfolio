@@ -1,11 +1,12 @@
 import gsap from "gsap";
 import SplitType from "split-type";
 
+import { fitHeroTitle } from "@/lib/motion/use-fit-hero-title";
 import { prefersReducedMotion } from "@/lib/motion/lenis-gsap";
 
 export const HERO_LOAD_STAGGER = 0.2;
 export const HERO_LOAD_DURATION = 0.72;
-export const HERO_ROW_DURATION = 1.5;
+export const HERO_ROW_DURATION = 0.85;
 export const HERO_NAV_DURATION = 0.5;
 export const HERO_NAV_LEAD = 1;
 export const HERO_LOAD_EASE = "power3.out";
@@ -22,14 +23,14 @@ const NAV_FROM = { opacity: 0, yPercent: -100 as number };
 
 type HeroLoadTargets = {
   titleEl: HTMLElement;
+  titleContainerEl: HTMLElement;
   headerEl: HTMLElement;
-  bottomRowEl: HTMLElement;
-  topRowEl: HTMLElement;
+  highlightsFlowEl: HTMLElement;
 };
 
-function getRowSegments(rowEl: HTMLElement): HTMLElement[] {
+function getFlowSegments(flowEl: HTMLElement): HTMLElement[] {
   return Array.from(
-    rowEl.querySelectorAll<HTMLElement>("[data-hero-load-segment]"),
+    flowEl.querySelectorAll<HTMLElement>("[data-hero-load-segment]"),
   );
 }
 
@@ -39,28 +40,9 @@ function getBensonEndTime(charCount: number) {
   return (charCount - 1) * HERO_LOAD_STAGGER + HERO_LOAD_DURATION;
 }
 
-function getRowRevealVars(segmentCount: number) {
-  if (segmentCount <= 1) {
-    return {
-      duration: HERO_ROW_DURATION,
-      stagger: 0,
-    };
-  }
-
-  return {
-    duration: HERO_LOAD_DURATION,
-    stagger: {
-      amount: HERO_ROW_DURATION - HERO_LOAD_DURATION,
-      from: "start" as const,
-    },
-  };
-}
-
 function commitFinalState(
   targets: HeroLoadTargets,
   titleChars: HTMLElement[],
-  bottomSegments: HTMLElement[],
-  topSegments: HTMLElement[],
 ) {
   if (titleChars.length) {
     gsap.set(titleChars, { yPercent: 0, opacity: 1 });
@@ -68,8 +50,11 @@ function commitFinalState(
     gsap.set(targets.titleEl, { opacity: 1 });
   }
 
-  gsap.set(bottomSegments, { yPercent: 0, opacity: 1 });
-  gsap.set(topSegments, { yPercent: 0, opacity: 1 });
+  gsap.set(targets.highlightsFlowEl, { yPercent: 0, opacity: 1 });
+  gsap.set(getFlowSegments(targets.highlightsFlowEl), {
+    yPercent: 0,
+    opacity: 1,
+  });
   gsap.set(targets.headerEl, { yPercent: 0, opacity: 1 });
 }
 
@@ -90,13 +75,14 @@ export function runHeroLoadAnimation(targets: HeroLoadTargets): () => void {
     await document.fonts.ready;
     if (cancelled) return;
 
-    const bottomSegments = getRowSegments(targets.bottomRowEl);
-    const topSegments = getRowSegments(targets.topRowEl);
+    fitHeroTitle(targets.titleEl, targets.titleContainerEl);
 
     titleSplit = new SplitType(targets.titleEl, {
       types: "chars",
       tagName: "span",
     });
+
+    fitHeroTitle(targets.titleEl, targets.titleContainerEl);
 
     const titleChars = titleSplit.chars ?? [];
 
@@ -105,21 +91,24 @@ export function runHeroLoadAnimation(targets: HeroLoadTargets): () => void {
       titleSplit = null;
       gsap.set(targets.titleEl, { opacity: 1 });
       gsap.set(targets.headerEl, { yPercent: 0, opacity: 1 });
-      commitFinalState(targets, [], bottomSegments, topSegments);
+      commitFinalState(targets, []);
       return;
     }
 
     if (!titleChars.length) {
       titleSplit.revert();
       titleSplit = null;
-      commitFinalState(targets, [], bottomSegments, topSegments);
+      commitFinalState(targets, []);
       return;
     }
 
     gsap.set(targets.titleEl, { opacity: 1 });
     gsap.set(titleChars, { display: "inline-block", ...REVEAL_FROM });
-    gsap.set(bottomSegments, { display: "inline-block", ...REVEAL_FROM });
-    gsap.set(topSegments, { display: "inline-block", ...REVEAL_FROM });
+    gsap.set(targets.highlightsFlowEl, { ...REVEAL_FROM });
+    gsap.set(getFlowSegments(targets.highlightsFlowEl), {
+      opacity: 1,
+      yPercent: 0,
+    });
     gsap.set(targets.headerEl, NAV_FROM);
 
     timeline = gsap.timeline();
@@ -136,19 +125,12 @@ export function runHeroLoadAnimation(targets: HeroLoadTargets): () => void {
     );
 
     timeline.to(
-      bottomSegments,
+      targets.highlightsFlowEl,
       {
-        ...REVEAL_TO,
-        ...getRowRevealVars(bottomSegments.length),
-      },
-      `loadStart+=${HERO_LOAD_STAGGER}`,
-    );
-
-    timeline.to(
-      topSegments,
-      {
-        ...REVEAL_TO,
-        ...getRowRevealVars(topSegments.length),
+        opacity: 1,
+        yPercent: 0,
+        duration: HERO_ROW_DURATION,
+        ease: HERO_LOAD_EASE,
       },
       `loadStart+=${HERO_LOAD_STAGGER}`,
     );

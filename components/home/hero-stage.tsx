@@ -12,10 +12,11 @@ import {
 import { useWorkOverlay } from "@/components/work/work-overlay-context";
 
 import { runHeroLoadAnimation } from "@/lib/motion/hero-load-animation";
+import { useFitHeroTitle } from "@/lib/motion/use-fit-hero-title";
 
 import { CustomCursor, useCustomCursorEnabled } from "./custom-cursor";
 import { HeroBackground } from "./hero-background";
-import { HeroHighlights } from "./hero-highlights";
+import { HeroHighlightsSection } from "./hero-highlights-section";
 import { SignatureHeader } from "./signature-header";
 
 type HeroStageProps = {
@@ -32,10 +33,13 @@ export function HeroStage({ highlights }: HeroStageProps) {
   const portraitRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
+  const titleContainerRef = useRef<HTMLDivElement>(null);
   const highlightsRef = useRef<HTMLDivElement>(null);
   const prevActiveIdRef = useRef<string | null>(null);
   const cursorEnabled = useCustomCursorEnabled();
   const { isOpen: isWorkModalOpen } = useWorkOverlay();
+
+  useFitHeroTitle(titleRef, titleContainerRef);
 
   const activeHighlight = highlights.find((item) => item.id === activeId) ?? null;
   const activeLabel = activeHighlight?.label ?? null;
@@ -69,24 +73,47 @@ export function HeroStage({ highlights }: HeroStageProps) {
 
   useEffect(() => {
     const titleEl = titleRef.current;
+    const titleContainerEl = titleContainerRef.current;
     const headerEl = headerRef.current;
     const highlightsEl = highlightsRef.current;
-    if (!titleEl || !headerEl || !highlightsEl) return;
+    if (!titleEl || !titleContainerEl || !headerEl || !highlightsEl) return;
 
-    const bottomRowEl = highlightsEl.querySelector<HTMLElement>(
-      '[data-hero-load-row="bottom"]',
-    );
-    const topRowEl = highlightsEl.querySelector<HTMLElement>(
-      '[data-hero-load-row="top"]',
-    );
-    if (!bottomRowEl || !topRowEl) return;
+    let cleanup: (() => void) | undefined;
 
-    return runHeroLoadAnimation({
-      titleEl,
-      headerEl,
-      bottomRowEl,
-      topRowEl,
-    });
+    const init = async () => {
+      await document.fonts.ready;
+
+      let flowEl: HTMLElement | null = null;
+      for (let attempt = 0; attempt < 30; attempt += 1) {
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve());
+        });
+
+        flowEl = highlightsEl.querySelector<HTMLElement>(
+          "[data-hero-load-flow]",
+        );
+        if (
+          flowEl?.querySelector("[data-hero-load-segment]") ||
+          flowEl?.querySelector("[data-hero-load-row]")
+        ) {
+          break;
+        }
+        flowEl = null;
+      }
+
+      if (!flowEl) return;
+
+      cleanup = runHeroLoadAnimation({
+        titleEl,
+        titleContainerEl,
+        headerEl,
+        highlightsFlowEl: flowEl,
+      });
+    };
+
+    void init();
+
+    return () => cleanup?.();
   }, []);
 
   useEffect(() => {
@@ -137,11 +164,16 @@ export function HeroStage({ highlights }: HeroStageProps) {
       >
         <SignatureHeader ref={headerRef} />
 
-        <div className="hero-content-wrapper">
-          <div ref={highlightsRef}>
-            <HeroHighlights highlights={highlights} onHover={handleHover} />
+        <div ref={titleContainerRef} className="hero-content-wrapper">
+          <div ref={highlightsRef} className="hero-highlights-wrapper">
+            <HeroHighlightsSection highlights={highlights} onHover={handleHover} />
           </div>
-          <div ref={titleRef} className="hero-title" aria-hidden>
+          <div
+            ref={titleRef}
+            className="hero-title"
+            data-title-text="BENSON"
+            aria-hidden
+          >
             BENSON
           </div>
         </div>
