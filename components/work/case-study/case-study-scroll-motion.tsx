@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
 
-const SCROLLER_SELECTOR = ".work-page";
+const SCROLLER_SELECTORS = [".work-modal__panel", ".work-page"] as const;
 const SCROLL_START = "top 88%";
 
 const MEDIA_REVEAL_DURATION = 0.85;
@@ -21,7 +21,14 @@ type CaseStudyScrollMotionProps = {
 };
 
 function getScroller(root: HTMLElement): HTMLElement | null {
-  return root.closest(SCROLLER_SELECTOR);
+  for (const selector of SCROLLER_SELECTORS) {
+    const scroller = root.closest(selector);
+    if (scroller instanceof HTMLElement) {
+      return scroller;
+    }
+  }
+
+  return null;
 }
 
 function setupMediaReveals(

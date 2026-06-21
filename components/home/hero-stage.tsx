@@ -9,6 +9,8 @@ import {
   type HeroHighlight,
 } from "@/content/hero-highlights";
 
+import { useWorkOverlay } from "@/components/work/work-overlay-context";
+
 import { CustomCursor, useCustomCursorEnabled } from "./custom-cursor";
 import { HeroBackground } from "./hero-background";
 import { HeroHighlights } from "./hero-highlights";
@@ -27,6 +29,7 @@ export function HeroStage({ highlights }: HeroStageProps) {
   const portraitRef = useRef<HTMLDivElement>(null);
   const prevActiveIdRef = useRef<string | null>(null);
   const cursorEnabled = useCustomCursorEnabled();
+  const { isOpen: isWorkModalOpen } = useWorkOverlay();
 
   const activeHighlight = highlights.find((item) => item.id === activeId) ?? null;
   const activeLabel = activeHighlight?.label ?? null;
@@ -108,7 +111,10 @@ export function HeroStage({ highlights }: HeroStageProps) {
           </div>
         </div>
 
-        <CustomCursor label={activeLabel} enabled={cursorEnabled} />
+        <CustomCursor
+          label={activeLabel}
+          enabled={cursorEnabled && !isWorkModalOpen}
+        />
       </div>
     </>
   );

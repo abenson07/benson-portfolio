@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import type { HeroHighlight } from "@/content/hero-highlights";
 
 type HeroHighlightsProps = {
@@ -25,15 +27,15 @@ export function HeroHighlights({
                 •{" "}
               </span>
             ) : null}
-            <button
-              type="button"
+            <Link
+              href={`/work/${item.slug}`}
               className="hero-highlights__label"
               onMouseEnter={() => onHover(item.id)}
               onFocus={() => onHover(item.id)}
               onBlur={() => onHover(null)}
             >
               {item.label}
-            </button>
+            </Link>
           </span>
         ))}
       </p>

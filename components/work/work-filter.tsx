@@ -12,6 +12,7 @@ const filters: { id: WorkFilterCategory; label: string }[] = [
   { id: "all", label: "ALL" },
   { id: "product-design", label: "PRODUCT DESIGN" },
   { id: "strategy-research", label: "STRATEGY & RESEARCH" },
+  { id: "employer", label: "EMPLOYER" },
 ];
 
 export function WorkFilter({ activeCategory, onChange }: WorkFilterProps) {

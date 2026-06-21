@@ -1,0 +1,179 @@
+.work-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  --work-modal-top-offset: max(20vh, 200px);
+}
+
+.work-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: #0a0a0a;
+  opacity: 0;
+  pointer-events: auto;
+}
+
+/* Lenis `.modal` equivalent — full-viewport scroll container */
+.work-modal__panel {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding-inline: 30px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: auto;
+}
+
+.work-modal__panel--exiting {
+  overflow: hidden;
+}
+
+/* `modal-inner` — top offset + slides on enter/exit; grows with content */
+.work-modal__inner {
+  position: relative;
+  width: 100%;
+  margin-top: var(--work-modal-top-offset);
+  min-height: calc(100% - var(--work-modal-top-offset));
+  overflow: visible;
+  will-change: transform;
+}
+
+/* `modal-inner__bg` — cream surface; stretches with inner, expands on scroll */
+.work-modal__bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  background: #f0ece4;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  pointer-events: none;
+}
+
+.work-modal__close {
+  position: absolute;
+  top: clamp(1rem, 2.5vw, 1.75rem);
+  right: clamp(1rem, 3vw, 2rem);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  border-radius: 999px;
+  background: rgba(26, 27, 26, 0.08);
+  color: #1a1b1a;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.work-modal__close:hover {
+  background: rgba(26, 27, 26, 0.14);
+}
+
+/* `modal-content` */
+.work-modal__content {
+  position: relative;
+  z-index: 1;
+  --cs-bg: transparent;
+  --cs-foreground: #1a1b1a;
+  --cs-muted: rgba(26, 27, 26, 0.55);
+  --cs-accent: #1f3d2b;
+  --cs-frame: #191919;
+  --cs-sticky-top: 0px;
+  --cs-page-padding: clamp(1.25rem, 4vw, 3.75rem);
+  --cs-column-gap: clamp(2rem, 5vw, 4.5rem);
+  color: var(--cs-foreground);
+}
+
+.work-modal__content .case-study-page--modal {
+  background: transparent;
+}
+
+.work-modal__content .case-study-scroll {
+  padding: clamp(1.5rem, 4vh, 3rem) var(--cs-page-padding)
+    clamp(4rem, 10vh, 7rem);
+}
+
+.work-modal__content .case-study-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.48fr);
+  gap: var(--cs-column-gap);
+  align-items: start;
+}
+
+.work-modal__content .case-study-sidebar,
+.work-modal__content .case-study-media {
+  position: sticky;
+  top: var(--cs-sticky-top);
+}
+
+body.work-modal-open {
+  --work-modal-chrome-progress: 0;
+}
+
+body.work-modal-open .page-wrapper {
+  pointer-events: none;
+}
+
+body.work-modal-open .body-wrapper .signature-header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 110;
+  padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 3.75rem) 0;
+  pointer-events: auto;
+}
+
+body.work-modal-open .signature-header__logo-image {
+  filter: invert(var(--work-modal-chrome-progress, 0));
+}
+
+body.work-modal-open .signature-header__status-label {
+  color: color-mix(
+    in srgb,
+    var(--foreground) calc((1 - var(--work-modal-chrome-progress, 0)) * 100%),
+    rgba(26, 27, 26, 0.55) calc(var(--work-modal-chrome-progress, 0) * 100%)
+  );
+}
+
+body.work-modal-open .signature-header__status-value {
+  color: color-mix(
+    in srgb,
+    var(--muted) calc((1 - var(--work-modal-chrome-progress, 0)) * 100%),
+    rgba(26, 27, 26, 0.4) calc(var(--work-modal-chrome-progress, 0) * 100%)
+  );
+}
+
+body.work-modal-open .custom-cursor {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .work-modal__panel {
+    padding-inline: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .work-modal__content .case-study-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .work-modal__content .case-study-sidebar,
+  .work-modal__content .case-study-media {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-modal__inner {
+    will-change: auto;
+  }
+}

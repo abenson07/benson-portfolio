@@ -1,39 +1,40 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getCaseStudy, getCaseStudySlugs } from "@/content/case-studies";
+import { CaseStudyPage } from "@/components/work/case-study/case-study-page";
+import { getWorkPage, getWorkPageSlugs } from "@/content/work-pages";
 
-type CaseStudyPageProps = {
+type WorkProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-  return getCaseStudySlugs().map((slug) => ({ slug }));
+  return getWorkPageSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
-}: CaseStudyPageProps): Promise<Metadata> {
+}: WorkProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const study = getCaseStudy(slug);
+  const page = getWorkPage(slug);
 
-  if (!study) {
-    return { title: "Case study not found" };
+  if (!page) {
+    return { title: "Project not found" };
   }
 
   return {
-    title: study.title,
-    description: study.summary,
+    title: page.title,
+    description: page.summary,
   };
 }
 
-export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
+export default async function WorkProjectPage({ params }: WorkProjectPageProps) {
   const { slug } = await params;
-  const study = getCaseStudy(slug);
+  const page = getWorkPage(slug);
 
-  if (!study) {
+  if (!page) {
     notFound();
   }
 
-  return null;
+  return <CaseStudyPage content={page} />;
 }

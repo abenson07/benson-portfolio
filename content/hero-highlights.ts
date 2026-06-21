@@ -1,30 +1,32 @@
+import { getWorkPage } from "@/content/work-pages";
+
 export type HeroHighlight = {
   id: string;
   label: string;
+  slug: string;
   backgroundImageUrl?: string;
 };
 
 export const heroHighlights: HeroHighlight[] = [
-  { id: "healthcare", label: "Healthcare" },
-  { id: "midwestern-originals", label: "Midwestern Originals" },
-  { id: "cybersecurity", label: "Cybersecurity" },
-  { id: "code-koalas", label: "Code Koalas" },
-  { id: "fintech", label: "Fintech" },
-  { id: "micronutrition", label: "Micronutrition", backgroundImageUrl: "/work/nutrilyze-cover.png" },
-  { id: "big-tech", label: "Big Tech" },
-  { id: "transit", label: "Transit" },
-  { id: "webflow", label: "Webflow" },
-  { id: "adtech", label: "Adtech", backgroundImageUrl: "/work/eclipse-rx.png" },
-  { id: "skincare", label: "Skincare" },
-  { id: "crema", label: "Crema" },
-  { id: "analytics", label: "Analytics" },
-  { id: "nuclear-plumbing", label: "Nuclear Plumbing" },
-  { id: "agency", label: "Agency" },
-  { id: "smbs", label: "SMBs" },
-  { id: "aviation", label: "Aviation" },
-  { id: "dave", label: "Dave" },
-  { id: "streaming", label: "Streaming" },
-  { id: "meta", label: "Meta" },
+  { id: "healthcare", label: "Healthcare", slug: "eclipse-rx" },
+  { id: "midwestern-originals", label: "Midwestern Originals", slug: "mwo" },
+  { id: "cybersecurity", label: "Cybersecurity", slug: "secure-blueprint" },
+  { id: "code-koalas", label: "Code Koalas", slug: "sociy" },
+  { id: "fintech", label: "Fintech", slug: "flexcard" },
+  { id: "nutrition", label: "Nutrition", slug: "nutrilyze" },
+  { id: "big-tech", label: "Big Tech", slug: "contextual-messaging" },
+  { id: "meta", label: "Meta", slug: "outcome-driven-signals-setup" },
+  { id: "transit", label: "Transit", slug: "boring-app" },
+  { id: "webflow", label: "Webflow", slug: "webflow" },
+  { id: "adtech", label: "Adtech", slug: "conversions-api" },
+  { id: "skincare", label: "Skincare", slug: "eclipse-rx" },
+  { id: "crema", label: "Crema", slug: "crema" },
+  { id: "analytics", label: "Analytics", slug: "analyze" },
+  { id: "nuclear-plumbing", label: "Nuclear Plumbing", slug: "crema" },
+  { id: "agency", label: "Agency", slug: "agency" },
+  { id: "aviation", label: "Aviation", slug: "flight-pro" },
+  { id: "dave", label: "Dave", slug: "dave" },
+  { id: "streaming", label: "Streaming", slug: "omnibox" },
 ];
 
 function hashString(value: string): number {
@@ -61,5 +63,14 @@ export function getHighlightPlaceholderBg(id: string): string {
 }
 
 export function getHighlightBackgroundUrl(highlight: HeroHighlight): string {
-  return highlight.backgroundImageUrl ?? getHighlightPlaceholderBg(highlight.id);
+  if (highlight.backgroundImageUrl) {
+    return highlight.backgroundImageUrl;
+  }
+
+  const workPage = getWorkPage(highlight.slug);
+  if (workPage?.coverImageUrl) {
+    return workPage.coverImageUrl;
+  }
+
+  return getHighlightPlaceholderBg(highlight.id);
 }

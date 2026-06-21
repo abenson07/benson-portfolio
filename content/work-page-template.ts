@@ -26,6 +26,7 @@ export type WorkPageContent = {
   title: string;
   websiteUrl: string;
   primaryTag: string;
+  coverImageUrl: string;
   lead: string;
   paragraphs: string[];
   services: CaseStudyService[];
@@ -38,6 +39,7 @@ export const workPageTemplate: WorkPageContent = {
   title: "Exposing Surveillance",
   websiteUrl: "#",
   primaryTag: "Data Visualisation",
+  coverImageUrl: "/work/01.png",
   lead:
     "Surveillance Watch is an investigative journalism platform that examines the surveillance-industrial complex via a meticulously researched database of companies and services.",
   paragraphs: [
@@ -121,4 +123,24 @@ export const workPageTemplate: WorkPageContent = {
     href: "#",
     imageLabel: "Next project image",
   },
+};
+
+/** Sidebar-heavy variant: text column taller than the media column. */
+export const workPageTemplateLongCopy: WorkPageContent = {
+  ...workPageTemplate,
+  paragraphs: [
+    ...workPageTemplate.paragraphs,
+    "The research phase began with a sprawling spreadsheet of companies, subsidiaries, and procurement records gathered over years of investigative work. Our first task was to understand how journalists actually searched this material — what questions they asked, what dead ends they hit, and where the existing tools failed them.",
+    "We mapped those workflows in detail before touching visual design. That meant long sessions with the editorial team, shadowing how they cross-referenced entries, and identifying the moments where context was lost between the database and the stories they published.",
+    "PayloadCMS gave the team a flexible editorial backend without sacrificing the structured data model the journalism depended on. Content editors could attach narrative context to raw entries while developers maintained strict schemas for search and filtering.",
+    "The headless architecture also made it possible to ship iterative releases — new entity types, relationship graphs, and map layers — without rebuilding the front end each time. That mattered because the dataset grew weekly as new investigations landed.",
+    "On the visual side, we treated the globe not as decoration but as an index. Every arc and cluster needed to answer a question: where is this company active, who connects to whom, and what scale of surveillance are we looking at?",
+    "Colour, motion, and density were calibrated against real reading sessions. Too much glow and the map felt like a game; too little and the global scope disappeared. We landed on a restrained palette that kept attention on the underlying data.",
+    "Accessibility was non-negotiable for a public-interest tool. Keyboard paths, screen-reader labels, and high-contrast modes were tested alongside the more cinematic views so the platform could serve classrooms and newsrooms alike.",
+    "Launch was only the beginning. Usage analytics and journalist feedback shaped a roadmap of filters, export tools, and embeddable views that extended the reach of the original research far beyond the core site.",
+  ],
+  media: [
+    { type: "single", label: "Hero image", aspect: "landscape" },
+    { type: "duo", label: "Detail", aspect: "portrait" },
+  ],
 };

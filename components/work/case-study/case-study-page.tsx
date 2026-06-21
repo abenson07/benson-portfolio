@@ -9,14 +9,24 @@ import { CaseStudyUpNextSection } from "./case-study-up-next";
 
 type CaseStudyPageProps = {
   content: WorkPageContent;
+  variant?: "page" | "modal";
 };
 
-export function CaseStudyPage({ content }: CaseStudyPageProps) {
+export function CaseStudyPage({
+  content,
+  variant = "page",
+}: CaseStudyPageProps) {
+  const isModal = variant === "modal";
+
   return (
-    <div className="case-study-page">
-      <header className="case-study-header">
-        <SignatureHeader showStatus={false} />
-      </header>
+    <div
+      className={`case-study-page${isModal ? " case-study-page--modal" : ""}`}
+    >
+      {isModal ? null : (
+        <header className="case-study-header">
+          <SignatureHeader showStatus={false} />
+        </header>
+      )}
 
       <CaseStudyScrollMotion>
         <div className="case-study-scroll">
