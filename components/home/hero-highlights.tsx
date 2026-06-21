@@ -3,7 +3,6 @@
 import Link from "next/link";
 
 import type { HeroHighlight } from "@/content/hero-highlights";
-import { heroHoverDebug } from "@/lib/debug/hero-hover-debug";
 
 type HeroHighlightsProps = {
   highlights: HeroHighlight[];
@@ -14,15 +13,10 @@ export function HeroHighlights({
   highlights,
   onHover,
 }: HeroHighlightsProps) {
-  const handlePointer = (id: string | null, source: "mouseenter" | "mouseleave" | "focus" | "blur") => {
-    heroHoverDebug.logPointer(id, source);
-    onHover(id);
-  };
-
   return (
     <div
       className="hero-highlights"
-      onMouseLeave={() => handlePointer(null, "mouseleave")}
+      onMouseLeave={() => onHover(null)}
     >
       <p className="hero-highlights__flow">
         {highlights.map((item, index) => (
@@ -36,9 +30,9 @@ export function HeroHighlights({
             <Link
               href={`/work/${item.slug}`}
               className="hero-highlights__label"
-              onMouseEnter={() => handlePointer(item.id, "mouseenter")}
-              onFocus={() => handlePointer(item.id, "focus")}
-              onBlur={() => handlePointer(null, "blur")}
+              onMouseEnter={() => onHover(item.id)}
+              onFocus={() => onHover(item.id)}
+              onBlur={() => onHover(null)}
             >
               {item.label}
             </Link>

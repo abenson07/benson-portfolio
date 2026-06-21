@@ -10,7 +10,6 @@ import {
 } from "@/content/hero-highlights";
 
 import { useWorkOverlay } from "@/components/work/work-overlay-context";
-import { heroHoverDebug } from "@/lib/debug/hero-hover-debug";
 
 import { CustomCursor, useCustomCursorEnabled } from "./custom-cursor";
 import { HeroBackground } from "./hero-background";
@@ -37,11 +36,8 @@ export function HeroStage({ highlights }: HeroStageProps) {
   const activeLabel = activeHighlight?.label ?? null;
 
   useEffect(() => {
-    heroHoverDebug.setActiveId(activeId);
-
     if (!activeId) {
       prevActiveIdRef.current = null;
-      heroHoverDebug.setBackgroundUrl(null);
       setBackgroundUrl(null);
       return;
     }
@@ -55,13 +51,11 @@ export function HeroStage({ highlights }: HeroStageProps) {
     prevActiveIdRef.current = activeId;
 
     if (!isSwitch) {
-      heroHoverDebug.setBackgroundUrl(nextUrl);
       setBackgroundUrl(nextUrl);
       return;
     }
 
     const timeout = window.setTimeout(() => {
-      heroHoverDebug.setBackgroundUrl(nextUrl);
       setBackgroundUrl(nextUrl);
     }, BACKGROUND_DEBOUNCE_MS);
 
@@ -78,48 +72,12 @@ export function HeroStage({ highlights }: HeroStageProps) {
     const duration = reducedMotion ? 0 : HOVER_TRANSITION_DURATION;
     const isIdle = activeId === null;
 
-    heroHoverDebug.logAnimationStart("portrait-fade", {
-      activeId,
-      isIdle,
-      targetOpacity: isIdle ? 0.45 : 0,
-      duration,
-    });
-
     gsap.to(portrait, {
       opacity: isIdle ? 0.45 : 0,
       duration,
       ease: "power2.inOut",
-      onComplete: () => {
-        heroHoverDebug.logAnimationStop("portrait-fade", {
-          activeId,
-          isIdle,
-          opacity: isIdle ? 0.45 : 0,
-        });
-      },
     });
   }, [activeId]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code !== "Space" && event.key !== " ") return;
-      if (event.target instanceof HTMLElement) {
-        const tag = event.target.tagName;
-        if (tag === "INPUT" || tag === "TEXTAREA" || event.target.isContentEditable) {
-          return;
-        }
-      }
-
-      event.preventDefault();
-      heroHoverDebug.snapshot({
-        activeHighlight: activeHighlight?.label ?? null,
-        backgroundUrl,
-        isWorkModalOpen,
-      });
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeHighlight?.label, backgroundUrl, isWorkModalOpen]);
 
   const handleHover = useCallback((id: string | null) => {
     setActiveId(id);
