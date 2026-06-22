@@ -193,7 +193,7 @@ export function HeroStage({ highlights }: HeroStageProps) {
 
       <div ref={portraitRef} className="hero-portrait" aria-hidden>
         <Image
-          src="/alex-bg.png"
+          src="/alex-bg2.png"
           alt=""
           width={1200}
           height={1200}

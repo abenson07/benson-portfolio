@@ -34,7 +34,7 @@ export const heroMobileCards: HeroMobileCard[] = [
     type: "intro",
     id: "benson",
     label: "BENSON",
-    backgroundUrl: "/alex-bg.png",
+    backgroundUrl: "/alex-bg2.png",
     scribble: "scroll down",
   },
   {
