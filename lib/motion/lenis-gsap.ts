@@ -125,3 +125,13 @@ export function createLenisScroller({
 export function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
+
+const NATIVE_SCROLL_MQ = "(max-width: 960px)";
+
+export function prefersNativeScroll() {
+  if (prefersReducedMotion()) {
+    return true;
+  }
+
+  return window.matchMedia(NATIVE_SCROLL_MQ).matches;
+}

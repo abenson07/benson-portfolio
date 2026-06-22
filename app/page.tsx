@@ -1,5 +1,5 @@
-import { HomePage } from "@/components/home/home-page";
+import { ResponsiveHomePage } from "@/components/home/responsive-home-page";
 
 export default function Page() {
-  return <HomePage />;
+  return <ResponsiveHomePage />;
 }

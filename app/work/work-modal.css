@@ -29,11 +29,12 @@
   pointer-events: auto;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 960px), (prefers-reduced-motion: reduce) {
   .work-modal__panel {
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
   }
 }
 

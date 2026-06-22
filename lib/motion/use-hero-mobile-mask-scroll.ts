@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { Observer } from "gsap/Observer";
 
+import { useWorkOverlay } from "@/components/work/work-overlay-context";
 import {
   getCardClipPaths,
   getScrollIndexFromScrollTop,
@@ -30,6 +31,7 @@ export function useHeroMobileMaskScroll({
   scrollerRef,
   mode,
 }: UseHeroMobileMaskScrollOptions): UseHeroMobileMaskScrollResult {
+  const { isOpen: isWorkModalOpen } = useWorkOverlay();
   const [clipPaths, setClipPaths] = useState(() => getCardClipPaths(0, cardCount));
   const activeIndexRef = useRef(0);
   const isAnimatingRef = useRef(false);
@@ -118,7 +120,7 @@ export function useHeroMobileMaskScroll({
     scroller.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize);
 
-    if (mode !== "snap") {
+    if (mode !== "snap" || isWorkModalOpen) {
       return () => {
         scroller.removeEventListener("scroll", handleScroll);
         window.removeEventListener("resize", handleResize);
@@ -153,7 +155,7 @@ export function useHeroMobileMaskScroll({
       window.removeEventListener("resize", handleResize);
       gsap.killTweensOf(scroller);
     };
-  }, [cardCount, goToIndex, mode, scrollerRef, syncFromScroller]);
+  }, [cardCount, goToIndex, isWorkModalOpen, mode, scrollerRef, syncFromScroller]);
 
   return { clipPaths };
 }

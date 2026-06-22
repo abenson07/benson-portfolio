@@ -1,5 +1,5 @@
-import { HeroMobileSnapPage } from "@/components/home/hero-mobile/hero-mobile-snap-page";
+import { redirect } from "next/navigation";
 
 export default function MobileSnapPage() {
-  return <HeroMobileSnapPage />;
+  redirect("/");
 }

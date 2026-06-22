@@ -15,6 +15,7 @@ import { useWorkOverlay } from "./work-overlay-context";
 
 import {
   createLenisScroller,
+  prefersNativeScroll,
   prefersReducedMotion,
   type LenisScrollerHandle,
 } from "@/lib/motion/lenis-gsap";
@@ -98,7 +99,7 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
   const initLenis = useCallback(() => {
     const panel = panelRef.current;
     const inner = innerRef.current;
-    if (!panel || !inner || prefersReducedMotion()) {
+    if (!panel || !inner || prefersNativeScroll()) {
       return;
     }
 
