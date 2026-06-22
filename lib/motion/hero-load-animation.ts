@@ -8,7 +8,7 @@ import { prefersReducedMotion } from "@/lib/motion/lenis-gsap";
 
 export const HERO_LOAD_STAGGER = 0.2;
 export const HERO_LOAD_DURATION = 0.72;
-export const HERO_ROW_DURATION = 0.85;
+export const HERO_ROW_DURATION = 1.5;
 export const HERO_NAV_DURATION = 0.5;
 export const HERO_NAV_LEAD = 1;
 export const HERO_LOAD_EASE = "power3.out";
@@ -42,10 +42,39 @@ function getFlowSegments(flowEl: HTMLElement): HTMLElement[] {
   );
 }
 
+function getFlowRows(flowEl: HTMLElement): HTMLElement[] {
+  return Array.from(
+    flowEl.querySelectorAll<HTMLElement>("[data-hero-load-row]"),
+  );
+}
+
+function getRowSegments(rowEl: HTMLElement): HTMLElement[] {
+  return Array.from(
+    rowEl.querySelectorAll<HTMLElement>("[data-hero-load-segment]"),
+  );
+}
+
 function getBensonEndTime(charCount: number) {
   if (charCount <= 0) return 0;
   if (charCount === 1) return HERO_LOAD_DURATION;
   return (charCount - 1) * HERO_LOAD_STAGGER + HERO_LOAD_DURATION;
+}
+
+function getRowRevealVars(segmentCount: number) {
+  if (segmentCount <= 1) {
+    return {
+      duration: HERO_ROW_DURATION,
+      stagger: 0,
+    };
+  }
+
+  return {
+    duration: HERO_LOAD_DURATION,
+    stagger: {
+      amount: HERO_ROW_DURATION - HERO_LOAD_DURATION,
+      from: "start" as const,
+    },
+  };
 }
 
 function commitFinalState(
@@ -66,6 +95,33 @@ function commitFinalState(
   });
   gsap.set(targets.headerEl, { yPercent: 0, opacity: 1 });
   onComplete?.();
+}
+
+function addHighlightRowAnimations(
+  timeline: gsap.core.Timeline,
+  flowEl: HTMLElement,
+  position: string | number,
+) {
+  const rows = getFlowRows(flowEl);
+  const rowGroups =
+    rows.length > 0
+      ? rows
+          .map((row) => getRowSegments(row))
+          .filter((segments) => segments.length > 0)
+      : [getFlowSegments(flowEl)];
+
+  for (const segments of rowGroups) {
+    if (segments.length === 0) continue;
+
+    timeline.to(
+      segments,
+      {
+        ...REVEAL_TO,
+        ...getRowRevealVars(segments.length),
+      },
+      position,
+    );
+  }
 }
 
 export function runHeroLoadAnimation(
@@ -92,6 +148,7 @@ export function runHeroLoadAnimation(
     );
 
     const titleChars = Array.from(getHeroTitleChars(targets.titleEl));
+    const segments = getFlowSegments(targets.highlightsFlowEl);
 
     if (prefersReducedMotion()) {
       gsap.set(targets.titleEl, { opacity: 1 });
@@ -107,11 +164,8 @@ export function runHeroLoadAnimation(
 
     gsap.set(titleChars, REVEAL_FROM);
     gsap.set(targets.titleEl, { opacity: 1 });
-    gsap.set(targets.highlightsFlowEl, { ...REVEAL_FROM });
-    gsap.set(getFlowSegments(targets.highlightsFlowEl), {
-      opacity: 1,
-      yPercent: 0,
-    });
+    gsap.set(targets.highlightsFlowEl, { opacity: 1, yPercent: 0 });
+    gsap.set(segments, { display: "inline-block", ...REVEAL_FROM });
     gsap.set(targets.headerEl, NAV_FROM);
 
     timeline = gsap.timeline();
@@ -126,14 +180,9 @@ export function runHeroLoadAnimation(
       "loadStart",
     );
 
-    timeline.to(
+    addHighlightRowAnimations(
+      timeline,
       targets.highlightsFlowEl,
-      {
-        opacity: 1,
-        yPercent: 0,
-        duration: HERO_ROW_DURATION,
-        ease: HERO_LOAD_EASE,
-      },
       `loadStart+=${HERO_LOAD_STAGGER}`,
     );
 
@@ -159,4 +208,4 @@ export function runHeroLoadAnimation(
   void run();
 
   return cleanup;
-};
+}

@@ -139,7 +139,7 @@ body {
   .hero-title__char,
   .signature-header,
   .hero-highlights,
-  .hero-highlights__row {
+  .hero-highlights [data-hero-load-segment] {
     opacity: 1;
     will-change: auto;
   }
@@ -464,6 +464,12 @@ body {
   text-decoration: none;
   cursor: pointer;
   transition: opacity 0.25s ease;
+}
+
+.hero-highlights [data-hero-load-segment] {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
 }
 
 .hero-highlights__label:focus-visible {
