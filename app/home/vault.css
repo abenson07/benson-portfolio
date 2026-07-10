@@ -18,7 +18,6 @@
 
 .vault {
   height: 200vh;
-  background: var(--foreground);
 }
 
 /* Sticky lives one level deeper so sibling z-index on the gallery can win. */
