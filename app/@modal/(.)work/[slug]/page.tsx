@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { CaseStudyPage } from "@/components/work/case-study/case-study-page";
 import { WorkModalShell } from "@/components/work/work-modal-shell";
-import { getWorkPage } from "@/content/work-pages";
+import { getEnrichedWorkPage } from "@/content/enrich-work-page";
 
 import "@/app/work/case-study.css";
 import "@/app/work/work-card.css";
@@ -15,7 +15,7 @@ export default async function InterceptedWorkPage({
   params,
 }: InterceptedWorkPageProps) {
   const { slug } = await params;
-  const page = getWorkPage(slug);
+  const page = getEnrichedWorkPage(slug);
 
   if (!page) {
     notFound();

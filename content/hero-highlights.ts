@@ -8,25 +8,10 @@ export type HeroHighlight = {
 };
 
 export const heroHighlights: HeroHighlight[] = [
-  { id: "healthcare", label: "Healthcare", slug: "eclipse-rx" },
-  { id: "midwestern-originals", label: "Midwestern Originals", slug: "mwo" },
-  { id: "cybersecurity", label: "Cybersecurity", slug: "secure-blueprint" },
-  { id: "code-koalas", label: "Code Koalas", slug: "sociy" },
-  { id: "fintech", label: "Fintech", slug: "flexcard" },
-  { id: "nutrition", label: "Nutrition", slug: "nutrilyze" },
-  { id: "big-tech", label: "Big Tech", slug: "contextual-messaging" },
-  { id: "meta", label: "Meta", slug: "outcome-driven-signals-setup" },
-  { id: "transit", label: "Transit", slug: "boring-app" },
-  { id: "webflow", label: "Webflow", slug: "webflow" },
-  { id: "adtech", label: "Adtech", slug: "conversions-api" },
-  { id: "skincare", label: "Skincare", slug: "eclipse-rx" },
-  { id: "crema", label: "Crema", slug: "crema" },
-  { id: "analytics", label: "Analytics", slug: "analyze" },
-  { id: "nuclear-plumbing", label: "Nuclear Plumbing", slug: "crema" },
-  { id: "agency", label: "Agency", slug: "agency" },
-  { id: "aviation", label: "Aviation", slug: "flight-pro" },
-  { id: "dave", label: "Dave", slug: "dave" },
-  { id: "streaming", label: "Streaming", slug: "omnibox" },
+  { id: "design", label: "Design", slug: "eclipse-rx" },
+  { id: "strategy", label: "Strategy", slug: "outcome-driven-signals-setup" },
+  { id: "research", label: "Research", slug: "journey-map" },
+  { id: "code", label: "Code", slug: "conversions-api" },
 ];
 
 function hashString(value: string): number {

@@ -40,6 +40,8 @@ export type WorkCardContent = WorkCardLayers & {
 
 export const WORK_CARD_LANDSCAPE_ASPECT: WorkCardAspect = { x: 1452, y: 890 };
 
+export const WORK_CARD_PORTRAIT_ASPECT: WorkCardAspect = { x: 573, y: 721 };
+
 export const WORK_CARD_PARALLAX_SCALE = 1.2;
 
 export const DEFAULT_WORK_CARD_PARALLAX: WorkCardParallax = {

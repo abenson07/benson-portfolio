@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { forwardRef } from "react";
 
+import { HeroStatusIndicator } from "./hero-status-indicator";
+
 type SignatureHeaderProps = {
   showStatus?: boolean;
   className?: string;
@@ -29,8 +31,7 @@ export const SignatureHeader = forwardRef<HTMLElement, SignatureHeaderProps>(
 
         {showStatus ? (
           <div className="signature-header__status">
-            <span className="signature-header__status-label">Currently...</span>
-            <span className="signature-header__status-value">Curious</span>
+            <HeroStatusIndicator />
           </div>
         ) : null}
       </header>

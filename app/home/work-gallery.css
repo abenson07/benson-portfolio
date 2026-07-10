@@ -1,0 +1,236 @@
+.work-gallery {
+  background: var(--foreground);
+  padding: 80px var(--body-inline-padding);
+}
+
+.work-gallery--custom-cursor .work-gallery-card {
+  cursor: none;
+}
+
+.work-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 38px 22px;
+  max-width: 1168px;
+  margin: 0 auto;
+}
+
+.work-gallery-card {
+  --aspect-x: 1452;
+  --aspect-y: 890;
+  --gallery-span: 1;
+
+  position: relative;
+  display: block;
+  grid-column: span var(--gallery-span);
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-gallery-card__frame {
+  position: relative;
+  aspect-ratio: var(--aspect-x) / var(--aspect-y);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #242424;
+}
+
+.work-gallery-card__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.work-gallery-card__background {
+  object-fit: cover;
+  object-position: center top;
+  transform-origin: top center;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-gallery-card__background {
+    will-change: auto;
+  }
+}
+
+.work-gallery-card__foreground {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.work-gallery-card__image {
+  display: block;
+  max-width: none;
+  max-height: none;
+}
+
+.work-gallery-card__image--wide {
+  width: 80%;
+  height: auto;
+}
+
+.work-gallery-card__image--tall {
+  height: 60%;
+  width: auto;
+}
+
+.work-gallery-card__image--full {
+  width: 100%;
+  height: auto;
+}
+
+.work-gallery-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.work-gallery-card__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.work-gallery-card__meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 24px;
+}
+
+.work-gallery-card__title {
+  font-family: var(--font-pp-neue-corp-condensed), var(--font-pp-neue-corp-tight),
+    "Arial Black", "Helvetica Neue", sans-serif;
+  font-size: 40px;
+  line-height: 0.8;
+  text-transform: uppercase;
+  color: #f4efe7;
+}
+
+.work-gallery-card__year {
+  font-family: var(--font-rock-salt), "Comic Sans MS", cursive;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--color-accent);
+  transform: rotate(-6deg);
+  pointer-events: none;
+}
+
+.work-gallery-card__category {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 24px;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+  color: #f4efe7;
+  text-align: right;
+}
+
+/* Caption lives outside the media frame — desktop hides it. */
+.work-gallery-card__caption {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .work-gallery {
+    padding: 48px var(--body-inline-padding);
+  }
+
+  .work-gallery__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: none;
+  }
+
+  .work-gallery-card {
+    grid-column: span 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .work-gallery-card__frame {
+    /* Uniform landscape media for every card on mobile. */
+    --aspect-x: 1452;
+    --aspect-y: 890;
+    aspect-ratio: 1452 / 890;
+    width: 100%;
+  }
+
+  .work-gallery-card__image--tall {
+    width: 60%;
+    height: auto;
+    align-self: flex-start;
+    margin-top: 5%;
+  }
+
+  .work-gallery-card:has(.work-gallery-card__image--tall)
+    .work-gallery-card__foreground {
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .work-gallery-card__scrim,
+  .work-gallery-card__overlay {
+    display: none;
+  }
+
+  .work-gallery-card__caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+  }
+
+  .work-gallery-card__caption-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .work-gallery-card__caption-title {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-pp-neue-corp-condensed),
+      var(--font-pp-neue-corp-tight), "Arial Black", "Helvetica Neue", sans-serif;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 0.85;
+    text-transform: uppercase;
+    color: #191614;
+  }
+
+  .work-gallery-card__caption-year {
+    flex-shrink: 0;
+    padding-top: 0.2em;
+    font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .work-gallery-card__caption-category {
+    margin: 0;
+    font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    color: rgba(25, 22, 20, 0.72);
+    text-transform: none;
+  }
+}

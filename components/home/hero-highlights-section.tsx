@@ -5,7 +5,6 @@ import { Suspense } from "react";
 import type { HeroHighlight } from "@/content/hero-highlights";
 
 import { HeroHighlights } from "./hero-highlights";
-import { HeroLayoutDevBadge } from "./hero-layout-dev-badge";
 
 type HeroHighlightsSectionProps = {
   highlights: HeroHighlight[];
@@ -30,7 +29,6 @@ export function HeroHighlightsSection({
     <>
       <Suspense fallback={<HeroHighlightsFallback />}>
         <HeroHighlights highlights={highlights} onHover={onHover} />
-        <HeroLayoutDevBadge />
       </Suspense>
     </>
   );

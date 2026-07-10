@@ -153,19 +153,11 @@ body.work-modal-open .signature-header__logo-image {
   filter: invert(var(--work-modal-chrome-progress, 0));
 }
 
-body.work-modal-open .signature-header__status-label {
+body.work-modal-open .hero-status-indicator__message {
   color: color-mix(
     in srgb,
-    var(--foreground) calc((1 - var(--work-modal-chrome-progress, 0)) * 100%),
+    #191614 calc((1 - var(--work-modal-chrome-progress, 0)) * 100%),
     rgba(26, 27, 26, 0.55) calc(var(--work-modal-chrome-progress, 0) * 100%)
-  );
-}
-
-body.work-modal-open .signature-header__status-value {
-  color: color-mix(
-    in srgb,
-    var(--muted) calc((1 - var(--work-modal-chrome-progress, 0)) * 100%),
-    rgba(26, 27, 26, 0.4) calc(var(--work-modal-chrome-progress, 0) * 100%)
   );
 }
 

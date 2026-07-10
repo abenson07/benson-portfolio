@@ -37,7 +37,8 @@ export function CaseStudyMobileModalBody({
         <CaseStudySidebarBody
           paragraphs={content.paragraphs}
           services={content.services}
-          awards={content.awards}
+          capabilities={content.capabilities}
+          collaboration={content.collaboration}
         />
       </aside>
 

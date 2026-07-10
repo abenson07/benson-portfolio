@@ -61,8 +61,14 @@ function HeroHighlightsGap({
       data-hero-load-flow
       onMouseLeave={() => onHover(null)}
     >
-      {highlights.map((item) => (
-        <HighlightSegment key={item.id} item={item} onHover={onHover} />
+      {highlights.map((item, index) => (
+        <HighlightSegment key={item.id} item={item} onHover={onHover}>
+          {index < highlights.length - 1 ? (
+            <span className="hero-highlights__bullet" aria-hidden>
+              •
+            </span>
+          ) : null}
+        </HighlightSegment>
       ))}
     </div>
   );

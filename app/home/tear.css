@@ -1,0 +1,76 @@
+.home-hero-section {
+  --tear-band-height: 10vh;
+
+  height: 110vh;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+  /* No section background — dark fill lives on __masked so the tear silhouette cuts it. */
+  background: transparent;
+}
+
+/* Hero content cut to the tear silhouette — tear-footer.png is opaque top→jagged bottom. */
+.home-hero-section__masked {
+  position: absolute;
+  inset: 0;
+  background: var(--background);
+  -webkit-mask-image:
+    linear-gradient(#000 0 0),
+    url("/home/tear-footer.png");
+  mask-image:
+    linear-gradient(#000 0 0),
+    url("/home/tear-footer.png");
+  -webkit-mask-size: 100% calc(100% - var(--tear-band-height)), 100% var(--tear-band-height);
+  mask-size: 100% calc(100% - var(--tear-band-height)), 100% var(--tear-band-height);
+  -webkit-mask-position: top, bottom;
+  mask-position: top, bottom;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-composite: source-over;
+  mask-composite: add;
+}
+
+.tear-transition {
+  --tear-fill: var(--foreground);
+
+  position: relative;
+  z-index: 5;
+  height: var(--tear-band-height, 10vh);
+  margin-top: calc(var(--tear-band-height, 10vh) * -1);
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Hero tear lives inside the hero section and covers the bottom of the title. */
+.home-hero-section > .tear-transition {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--tear-band-height);
+  margin-top: 0;
+  z-index: 6;
+}
+
+.tear-transition--footer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 0;
+  z-index: 3;
+}
+
+.tear-transition__edge {
+  object-fit: fill;
+  object-position: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .home-hero-section {
+    --tear-band-height: 8vh;
+    height: 105vh;
+  }
+}

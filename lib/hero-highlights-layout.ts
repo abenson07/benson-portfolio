@@ -23,15 +23,3 @@ export function parseHeroHighlightLayout(
 
   return DEFAULT_HERO_HIGHLIGHT_LAYOUT;
 }
-
-export const HERO_HIGHLIGHT_LAYOUT_LABELS: Record<
-  HeroHighlightLayout,
-  string
-> = {
-  packed: "Measured rows, sparse lines centered",
-  wrap: "Single flex wrap + space-between",
-  justify: "Inline flow + text justify",
-  manual: "Three fixed rows, centered gap",
-  gap: "Centered rows, measured wrap",
-  grid: "Grid rows, bullets in own fr columns",
-};

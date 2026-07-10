@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import type { HeroHighlight } from "@/content/hero-highlights";
 import {
@@ -31,12 +32,18 @@ export function HighlightLabel({ item, onHover }: HighlightLabelProps) {
 type HighlightSegmentProps = {
   item: HeroHighlight;
   onHover: (id: string | null) => void;
+  children?: ReactNode;
 };
 
-export function HighlightSegment({ item, onHover }: HighlightSegmentProps) {
+export function HighlightSegment({
+  item,
+  onHover,
+  children,
+}: HighlightSegmentProps) {
   return (
     <span className="hero-highlights__segment">
       <HighlightLabel item={item} onHover={onHover} />
+      {children}
     </span>
   );
 }

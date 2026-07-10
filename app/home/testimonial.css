@@ -1,0 +1,191 @@
+.testimonial-stack {
+  position: relative;
+  background: var(--foreground);
+}
+
+.testimonial-stack__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4rem);
+  padding: 0 var(--body-inline-padding);
+  padding-left: 6rem;
+  background: var(--foreground);
+}
+
+.testimonial-stack__text {
+  position: relative;
+  min-height: 20rem;
+}
+
+.testimonial-stack__text-block {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+  opacity: 0;
+}
+
+.testimonial-stack__text-block:first-child {
+  opacity: 1;
+}
+
+.testimonial-stack__quote {
+  margin: 0;
+  font-family: var(--font-pp-neue-corp-tight), "Arial Black", "Helvetica Neue",
+    sans-serif;
+  font-size: clamp(2rem, 4.2vw, 60.8px);
+  line-height: 0.8;
+  text-transform: uppercase;
+  color: var(--color-headline);
+}
+
+.testimonial-stack__quote--emphasis {
+  color: var(--color-accent);
+}
+
+.testimonial-stack__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.testimonial-stack__name {
+  margin: 0;
+  font-family: var(--font-pp-migra), "Iowan Old Style", "Palatino Linotype",
+    serif;
+  font-size: 22px;
+  color: #191614;
+}
+
+.testimonial-stack__title {
+  margin: 0;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
+  font-size: 12px;
+  color: rgba(41, 41, 41, 0.7);
+}
+
+.testimonial-stack__images {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Unrotated wrapper — nudgeX/nudgeY move the card in screen space. */
+.testimonial-stack__image-slot {
+  --nudge-x: 0px;
+  --nudge-y: 0px;
+
+  position: absolute;
+  width: min(440px, 70%);
+  aspect-ratio: 1;
+  transform: translate(var(--nudge-x), var(--nudge-y));
+  opacity: 0;
+}
+
+.testimonial-stack__image-slot:first-child {
+  opacity: 1;
+}
+
+/* Rotated card frame — stack offsets live here so rotation doesn't fight nudges. */
+.testimonial-stack__image {
+  --rotation: 0deg;
+  --offset-x: 0px;
+  --offset-y: 0px;
+
+  width: 100%;
+  height: 100%;
+  padding: 17px;
+  background: white;
+  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+  transform: rotate(var(--rotation)) translate(var(--offset-x), var(--offset-y));
+}
+
+.testimonial-stack__image-slot:first-child .testimonial-stack__image {
+  box-shadow: none;
+}
+
+.testimonial-stack__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .testimonial-stack__sticky {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 1.5rem var(--body-inline-padding);
+    /* Sticky + multi-vh section height stay — scroll still stages content. */
+  }
+
+  .testimonial-stack__images {
+    order: -1;
+    position: relative;
+    flex: 0 0 auto;
+    width: 100%;
+    min-height: 0;
+    height: min(240px, 42vw);
+  }
+
+  .testimonial-stack__image-slot {
+    --card-size: min(220px, 56vw);
+
+    left: 50%;
+    top: 50%;
+    width: var(--card-size);
+    /* Margin-center so GSAP scale transforms don't unseat the card. */
+    margin-left: calc(var(--card-size) / -2);
+    margin-top: calc(var(--card-size) / -2);
+    --nudge-x: 0px;
+    --nudge-y: 0px;
+  }
+
+  .testimonial-stack__image {
+    /* Keep slight rotation; collapse desktop stack offsets on small screens. */
+    --offset-x: 0px;
+    --offset-y: 0px;
+  }
+
+  .testimonial-stack__text {
+    position: relative;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 22rem;
+    min-height: 11rem;
+  }
+
+  .testimonial-stack__text-block {
+    position: absolute;
+    inset: 0;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    gap: 0.85rem;
+  }
+
+  .testimonial-stack__meta {
+    align-items: center;
+  }
+
+  .testimonial-stack__quote {
+    font-size: clamp(1.6rem, 7vw, 2.25rem);
+  }
+
+  .testimonial-stack__name {
+    font-size: 18px;
+  }
+}

@@ -39,12 +39,12 @@ export const heroMobileCards: HeroMobileCard[] = [
   },
   {
     type: "highlight",
-    highlightId: "nutrition",
+    highlightId: "design",
     scribble: "keep going",
   },
   {
     type: "highlight",
-    highlightId: "fintech",
+    highlightId: "code",
     scribble: "tap to open",
   },
 ];

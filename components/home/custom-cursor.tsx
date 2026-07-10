@@ -1,18 +1,48 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import gsap from "gsap";
 
-type CustomCursorProps = {
-  label: string | null;
-  enabled: boolean;
+type CustomCursorController = {
+  setLabel: (label: string | null, owner: string) => void;
+  setSuppressed: (suppressed: boolean) => void;
 };
+
+const CustomCursorContext = createContext<CustomCursorController | null>(null);
 
 const DOT_SIZE = 20;
 const MIN_CIRCLE = 160;
 const CIRCLE_PADDING = 56;
 const EXPAND_DURATION = 0.35;
 const FOLLOW_DURATION = 0.35;
+
+const lastPointer = { x: 0, y: 0 };
+let pointerListenerBound = false;
+
+function ensurePointerTracking() {
+  if (pointerListenerBound || typeof window === "undefined") {
+    return;
+  }
+
+  pointerListenerBound = true;
+  window.addEventListener(
+    "mousemove",
+    (event) => {
+      lastPointer.x = event.clientX;
+      lastPointer.y = event.clientY;
+    },
+    { passive: true },
+  );
+}
 
 function measureCircleSize(label: string): number {
   if (typeof document === "undefined") return MIN_CIRCLE;
@@ -36,7 +66,13 @@ function measureCircleSize(label: string): number {
   return Math.max(MIN_CIRCLE, width + CIRCLE_PADDING, height + CIRCLE_PADDING);
 }
 
-export function CustomCursor({ label, enabled }: CustomCursorProps) {
+function CustomCursorView({
+  label,
+  enabled,
+}: {
+  label: string | null;
+  enabled: boolean;
+}) {
   const cursorRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
   const dotRef = useRef<HTMLSpanElement>(null);
@@ -49,12 +85,20 @@ export function CustomCursor({ label, enabled }: CustomCursorProps) {
     reducedMotionRef.current = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    ensurePointerTracking();
   }, []);
 
   useEffect(() => {
     if (!enabled || !cursorRef.current) return;
 
-    gsap.set(cursorRef.current, { xPercent: -50, yPercent: -50, opacity: 0 });
+    document.documentElement.classList.add("custom-cursor-active");
+    gsap.set(cursorRef.current, {
+      xPercent: -50,
+      yPercent: -50,
+      x: lastPointer.x,
+      y: lastPointer.y,
+      opacity: 0,
+    });
 
     xToRef.current = gsap.quickTo(cursorRef.current, "x", {
       duration: FOLLOW_DURATION,
@@ -66,7 +110,13 @@ export function CustomCursor({ label, enabled }: CustomCursorProps) {
     });
 
     const handleMove = (event: MouseEvent) => {
-      gsap.to(cursorRef.current, { opacity: 1, duration: 0.15, overwrite: "auto" });
+      lastPointer.x = event.clientX;
+      lastPointer.y = event.clientY;
+      gsap.to(cursorRef.current, {
+        opacity: 1,
+        duration: 0.15,
+        overwrite: "auto",
+      });
       xToRef.current?.(event.clientX);
       yToRef.current?.(event.clientY);
     };
@@ -75,6 +125,7 @@ export function CustomCursor({ label, enabled }: CustomCursorProps) {
 
     return () => {
       window.removeEventListener("mousemove", handleMove);
+      document.documentElement.classList.remove("custom-cursor-active");
     };
   }, [enabled]);
 
@@ -92,11 +143,10 @@ export function CustomCursor({ label, enabled }: CustomCursorProps) {
       labelEl.textContent = label;
       gsap.set(labelEl, { visibility: "visible" });
       cursor.classList.add("custom-cursor--expanded");
+      gsap.set(dot, { scale: 0, opacity: 0 });
 
       const targetSize = measureCircleSize(label);
-      const fromSize = expandedRef.current ? undefined : DOT_SIZE;
-
-      if (fromSize !== undefined) {
+      if (!expandedRef.current) {
         gsap.set(cursor, { width: DOT_SIZE, height: DOT_SIZE });
       }
 
@@ -105,12 +155,6 @@ export function CustomCursor({ label, enabled }: CustomCursorProps) {
         height: targetSize,
         duration,
         ease: "power2.out",
-      });
-      gsap.to(dot, {
-        scale: 0,
-        opacity: 0,
-        duration: duration * 0.5,
-        ease: "power2.in",
       });
       gsap.to(labelEl, { opacity: 1, duration, ease: "power2.out" });
       expandedRef.current = true;
@@ -151,6 +195,63 @@ export function CustomCursor({ label, enabled }: CustomCursorProps) {
   );
 }
 
+export function CustomCursorProvider({ children }: { children: ReactNode }) {
+  const [label, setLabelState] = useState<string | null>(null);
+  const [suppressed, setSuppressed] = useState(false);
+  const cursorEnabled = useCustomCursorEnabled();
+  const ownerRef = useRef<string | null>(null);
+
+  const setLabel = useCallback((next: string | null, owner: string) => {
+    if (next) {
+      ownerRef.current = owner;
+      setLabelState(next);
+      return;
+    }
+
+    if (ownerRef.current && ownerRef.current !== owner) {
+      return;
+    }
+
+    ownerRef.current = null;
+    setLabelState(null);
+  }, []);
+
+  const value = useMemo<CustomCursorController>(
+    () => ({ setLabel, setSuppressed }),
+    [setLabel],
+  );
+
+  return (
+    <CustomCursorContext.Provider value={value}>
+      {children}
+      <CustomCursorView
+        label={label}
+        enabled={cursorEnabled && !suppressed}
+      />
+    </CustomCursorContext.Provider>
+  );
+}
+
+export function useCustomCursorController(owner: string) {
+  const ctx = useContext(CustomCursorContext);
+
+  const setLabel = useCallback(
+    (label: string | null) => {
+      ctx?.setLabel(label, owner);
+    },
+    [ctx, owner],
+  );
+
+  const setSuppressed = useCallback(
+    (suppressed: boolean) => {
+      ctx?.setSuppressed(suppressed);
+    },
+    [ctx],
+  );
+
+  return { setLabel, setSuppressed };
+}
+
 export function useCustomCursorEnabled() {
   const [enabled, setEnabled] = useState(false);
 
@@ -163,4 +264,15 @@ export function useCustomCursorEnabled() {
   }, []);
 
   return enabled;
+}
+
+/** Standalone cursor for pages without CustomCursorProvider. */
+export function CustomCursor({
+  label,
+  enabled,
+}: {
+  label: string | null;
+  enabled: boolean;
+}) {
+  return <CustomCursorView label={label} enabled={enabled} />;
 }

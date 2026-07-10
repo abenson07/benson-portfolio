@@ -1,5 +1,7 @@
+import type { WorkCardContent } from "@/content/work-card";
 import type { WorkPageContent } from "@/content/work-page-template";
 import { workPageTemplate } from "@/content/work-page-template";
+import { workUpNextPreferences } from "@/content/work-up-next-config";
 
 export type WorkPageCategory = "product-design" | "strategy-research" | "employer";
 
@@ -60,7 +62,8 @@ function createWorkPage({
     lead: overrides?.lead ?? defaultSummary,
     paragraphs: overrides?.paragraphs ?? placeholderParagraphs(title),
     services: overrides?.services ?? DEFAULT_SERVICES,
-    awards: overrides?.awards ?? [],
+    capabilities: overrides?.capabilities ?? [],
+    collaboration: overrides?.collaboration ?? [],
     media: overrides?.media ?? DEFAULT_MEDIA,
     upNext: overrides?.upNext ?? {
       eyebrow: "Up Next",
@@ -258,18 +261,69 @@ export const heroWorkSlugOrder = [
   "omnibox",
 ] as const;
 
+function buildUpNextCard(page: WorkPage): WorkCardContent {
+  return {
+    title: page.title,
+    href: `/work/${page.slug}`,
+    background: {
+      type: "image",
+      src: page.coverImageUrl,
+      alt: `${page.title} preview`,
+    },
+  };
+}
+
+export function buildUpNextCardForSlug(slug: string): WorkCardContent | undefined {
+  const page = workPages[slug];
+  return page ? buildUpNextCard(page) : undefined;
+}
+
+function getCircularNextSlug(
+  slug: string,
+  heroSlugs: string[],
+  allSlugs: string[],
+): string | undefined {
+  const sequence = heroSlugs.includes(slug) ? heroSlugs : allSlugs;
+  const index = sequence.indexOf(slug);
+  if (index === -1) {
+    return undefined;
+  }
+
+  return sequence[(index + 1) % sequence.length];
+}
+
 function attachUpNext(pages: WorkPage[]): WorkPage[] {
   const bySlug = new Map(pages.map((page) => [page.slug, page]));
   const heroSlugs = heroWorkSlugOrder.filter((slug) => bySlug.has(slug));
   const allSlugs = pages.map((page) => page.slug);
 
   return pages.map((page) => {
-    const sequence = heroSlugs.includes(page.slug as (typeof heroWorkSlugOrder)[number])
-      ? heroSlugs
-      : allSlugs;
-    const index = sequence.indexOf(page.slug);
-    const nextSlug = sequence[(index + 1) % sequence.length];
-    const nextPage = bySlug.get(nextSlug);
+    const preference = workUpNextPreferences[page.slug];
+
+    if (preference) {
+      const primaryPage = bySlug.get(preference.primary);
+      if (!primaryPage) {
+        return page;
+      }
+
+      const secondaryPage = preference.secondary
+        ? bySlug.get(preference.secondary)
+        : undefined;
+
+      return {
+        ...page,
+        upNext: {
+          eyebrow: "Up Next",
+          card: buildUpNextCard(primaryPage),
+          ...(secondaryPage
+            ? { secondaryCard: buildUpNextCard(secondaryPage) }
+            : {}),
+        },
+      };
+    }
+
+    const nextSlug = getCircularNextSlug(page.slug, heroSlugs, allSlugs);
+    const nextPage = nextSlug ? bySlug.get(nextSlug) : undefined;
 
     if (!nextPage) {
       return page;
@@ -279,15 +333,7 @@ function attachUpNext(pages: WorkPage[]): WorkPage[] {
       ...page,
       upNext: {
         eyebrow: "Up Next",
-        card: {
-          title: nextPage.title,
-          href: `/work/${nextPage.slug}`,
-          background: {
-            type: "image",
-            src: nextPage.coverImageUrl,
-            alt: `${nextPage.title} preview`,
-          },
-        },
+        card: buildUpNextCard(nextPage),
       },
     };
   });

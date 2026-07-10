@@ -6,10 +6,9 @@ export type CaseStudyService = {
   label: string;
 };
 
-export type CaseStudyAward = {
+export type CaseStudyCollaboration = {
   name: string;
-  category: string;
-  year: string;
+  description: string;
 };
 
 export type CaseStudyAspect = "landscape" | "portrait";
@@ -35,6 +34,7 @@ export type CaseStudyMediaBlock =
 export type CaseStudyUpNext = {
   eyebrow: string;
   card: WorkCardContent;
+  secondaryCard?: WorkCardContent;
 };
 
 export type WorkPageContent = {
@@ -45,7 +45,8 @@ export type WorkPageContent = {
   lead: string;
   paragraphs: string[];
   services: CaseStudyService[];
-  awards: CaseStudyAward[];
+  capabilities: string[];
+  collaboration: CaseStudyCollaboration[];
   media: CaseStudyMediaBlock[];
   upNext: CaseStudyUpNext;
 };
@@ -71,53 +72,8 @@ export const workPageTemplate: WorkPageContent = {
     { icon: "^", iconClass: "chevron", label: "Interaction Design" },
     { icon: "x", iconClass: "cross", label: "Headless CMS" },
   ],
-  awards: [
-    {
-      name: "Webby Awards",
-      category: "Winner — Responsible Information",
-      year: "2026",
-    },
-    {
-      name: "Webby Awards",
-      category: "Best Use of Data",
-      year: "2026",
-    },
-    {
-      name: "Australian Web Awards",
-      category: "React.js",
-      year: "2025",
-    },
-    {
-      name: "Australian Web Awards",
-      category: "Web Platform",
-      year: "2024",
-    },
-    {
-      name: "Australian Web Awards",
-      category: "Best in Show: Development",
-      year: "2024",
-    },
-    {
-      name: "Good Design Awards",
-      category: "Digital Design",
-      year: "2025",
-    },
-    {
-      name: "Good Design Awards",
-      category: "Product Service Design",
-      year: "2025",
-    },
-    {
-      name: "Anthem Awards",
-      category: "Digital & Innovative Experiences",
-      year: "2024",
-    },
-    {
-      name: "Anthem Awards",
-      category: "Global Awareness Campaign",
-      year: "2024",
-    },
-  ],
+  capabilities: [],
+  collaboration: [],
   media: [
     { type: "single", preview: { label: "Hero image", aspect: "landscape" } },
     {

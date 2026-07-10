@@ -221,17 +221,36 @@
   color: #ff6b9d;
 }
 
-/* Awards */
+/* Capabilities */
 
-.case-study-awards__heading {
-  margin: 0 0 1.25rem;
+.case-study-capabilities__heading,
+.case-study-collaboration__heading {
+  margin: clamp(2rem, 4vw, 2.75rem) 0 1.25rem;
   font-family: var(--font-pp-migra), "Iowan Old Style", "Palatino Linotype", serif;
   font-size: clamp(1.75rem, 2.5vw, 2.25rem);
   font-weight: 400;
   line-height: 1.1;
 }
 
-.case-study-awards__list {
+.case-study-capabilities__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.case-study-capabilities__item {
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* Collaboration */
+
+.case-study-collaboration__list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -239,9 +258,9 @@
   flex-direction: column;
 }
 
-.case-study-awards__row {
+.case-study-collaboration__row {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) auto;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
   gap: 1rem;
   padding-block: 0.85rem;
   border-top: 1px solid rgba(26, 27, 26, 0.12);
@@ -251,16 +270,11 @@
   line-height: 1.35;
 }
 
-.case-study-awards__row:last-child {
+.case-study-collaboration__row:last-child {
   border-bottom: 1px solid rgba(26, 27, 26, 0.12);
 }
 
-.case-study-awards__category {
-  color: rgba(26, 27, 26, 0.72);
-}
-
-.case-study-awards__year {
-  text-align: right;
+.case-study-collaboration__description {
   color: rgba(26, 27, 26, 0.72);
 }
 
@@ -399,23 +413,9 @@
     max-width: none;
   }
 
-  .case-study-awards__row {
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      "name year"
-      "category category";
-  }
-
-  .case-study-awards__name {
-    grid-area: name;
-  }
-
-  .case-study-awards__category {
-    grid-area: category;
-  }
-
-  .case-study-awards__year {
-    grid-area: year;
+  .case-study-collaboration__row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
   }
 }
 

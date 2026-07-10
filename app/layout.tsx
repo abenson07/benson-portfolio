@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { ppMigra } from "@/lib/fonts/pp-migra";
 import { ppNeueCorpCompact } from "@/lib/fonts/pp-neue-corp-compact";
+import { ppNeueCorpCondensed } from "@/lib/fonts/pp-neue-corp-condensed";
 import { ppNeueCorpTight } from "@/lib/fonts/pp-neue-corp-tight";
 import { rockSalt } from "@/lib/fonts/rock-salt";
 import { WorkOverlayProvider } from "@/components/work/work-overlay-context";
@@ -26,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full ${ppMigra.variable} ${ppNeueCorpCompact.variable} ${ppNeueCorpTight.variable} ${rockSalt.variable}`}
+      className={`h-full ${ppMigra.variable} ${ppNeueCorpCompact.variable} ${ppNeueCorpCondensed.variable} ${ppNeueCorpTight.variable} ${rockSalt.variable}`}
     >
       <body className="min-h-full">
         <WorkOverlayProvider>

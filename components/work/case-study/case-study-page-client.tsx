@@ -12,11 +12,13 @@ import { useCaseStudyMobileModal } from "./use-case-study-mobile-modal";
 
 type CaseStudyPageClientProps = {
   content: WorkPageContent;
+  slug?: string;
   variant?: "page" | "modal";
 };
 
 export function CaseStudyPageClient({
   content,
+  slug,
   variant = "page",
 }: CaseStudyPageClientProps) {
   const isModal = variant === "modal";
@@ -43,13 +45,14 @@ export function CaseStudyPageClient({
                 lead={content.lead}
                 paragraphs={content.paragraphs}
                 services={content.services}
-                awards={content.awards}
+                capabilities={content.capabilities}
+                collaboration={content.collaboration}
               />
               <CaseStudyMedia blocks={content.media} />
             </div>
           )}
 
-          <CaseStudyUpNextSection upNext={content.upNext} />
+          <CaseStudyUpNextSection upNext={content.upNext} currentSlug={slug} />
         </div>
       </CaseStudyScrollMotion>
     </div>

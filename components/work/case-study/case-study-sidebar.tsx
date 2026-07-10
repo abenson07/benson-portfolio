@@ -1,5 +1,5 @@
 import type {
-  CaseStudyAward,
+  CaseStudyCollaboration,
   CaseStudyService,
 } from "@/content/work-page-template";
 
@@ -13,7 +13,8 @@ type CaseStudySidebarIntroProps = {
 type CaseStudySidebarBodyProps = {
   paragraphs: string[];
   services: CaseStudyService[];
-  awards: CaseStudyAward[];
+  capabilities: string[];
+  collaboration: CaseStudyCollaboration[];
 };
 
 type CaseStudySidebarProps = CaseStudySidebarIntroProps &
@@ -47,7 +48,8 @@ export function CaseStudySidebarIntro({
 export function CaseStudySidebarBody({
   paragraphs,
   services,
-  awards,
+  capabilities,
+  collaboration,
 }: CaseStudySidebarBodyProps) {
   return (
     <>
@@ -59,34 +61,52 @@ export function CaseStudySidebarBody({
         ))}
       </div>
 
-      <ul className="case-study-services">
-        {services.map((service) => (
-          <li key={service.label} className="case-study-services__item">
-            <span
-              className={`case-study-services__icon case-study-services__icon--${service.iconClass}`}
-              aria-hidden
-            >
-              {service.icon}
-            </span>
-            {service.label}
-          </li>
-        ))}
-      </ul>
-
-      {awards.length > 0 ? (
-        <section className="case-study-awards">
-          <h2 className="case-study-awards__heading">Awards</h2>
-          <ul className="case-study-awards__list">
-            {awards.map((award) => (
-              <li
-                key={`${award.name}-${award.category}`}
-                className="case-study-awards__row"
+      {services.length > 0 ? (
+        <ul className="case-study-services">
+          {services.map((service) => (
+            <li key={service.label} className="case-study-services__item">
+              <span
+                className={`case-study-services__icon case-study-services__icon--${service.iconClass}`}
+                aria-hidden
               >
-                <span className="case-study-awards__name">{award.name}</span>
-                <span className="case-study-awards__category">
-                  {award.category}
+                {service.icon}
+              </span>
+              {service.label}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {capabilities.length > 0 ? (
+        <section className="case-study-capabilities">
+          <h2 className="case-study-capabilities__heading">Capabilities</h2>
+          <ul className="case-study-capabilities__list">
+            {capabilities.map((capability) => (
+              <li key={capability} className="case-study-capabilities__item">
+                {capability}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {collaboration.length > 0 ? (
+        <section className="case-study-collaboration">
+          <h2 className="case-study-collaboration__heading">Collaboration</h2>
+          <ul className="case-study-collaboration__list">
+            {collaboration.map((entry) => (
+              <li
+                key={`${entry.name}-${entry.description}`}
+                className="case-study-collaboration__row"
+              >
+                <span className="case-study-collaboration__name">
+                  {entry.name}
                 </span>
-                <span className="case-study-awards__year">{award.year}</span>
+                {entry.description ? (
+                  <span className="case-study-collaboration__description">
+                    {entry.description}
+                  </span>
+                ) : null}
               </li>
             ))}
           </ul>
@@ -103,7 +123,8 @@ export function CaseStudySidebar({
   lead,
   paragraphs,
   services,
-  awards,
+  capabilities,
+  collaboration,
 }: CaseStudySidebarProps) {
   return (
     <aside className="case-study-sidebar">
@@ -116,7 +137,8 @@ export function CaseStudySidebar({
       <CaseStudySidebarBody
         paragraphs={paragraphs}
         services={services}
-        awards={awards}
+        capabilities={capabilities}
+        collaboration={collaboration}
       />
     </aside>
   );
