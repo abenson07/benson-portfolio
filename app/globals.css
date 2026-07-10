@@ -60,6 +60,8 @@ body {
 .page-wrapper--scrolling-home {
   overflow-y: auto;
   overflow-x: hidden;
+  /* Canvas fill only — do not override --background (hero/masked still need dark). */
+  background: #f0ece4;
 }
 
 .home-scroll-content {
@@ -391,7 +393,7 @@ html.custom-cursor-active * {
   width: var(--hero-bleed-width);
   max-width: var(--hero-content-max-width);
   margin-top: auto;
-  margin-bottom: -15%;
+  margin-bottom: -100px;
   margin-left: calc(50% - var(--hero-bleed-half));
   margin-right: calc(50% - var(--hero-bleed-half));
 }

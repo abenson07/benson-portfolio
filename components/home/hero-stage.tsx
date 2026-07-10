@@ -13,6 +13,7 @@ import { useWorkOverlay } from "@/components/work/work-overlay-context";
 
 import { runHeroLoadAnimation } from "@/lib/motion/hero-load-animation";
 import { useFitHeroTitle } from "@/lib/motion/use-fit-hero-title";
+import { useHeroContentParallax } from "@/lib/motion/use-hero-content-parallax";
 import { useHeroMobileViewport } from "@/lib/motion/use-hero-mobile-viewport";
 import { prefersReducedMotion } from "@/lib/motion/lenis-gsap";
 
@@ -52,6 +53,7 @@ export function HeroStage({ highlights }: HeroStageProps) {
   const { isOpen: isWorkModalOpen } = useWorkOverlay();
 
   useFitHeroTitle(titleRef, titleContainerRef, highlightsRef);
+  useHeroContentParallax({ contentRef: titleContainerRef });
 
   const activeHighlight = highlights.find((item) => item.id === activeId) ?? null;
   const activeLabel = activeHighlight?.label ?? null;

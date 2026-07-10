@@ -1,5 +1,6 @@
 .reveal-footer {
   position: relative;
+  overflow: hidden;
   color: var(--foreground);
   background: var(--highlight);
 }
@@ -12,6 +13,7 @@
   position: relative;
   z-index: 1;
   padding: 12vh var(--body-inline-padding) 48px;
+  will-change: transform;
 }
 
 .reveal-footer__row {
@@ -85,12 +87,12 @@
 */
 
 .reveal-footer__nav {
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: end;
+  justify-items: end;
   align-items: baseline;
-  justify-content: flex-end;
   gap: 1.5rem 2.5rem;
-  overflow-x: auto;
 }
 
 .reveal-footer__nav-item {
@@ -155,9 +157,8 @@
   }
 
   .reveal-footer__nav {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    overflow-x: visible;
+    justify-content: start;
+    justify-items: start;
     gap: 1rem 1.75rem;
   }
 

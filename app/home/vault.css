@@ -21,7 +21,7 @@
 /* Sticky lives one level deeper so sibling z-index on the gallery can win. */
 .vault__pin {
   position: sticky;
-  top: 0;
+  top: 15vh;
   height: 70vh;
   margin-top: -70vh;
   z-index: 0;

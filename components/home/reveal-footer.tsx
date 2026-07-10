@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback } from "react";
-// import { useRef } from "react";
+import { useCallback, useRef } from "react";
 
 import { homepageFooter } from "@/content/homepage-footer";
 // Shelved timed word-cycle (BEN-641) — restore with useFooterHeadline
 // import { useFooterHeadline } from "@/lib/motion/use-footer-headline";
+import { useFooterReveal } from "@/lib/motion/use-footer-reveal";
 
 import {
   useCustomCursorController,
@@ -20,8 +20,12 @@ const COMING_SOON_LABEL = "coming soon";
 export function RevealFooter() {
   // const wordRefs = useRef<(HTMLElement | null)[]>([]);
   // useFooterHeadline({ wordRefs });
+  const footerRef = useRef<HTMLElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const cursorEnabled = useCustomCursorEnabled();
   const { setLabel: setCursorLabel } = useCustomCursorController("footer");
+
+  useFooterReveal({ footerRef, innerRef });
 
   const handleNavHover = useCallback(
     (active: boolean) => {
@@ -32,12 +36,17 @@ export function RevealFooter() {
 
   return (
     <footer
+      ref={footerRef}
       className={`reveal-footer${cursorEnabled ? " reveal-footer--custom-cursor" : ""}`}
       data-figma-node="3051:41119"
     >
       <TearTransition variant="footer" />
 
-      <div className="reveal-footer__inner" data-figma-node="3051:41121">
+      <div
+        ref={innerRef}
+        className="reveal-footer__inner"
+        data-figma-node="3051:41121"
+      >
         <div className="reveal-footer__row">
           <div className="reveal-footer__brand">
             <p className="reveal-footer__intro" data-figma-node="3051:41125">

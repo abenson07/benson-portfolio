@@ -1,5 +1,4 @@
 .work-gallery {
-  background: var(--foreground);
   padding: 80px var(--body-inline-padding);
 }
 
@@ -68,6 +67,7 @@
   display: block;
   max-width: none;
   max-height: none;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
 }
 
 .work-gallery-card__image--wide {
@@ -135,7 +135,7 @@
   right: 0;
   padding: 24px;
   font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
-  font-size: 20px;
+  font-size: 14px;
   line-height: 1.5;
   color: #f4efe7;
   text-align: right;

@@ -4,10 +4,10 @@ import { useLayoutEffect, type RefObject } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { WORK_CARD_PARALLAX_SCALE } from "@/content/work-card";
 import { prefersReducedMotion } from "@/lib/motion/lenis-gsap";
 
-const PARALLAX_SCALE = WORK_CARD_PARALLAX_SCALE;
+/** Overscale so 5% of frame height can travel without showing edges. */
+const PARALLAX_SCALE = 1.05;
 
 type UseWorkGalleryParallaxArgs = {
   sectionRef: RefObject<HTMLElement | null>;
@@ -70,7 +70,7 @@ export function useWorkGalleryParallax({
       const createTween = () => {
         const travel = getParallaxTravel(frame, PARALLAX_SCALE);
 
-        // 1.2× overscale from top: start top-aligned, scrub to bottom-aligned.
+        // 1.05× overscale from top: start top-aligned, scrub to bottom-aligned.
         gsap.set(background, {
           transformOrigin: "top center",
           scale: PARALLAX_SCALE,
