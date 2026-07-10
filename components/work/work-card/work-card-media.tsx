@@ -49,6 +49,7 @@ export function WorkCardMediaView({
         sizes={sizes}
         priority={priority}
         draggable={false}
+        unoptimized
       />
     </div>
   );

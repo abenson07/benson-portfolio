@@ -22,7 +22,7 @@ type CaseStudySidebarProps = CaseStudySidebarIntroProps &
 
 export function CaseStudySidebarIntro({
   title,
-  websiteUrl,
+  websiteUrl: _websiteUrl,
   primaryTag,
   lead,
 }: CaseStudySidebarIntroProps) {
@@ -31,12 +31,12 @@ export function CaseStudySidebarIntro({
       <h1 className="case-study-sidebar__title">{title}</h1>
 
       <div className="case-study-sidebar__actions">
-        <a className="case-study-sidebar__cta" href={websiteUrl}>
+        {/* <a className="case-study-sidebar__cta" href={websiteUrl}>
           Visit Website
           <span aria-hidden className="case-study-sidebar__cta-arrow">
             →
           </span>
-        </a>
+        </a> */}
         <span className="case-study-sidebar__tag">{primaryTag}</span>
       </div>
 

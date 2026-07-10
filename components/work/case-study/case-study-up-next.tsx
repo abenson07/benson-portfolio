@@ -56,6 +56,7 @@ export function CaseStudyUpNextSection({
         key={card.href ?? card.title}
         {...card}
         className="case-study-up-next__card"
+        parallaxEnabled={false}
       />
     </section>
   );

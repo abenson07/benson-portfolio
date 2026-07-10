@@ -77,9 +77,22 @@ export function WorkCardThumbnail({
     parallax,
   });
 
+  const backgroundStyle =
+    background.type === "image"
+      ? {
+          backgroundImage: `url(${background.src})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+        }
+      : undefined;
+
   return (
     <div ref={wrapperRef} className="work-card__thumbnail-wrapper">
-      <div ref={outerRef} className="work-card__thumbnail-outer">
+      <div
+        ref={outerRef}
+        className="work-card__thumbnail-outer"
+        style={backgroundStyle}
+      >
         <WorkCardMediaView media={background} priority />
       </div>
 
