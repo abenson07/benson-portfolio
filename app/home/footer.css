@@ -12,7 +12,9 @@
 .reveal-footer__inner {
   position: relative;
   z-index: 1;
-  padding: 12vh var(--body-inline-padding) 24px;
+  /* Extra bottom pad clears iOS Safari chrome + Android gesture nav */
+  padding: 12vh var(--body-inline-padding)
+    calc(1.5rem + env(safe-area-inset-bottom, 0px));
   will-change: transform;
 }
 
@@ -142,7 +144,8 @@
 
 @media (max-width: 768px) {
   .reveal-footer__inner {
-    padding: 10vh var(--body-inline-padding) 24px;
+    padding: 10vh var(--body-inline-padding)
+      calc(6rem + env(safe-area-inset-bottom, 0px));
   }
 
   .reveal-footer__row {

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import { ppMigra } from "@/lib/fonts/pp-migra";
 import { ppNeueCorpCompact } from "@/lib/fonts/pp-neue-corp-compact";
@@ -8,6 +8,12 @@ import { rockSalt } from "@/lib/fonts/rock-salt";
 import { WorkOverlayProvider } from "@/components/work/work-overlay-context";
 import { site } from "@/lib/site";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
