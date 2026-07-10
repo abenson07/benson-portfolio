@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 import type { WorkCardContent } from "@/content/work-card";
 import type { CaseStudyUpNext } from "@/content/work-page-template";
-import { buildUpNextCardForSlug, heroWorkSlugOrder } from "@/content/work-pages";
+import {
+  buildUpNextCardForSlug,
+  readyCaseStudySlugOrder,
+} from "@/content/work-pages";
 import { pickUpNextCard } from "@/lib/resolve-up-next";
 import {
   getVisitedWorkSlugs,
@@ -25,6 +28,10 @@ export function CaseStudyUpNextSection({
   const [card, setCard] = useState<WorkCardContent>(upNext.card);
 
   useEffect(() => {
+    setCard(upNext.card);
+  }, [upNext]);
+
+  useEffect(() => {
     if (!currentSlug) {
       return;
     }
@@ -34,7 +41,7 @@ export function CaseStudyUpNextSection({
       upNext,
       visited,
       currentSlug,
-      heroWorkSlugOrder,
+      readyCaseStudySlugOrder,
       buildUpNextCardForSlug,
     );
 
@@ -45,7 +52,11 @@ export function CaseStudyUpNextSection({
   return (
     <section className="case-study-up-next">
       <h2 className="case-study-up-next__eyebrow">{upNext.eyebrow}</h2>
-      <WorkCard {...card} className="case-study-up-next__card" />
+      <WorkCard
+        key={card.href ?? card.title}
+        {...card}
+        className="case-study-up-next__card"
+      />
     </section>
   );
 }

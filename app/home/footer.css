@@ -12,7 +12,7 @@
 .reveal-footer__inner {
   position: relative;
   z-index: 1;
-  padding: 12vh var(--body-inline-padding) 48px;
+  padding: 12vh var(--body-inline-padding) 24px;
   will-change: transform;
 }
 
@@ -142,7 +142,7 @@
 
 @media (max-width: 768px) {
   .reveal-footer__inner {
-    padding: 10vh var(--body-inline-padding) 32px;
+    padding: 10vh var(--body-inline-padding) 24px;
   }
 
   .reveal-footer__row {

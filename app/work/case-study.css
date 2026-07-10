@@ -384,7 +384,7 @@
 
 .case-study-up-next {
   margin-top: clamp(4rem, 10vh, 7rem);
-  max-width: min(100%, 72rem);
+  width: 100%;
 }
 
 .case-study-up-next__eyebrow {

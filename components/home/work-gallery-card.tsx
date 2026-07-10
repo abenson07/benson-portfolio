@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import type { CSSProperties } from "react";
 
 import {
@@ -11,7 +12,7 @@ import type { HomeGalleryItem } from "@/content/homepage-gallery";
 
 type WorkGalleryCardProps = {
   item: HomeGalleryItem;
-  onHover: (active: boolean) => void;
+  onHover: (active: boolean, href?: string) => void;
 };
 
 export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
@@ -23,15 +24,8 @@ export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
     "--gallery-span": item.span,
   } as CSSProperties;
 
-  return (
-    <article
-      className="work-gallery-card"
-      style={style}
-      data-figma-node={item.slug}
-      aria-label={`${item.title} — coming soon`}
-      onMouseEnter={() => onHover(true)}
-      onMouseLeave={() => onHover(false)}
-    >
+  const content = (
+    <>
       <div className="work-gallery-card__frame">
         <div className="work-gallery-card__media">
           <Image
@@ -62,6 +56,18 @@ export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
           </div>
           <span className="work-gallery-card__category">{item.categoryLabel}</span>
         </div>
+        {!item.href ? (
+          <div className="work-gallery-card__coming-soon" aria-hidden>
+            <Image
+              className="work-gallery-card__coming-soon-placard"
+              src="/case-studies/coming-soon-placard.png"
+              alt=""
+              width={1600}
+              height={400}
+              unoptimized
+            />
+          </div>
+        ) : null}
       </div>
 
       <div className="work-gallery-card__caption">
@@ -71,6 +77,35 @@ export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
         </div>
         <p className="work-gallery-card__caption-category">{item.categoryLabel}</p>
       </div>
+    </>
+  );
+
+  if (item.href) {
+    return (
+      <Link
+        className="work-gallery-card"
+        style={style}
+        data-figma-node={item.slug}
+        href={item.href}
+        aria-label={`Open ${item.title} case study`}
+        onMouseEnter={() => onHover(true, item.href)}
+        onMouseLeave={() => onHover(false)}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <article
+      className="work-gallery-card"
+      style={style}
+      data-figma-node={item.slug}
+      aria-label={`${item.title} — coming soon`}
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+    >
+      {content}
     </article>
   );
 }

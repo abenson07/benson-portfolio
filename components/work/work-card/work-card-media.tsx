@@ -40,7 +40,7 @@ export function WorkCardMediaView({
   }
 
   return (
-    <div className="work-card__media-frame">
+    <div className="work-card__media-frame" key={media.src}>
       <Image
         src={media.src}
         alt={media.alt ?? ""}

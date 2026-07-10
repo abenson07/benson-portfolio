@@ -3,7 +3,12 @@ export type WorkCardMedia =
   | { type: "video"; src: string; poster?: string; alt?: string }
   | { type: "placeholder"; label: string };
 
-export type WorkCardForegroundLayout = "desktop" | "phone" | "phone-grid";
+export type WorkCardForegroundLayout =
+  | "desktop"
+  | "phone"
+  | "phone-grid"
+  | "full"
+  | "tall";
 
 export type WorkCardForeground = {
   layout: WorkCardForegroundLayout;

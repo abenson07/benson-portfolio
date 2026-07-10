@@ -11,6 +11,8 @@ export type HomeGalleryItem = {
   imageSrc: string;
   /** Foreground device/mock sizing inside the card. */
   imageFit: HomeGalleryImageFit;
+  /** When set, the card links to the case study (modal/page). */
+  href?: string;
 };
 
 export const homeGalleryItems: HomeGalleryItem[] = [
@@ -43,6 +45,7 @@ export const homeGalleryItems: HomeGalleryItem[] = [
     backgroundSrc: "/home/nutrilyze-background.png",
     imageSrc: "/home/nutrilyze-image.png",
     imageFit: "tall",
+    href: "/work/nutrilyze",
   },
   {
     slug: "outcome-driven-signals-setup",
@@ -63,6 +66,7 @@ export const homeGalleryItems: HomeGalleryItem[] = [
     backgroundSrc: "/home/eclipse-background.png",
     imageSrc: "/home/eclipse-image.png",
     imageFit: "tall",
+    href: "/work/eclipse-rx",
   },
   {
     slug: "flight-pro",
@@ -73,6 +77,7 @@ export const homeGalleryItems: HomeGalleryItem[] = [
     backgroundSrc: "/home/flight-pro-background.png",
     imageSrc: "/home/flight-pro-image.png",
     imageFit: "full",
+    href: "/work/flight-pro",
   },
   {
     slug: "journey-map",
@@ -83,5 +88,6 @@ export const homeGalleryItems: HomeGalleryItem[] = [
     backgroundSrc: "/home/journey-background.png",
     imageSrc: "/home/journey-image.png",
     imageFit: "wide",
+    href: "/work/journey-map",
   },
 ];

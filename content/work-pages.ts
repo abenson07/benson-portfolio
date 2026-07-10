@@ -1,4 +1,9 @@
-import type { WorkCardContent } from "@/content/work-card";
+import { caseStudyMediaBySlug } from "@/content/case-study-media";
+import {
+  homeGalleryItems,
+  type HomeGalleryImageFit,
+} from "@/content/homepage-gallery";
+import type { WorkCardContent, WorkCardForegroundLayout } from "@/content/work-card";
 import type { WorkPageContent } from "@/content/work-page-template";
 import { workPageTemplate } from "@/content/work-page-template";
 import { workUpNextPreferences } from "@/content/work-up-next-config";
@@ -83,6 +88,9 @@ const workPageDefinitions: CreateWorkPageInput[] = [
     primaryTag: "Product Design",
     coverImageUrl: "/work/eclipse-rx.png",
     category: "product-design",
+    overrides: {
+      media: caseStudyMediaBySlug["eclipse-rx"],
+    },
   },
   {
     slug: "mwo",
@@ -118,6 +126,9 @@ const workPageDefinitions: CreateWorkPageInput[] = [
     primaryTag: "Product Design",
     coverImageUrl: "/work/nutrilyze-cover.png",
     category: "product-design",
+    overrides: {
+      media: caseStudyMediaBySlug.nutrilyze,
+    },
   },
   {
     slug: "contextual-messaging",
@@ -181,6 +192,9 @@ const workPageDefinitions: CreateWorkPageInput[] = [
     primaryTag: "Product Design",
     coverImageUrl: "/work/09.png",
     category: "product-design",
+    overrides: {
+      media: caseStudyMediaBySlug["flight-pro"],
+    },
   },
   {
     slug: "dave",
@@ -216,6 +230,9 @@ const workPageDefinitions: CreateWorkPageInput[] = [
     primaryTag: "Strategy & Research",
     coverImageUrl: "/work/journey-map.png",
     category: "strategy-research",
+    overrides: {
+      media: caseStudyMediaBySlug["journey-map"],
+    },
   },
   {
     slug: "event-setup-tool",
@@ -240,7 +257,7 @@ const workPageDefinitions: CreateWorkPageInput[] = [
   },
 ];
 
-/** Home highlight order — used for Up Next chaining on mapped projects. */
+/** Home highlight order — used for hero surfaces; not Up Next until more studies ship. */
 export const heroWorkSlugOrder = [
   "eclipse-rx",
   "mwo",
@@ -261,7 +278,95 @@ export const heroWorkSlugOrder = [
   "omnibox",
 ] as const;
 
+/** Case studies with real media + markdown — Up Next only cycles these. */
+export const readyCaseStudySlugOrder = [
+  "eclipse-rx",
+  "nutrilyze",
+  "flight-pro",
+  "journey-map",
+] as const;
+
+const galleryBySlug = Object.fromEntries(
+  homeGalleryItems.map((item) => [item.slug, item]),
+);
+
+function galleryFitToForegroundLayout(
+  fit: HomeGalleryImageFit,
+): WorkCardForegroundLayout {
+  switch (fit) {
+    case "tall":
+      return "phone";
+    case "full":
+      return "full";
+    case "wide":
+    default:
+      return "desktop";
+  }
+}
+
 function buildUpNextCard(page: WorkPage): WorkCardContent {
+  const gallery = galleryBySlug[page.slug];
+
+  if (page.slug === "flight-pro" && gallery) {
+    return {
+      title: page.title,
+      href: `/work/${page.slug}`,
+      background: {
+        type: "image",
+        src: gallery.backgroundSrc,
+        alt: `${page.title} preview`,
+      },
+      foreground: {
+        layout: "full",
+        media: {
+          type: "image",
+          src: "/case-studies/flight-pro-full.png",
+          alt: `${page.title} detail`,
+        },
+      },
+    };
+  }
+
+  if (page.slug === "nutrilyze" && gallery) {
+    return {
+      title: page.title,
+      href: `/work/${page.slug}`,
+      background: {
+        type: "image",
+        src: gallery.backgroundSrc,
+        alt: `${page.title} preview`,
+      },
+      foreground: {
+        layout: "tall",
+        media: {
+          type: "image",
+          src: gallery.imageSrc,
+          alt: `${page.title} detail`,
+        },
+      },
+    };
+  }
+
+  if (gallery) {
+    return {
+      title: page.title,
+      href: `/work/${page.slug}`,
+      background: {
+        type: "image",
+        src: gallery.backgroundSrc,
+        alt: `${page.title} preview`,
+      },
+      foreground: {
+        layout: galleryFitToForegroundLayout(gallery.imageFit),
+        media: {
+          type: "image",
+          src: gallery.imageSrc,
+          alt: `${page.title} detail`,
+        },
+      },
+    };
+  }
+
   return {
     title: page.title,
     href: `/work/${page.slug}`,
@@ -280,22 +385,23 @@ export function buildUpNextCardForSlug(slug: string): WorkCardContent | undefine
 
 function getCircularNextSlug(
   slug: string,
-  heroSlugs: string[],
-  allSlugs: string[],
+  readySlugs: string[],
 ): string | undefined {
-  const sequence = heroSlugs.includes(slug) ? heroSlugs : allSlugs;
-  const index = sequence.indexOf(slug);
-  if (index === -1) {
+  if (readySlugs.length === 0) {
     return undefined;
   }
 
-  return sequence[(index + 1) % sequence.length];
+  const index = readySlugs.indexOf(slug);
+  if (index === -1) {
+    return readySlugs[0];
+  }
+
+  return readySlugs[(index + 1) % readySlugs.length];
 }
 
 function attachUpNext(pages: WorkPage[]): WorkPage[] {
   const bySlug = new Map(pages.map((page) => [page.slug, page]));
-  const heroSlugs = heroWorkSlugOrder.filter((slug) => bySlug.has(slug));
-  const allSlugs = pages.map((page) => page.slug);
+  const readySlugs = readyCaseStudySlugOrder.filter((slug) => bySlug.has(slug));
 
   return pages.map((page) => {
     const preference = workUpNextPreferences[page.slug];
@@ -322,7 +428,7 @@ function attachUpNext(pages: WorkPage[]): WorkPage[] {
       };
     }
 
-    const nextSlug = getCircularNextSlug(page.slug, heroSlugs, allSlugs);
+    const nextSlug = getCircularNextSlug(page.slug, readySlugs);
     const nextPage = nextSlug ? bySlug.get(nextSlug) : undefined;
 
     if (!nextPage) {

@@ -146,6 +146,10 @@
   display: none;
 }
 
+.work-gallery-card__coming-soon {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .work-gallery {
     padding: 48px var(--body-inline-padding);
@@ -188,6 +192,24 @@
   .work-gallery-card__scrim,
   .work-gallery-card__overlay {
     display: none;
+  }
+
+  .work-gallery-card__coming-soon {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .work-gallery-card__coming-soon-placard {
+    display: block;
+    width: 120%;
+    height: auto;
+    max-width: none;
+    transform: rotate(7.22deg);
   }
 
   .work-gallery-card__caption {

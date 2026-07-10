@@ -97,6 +97,51 @@
   border-radius: clamp(0.5rem, 1vw, 0.85rem);
 }
 
+.work-card__thumbnail-inner--full {
+  padding: 0;
+  display: block;
+}
+
+.work-card__foreground--full {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  height: 80%;
+  width: auto;
+  overflow: visible;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.work-card__media--full {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+}
+
+.work-card__thumbnail-inner--tall {
+  padding: clamp(1rem, 2.5vw, 2rem);
+}
+
+.work-card__foreground--tall {
+  height: min(82%, 30rem);
+  width: auto;
+  overflow: visible;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.work-card__media--tall {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.35));
+}
+
 .work-card__thumbnail-inner--phone {
   padding: clamp(1.25rem, 3vw, 2.5rem);
 }

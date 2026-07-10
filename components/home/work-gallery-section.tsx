@@ -15,6 +15,7 @@ import { WorkGalleryCard } from "./work-gallery-card";
 import "@/app/home/work-gallery.css";
 
 const COMING_SOON_LABEL = "coming soon";
+const VIEW_LABEL = "view";
 
 export function WorkGallerySection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -25,8 +26,13 @@ export function WorkGallerySection() {
   useWorkGalleryParallax({ sectionRef });
 
   const handleHover = useCallback(
-    (active: boolean) => {
-      setCursorLabel(active ? COMING_SOON_LABEL : null, { scale: 0.5 });
+    (active: boolean, href?: string) => {
+      if (!active) {
+        setCursorLabel(null);
+        return;
+      }
+
+      setCursorLabel(href ? VIEW_LABEL : COMING_SOON_LABEL, { scale: 0.5 });
     },
     [setCursorLabel],
   );

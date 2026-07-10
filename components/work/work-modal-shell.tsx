@@ -19,6 +19,11 @@ import {
   prefersReducedMotion,
   type LenisScrollerHandle,
 } from "@/lib/motion/lenis-gsap";
+import {
+  consumeWorkModalHistoryClose,
+  markWorkModalHistoryEntry,
+  resetWorkModalHistory,
+} from "@/lib/work-modal-history";
 
 import "@/app/work/work-modal.css";
 
@@ -217,12 +222,19 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
       document.body.classList.remove("work-modal-open");
       clearChrome();
 
-      if (window.history.length > 1) {
-        router.back();
+      const action = consumeWorkModalHistoryClose();
+
+      if (action.type === "go") {
+        window.history.go(action.delta);
         return;
       }
 
-      router.push("/", { scroll: false });
+      if (action.type === "push") {
+        router.push(action.href, { scroll: false });
+        return;
+      }
+
+      router.back();
     };
 
     if (reducedMotion) {
@@ -268,6 +280,7 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
     setOpen(true);
     document.body.classList.add("work-modal-open");
     document.body.style.setProperty("--work-modal-chrome-progress", "0");
+    markWorkModalHistoryEntry(slug);
 
     const modalRoot = modalRootRef.current;
     const backdrop = backdropRef.current;
@@ -380,6 +393,17 @@ export function WorkModalShell({ slug, children }: WorkModalShellProps) {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [closeModal]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (!window.location.pathname.startsWith("/work/")) {
+        resetWorkModalHistory();
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   return (
     <div

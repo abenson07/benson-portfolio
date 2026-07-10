@@ -3,8 +3,11 @@ export type WorkUpNextPreference = {
   secondary?: string;
 };
 
-/** Per-project Up Next targets — primary shown first; secondary when primary was already visited. */
+/**
+ * Per-project Up Next targets — primary shown first; secondary when primary was already visited.
+ * Leave empty to cycle `readyCaseStudySlugOrder` (only studies with real content).
+ */
 export const workUpNextPreferences: Partial<Record<string, WorkUpNextPreference>> = {
-  // "eclipse-rx": { primary: "mwo", secondary: "contextual-messaging" },
-  // "mwo": { primary: "eclipse-rx", secondary: "secure-blueprint" },
+  // Prefer ready slugs only while other case studies are still placeholders:
+  // "eclipse-rx": { primary: "flight-pro", secondary: "nutrilyze" },
 };

@@ -17,7 +17,7 @@ app/
 
 - Soft navigation from `/` → `/work/crema` shows the modal over the homepage.
 - Hard navigation or refresh on `/work/crema` renders the full case study page (no modal shell).
-- Close calls `router.back()` (or `/` if no history).
+- Close dismisses the **entire** modal history stack (not one `router.back()` step), returning to the page that opened the first modal.
 
 ## Key files
 
