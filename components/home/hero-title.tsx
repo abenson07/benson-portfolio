@@ -13,7 +13,7 @@ export const HeroTitle = forwardRef<HTMLDivElement>(function HeroTitle(_, ref) {
 
   return (
     <div ref={ref} className="hero-title" data-title-text="BENSON" aria-hidden>
-      <div className="hero-title__track" style={{ columnGap: "1rem" }}>
+      <div className="hero-title__track">
         {HERO_TITLE_LETTERS.map(({ char, d, x, width }, index) => (
           <div
             key={`${char}-${index}`}

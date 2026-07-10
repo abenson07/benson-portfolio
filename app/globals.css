@@ -678,8 +678,9 @@ html.custom-cursor-active * {
     opacity: 0;
   }
 
+  .hero-title__track,
   .hero-mobile-brand .hero-title__track {
-    column-gap: 0.35rem;
+    column-gap: 0;
   }
 
   .hero-mobile-brand__tagline {
