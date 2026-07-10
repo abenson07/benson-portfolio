@@ -159,6 +159,14 @@ body {
     will-change: auto;
   }
 
+  .hero-highlights__letter {
+    will-change: auto;
+  }
+
+  .hero-highlights__word-line--alt {
+    display: none;
+  }
+
   .signature-header {
     transform: none;
   }
@@ -439,7 +447,7 @@ html.custom-cursor-active * {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  align-items: baseline;
+  align-items: center;
   gap: 0 0.75em;
   width: 100%;
   margin-bottom: 1rem;
@@ -449,10 +457,38 @@ html.custom-cursor-active * {
   margin-left: 0.75em;
   color: var(--color-accent);
   pointer-events: none;
+  line-height: inherit;
 }
 
 .hero-highlights__word {
+  position: relative;
   display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  line-height: inherit;
+}
+
+.hero-highlights__word-line {
+  position: relative;
+  display: flex;
+  white-space: nowrap;
+  line-height: inherit;
+}
+
+.hero-highlights__word-line--alt {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-highlights__letter {
+  display: block;
+  flex: 0 0 auto;
+  line-height: inherit;
+  will-change: opacity;
 }
 
 .hero-highlights--packed {
@@ -472,7 +508,7 @@ html.custom-cursor-active * {
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
-  align-items: baseline;
+  align-items: center;
   gap: 0 1.35em;
   width: 100%;
 }
@@ -509,7 +545,7 @@ html.custom-cursor-active * {
 .hero-highlights__row {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   width: 100%;
 }
 
@@ -520,19 +556,20 @@ html.custom-cursor-active * {
 
 .hero-highlights__segment {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   flex: 0 0 auto;
   white-space: nowrap;
 }
 
 .hero-highlights__label {
+  display: inline-block;
   border: 0;
   padding: 0;
   background: transparent;
   color: inherit;
   font: inherit;
   text-decoration: none;
-  cursor: pointer;
+  cursor: default;
   transition: opacity 0.25s ease;
 }
 

@@ -1,13 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 
 import type { HeroHighlight } from "@/content/hero-highlights";
 import {
   buildGridRowTemplateColumns,
   isSparseHighlightRow,
 } from "@/lib/motion/pack-hero-highlight-rows";
+import { useHeroHighlightLetterHover } from "@/lib/motion/use-hero-highlight-letter-hover";
+
+function splitLetters(text: string): string[] {
+  return Array.from(text);
+}
 
 type HighlightLabelProps = {
   item: HeroHighlight;
@@ -15,28 +19,56 @@ type HighlightLabelProps = {
 };
 
 export function HighlightLabel({ item, onHover }: HighlightLabelProps) {
-  const words = item.label.trim().split(/\s+/).filter(Boolean);
+  const wordRef = useRef<HTMLSpanElement>(null);
+  const { play, reverse } = useHeroHighlightLetterHover({ wordRef });
+
+  const handleEnter = () => {
+    onHover(item.id);
+    play();
+  };
+
+  const handleLeave = () => {
+    onHover(null);
+    reverse();
+  };
 
   return (
-    <Link
-      href={`/work/${item.slug}`}
+    <span
       className="hero-highlights__label"
       data-hero-load-segment
-      onMouseEnter={() => onHover(item.id)}
-      onFocus={() => onHover(item.id)}
-      onBlur={() => onHover(null)}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
     >
-      {words.map((word, index) => (
-        <span
-          key={`${word}-${index}`}
-          className="hero-highlights__word"
-          data-hero-load-word
-        >
-          {word}
-          {index < words.length - 1 ? "\u00A0" : null}
+      <span
+        ref={wordRef}
+        className="hero-highlights__word"
+        data-hero-load-word
+      >
+        <span className="hero-highlights__word-line">
+          {splitLetters(item.label).map((char, index) => (
+            <span
+              key={`primary-${char}-${index}`}
+              className="hero-highlights__letter"
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
         </span>
-      ))}
-    </Link>
+        <span
+          className="hero-highlights__word-line hero-highlights__word-line--alt"
+          aria-hidden
+        >
+          {splitLetters(item.hoverLabel).map((char, index) => (
+            <span
+              key={`alt-${char}-${index}`}
+              className="hero-highlights__letter"
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </span>
+      </span>
+    </span>
   );
 }
 

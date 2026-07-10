@@ -3,15 +3,26 @@ import { getWorkPage } from "@/content/work-pages";
 export type HeroHighlight = {
   id: string;
   label: string;
+  hoverLabel: string;
   slug: string;
   backgroundImageUrl?: string;
 };
 
 export const heroHighlights: HeroHighlight[] = [
-  { id: "design", label: "Design", slug: "eclipse-rx" },
-  { id: "strategy", label: "Strategy", slug: "outcome-driven-signals-setup" },
-  { id: "research", label: "Research", slug: "journey-map" },
-  { id: "code", label: "Code", slug: "conversions-api" },
+  { id: "design", label: "Design", hoverLabel: "Craft", slug: "eclipse-rx" },
+  {
+    id: "strategy",
+    label: "Strategy",
+    hoverLabel: "Product",
+    slug: "outcome-driven-signals-setup",
+  },
+  {
+    id: "research",
+    label: "Research",
+    hoverLabel: "People",
+    slug: "journey-map",
+  },
+  { id: "code", label: "Code", hoverLabel: "AI", slug: "conversions-api" },
 ];
 
 function hashString(value: string): number {
