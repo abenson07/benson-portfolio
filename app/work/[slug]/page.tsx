@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CaseStudyPage } from "@/components/work/case-study/case-study-page";
+import { WorkPageShell } from "@/components/work/work-page-shell";
 import { getEnrichedWorkPage } from "@/content/enrich-work-page";
 import { getWorkPageSlugs } from "@/content/work-pages";
 
@@ -37,5 +38,9 @@ export default async function WorkProjectPage({ params }: WorkProjectPageProps) 
     notFound();
   }
 
-  return <CaseStudyPage content={page} />;
+  return (
+    <WorkPageShell>
+      <CaseStudyPage content={page} />
+    </WorkPageShell>
+  );
 }

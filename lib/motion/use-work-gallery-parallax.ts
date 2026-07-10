@@ -36,7 +36,9 @@ export function useWorkGalleryParallax({
     gsap.registerPlugin(ScrollTrigger);
 
     const scroller =
-      section.closest(".page-wrapper--scrolling-home") ?? undefined;
+      section.closest(
+        ".page-wrapper--scrolling-home, .page-wrapper--scrolling-work",
+      ) ?? undefined;
 
     if (prefersReducedMotion()) {
       cards.forEach((card) => {

@@ -21,24 +21,57 @@ function VaultArrow() {
   );
 }
 
-export function VaultSection() {
+export type VaultSectionProps = {
+  support: string;
+  heading: string;
+  cta: string;
+  /** When set, the heading is a link. Otherwise it renders as plain text. */
+  headingHref?: string;
+  id?: string;
+  figmaNode?: string;
+  supportFigmaNode?: string;
+  headingFigmaNode?: string;
+  ctaFigmaNode?: string;
+  showArrow?: boolean;
+};
+
+export function VaultSection({
+  support,
+  heading,
+  cta,
+  headingHref,
+  id,
+  figmaNode,
+  supportFigmaNode,
+  headingFigmaNode,
+  ctaFigmaNode,
+  showArrow = true,
+}: VaultSectionProps) {
+  const headingClassName = "vault__heading";
+
   return (
-    <section className="vault" data-figma-node="3051:39501">
+    <section className="vault" id={id} data-figma-node={figmaNode}>
       <div className="vault__pin">
         <div className="vault__sticky">
-          <p className="vault__support" data-figma-node="3051:40790">
-            15 years of experience doesn&apos;t fit on one page
+          <p className="vault__support" data-figma-node={supportFigmaNode}>
+            {support}
           </p>
-          <Link
-            href="/work"
-            className="vault__heading"
-            data-figma-node="3051:40789"
-          >
-            SEE MORE
-          </Link>
-          <span className="vault__cta" data-figma-node="3051:40791">
-            Click Here Now
-            <VaultArrow />
+          {headingHref ? (
+            <Link
+              href={headingHref}
+              className={headingClassName}
+              data-figma-node={headingFigmaNode}
+            >
+              {heading}
+            </Link>
+          ) : (
+            <p className={headingClassName} data-figma-node={headingFigmaNode}>
+              {heading}
+            </p>
+          )}
+          <span className="vault__cta" data-figma-node={ctaFigmaNode}>
+            {cta}
+            {showArrow ? <VaultArrow /> : null}
           </span>
         </div>
       </div>

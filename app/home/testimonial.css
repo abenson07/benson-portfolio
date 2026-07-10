@@ -1,6 +1,5 @@
 .testimonial-stack {
   position: relative;
-  background: var(--foreground);
 }
 
 .testimonial-stack__sticky {
@@ -13,7 +12,6 @@
   gap: clamp(2rem, 4vw, 4rem);
   padding: 0 var(--body-inline-padding);
   padding-left: 6rem;
-  background: var(--foreground);
 }
 
 .testimonial-stack__text {
@@ -27,7 +25,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1.25rem;
+  gap: 0.75rem;
   opacity: 0;
 }
 
@@ -52,21 +50,21 @@
 .testimonial-stack__meta {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.1rem;
 }
 
 .testimonial-stack__name {
   margin: 0;
   font-family: var(--font-pp-migra), "Iowan Old Style", "Palatino Linotype",
     serif;
-  font-size: 22px;
+  font-size: 24px;
   color: #191614;
 }
 
 .testimonial-stack__title {
   margin: 0;
   font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(41, 41, 41, 0.7);
 }
 

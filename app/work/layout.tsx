@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 
-import { WorkPageShell } from "@/components/work/work-page-shell";
-
 import "./case-study.css";
 import "./work-card.css";
 import "./work.css";
+import "./work-index.css";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -15,5 +14,5 @@ export default function WorkLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <WorkPageShell>{children}</WorkPageShell>;
+  return children;
 }

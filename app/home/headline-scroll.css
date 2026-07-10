@@ -3,7 +3,6 @@
   position: relative;
   z-index: 1;
   margin-top: -40vh;
-  background: var(--foreground);
 }
 
 .headline-scroll__sticky {

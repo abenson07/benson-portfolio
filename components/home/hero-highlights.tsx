@@ -64,7 +64,11 @@ function HeroHighlightsGap({
       {highlights.map((item, index) => (
         <HighlightSegment key={item.id} item={item} onHover={onHover}>
           {index < highlights.length - 1 ? (
-            <span className="hero-highlights__bullet" aria-hidden>
+            <span
+              className="hero-highlights__bullet"
+              data-hero-load-word
+              aria-hidden
+            >
               •
             </span>
           ) : null}

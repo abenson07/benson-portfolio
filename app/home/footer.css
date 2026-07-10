@@ -47,7 +47,7 @@
 }
 
 .reveal-footer__headline {
-  margin: 0;
+  margin: -0.85rem 0 0;
   font-family: var(--font-pp-neue-corp-condensed), var(--font-pp-neue-corp-tight),
     "Arial Black", "Helvetica Neue", sans-serif;
   font-size: clamp(4rem, 16.5vw, 240px);

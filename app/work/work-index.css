@@ -1,0 +1,129 @@
+.work-index {
+  position: relative;
+  min-height: 100%;
+  color: #292929;
+}
+
+.work-index-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  max-width: 853px;
+  padding: clamp(5.5rem, 12vh, 7.5rem) var(--body-inline-padding) 0;
+  margin-bottom: -20px;
+}
+
+.work-index .work-gallery {
+  padding-top: 60px;
+}
+
+.work-index-intro__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.work-index-intro__eyebrow {
+  margin: 0;
+  font-family: var(--font-rock-salt), "Comic Sans MS", cursive;
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--color-accent);
+}
+
+.work-index-intro__headline {
+  margin: 0;
+  font-family: var(--font-pp-neue-corp-tight), "Arial Black", "Helvetica Neue",
+    sans-serif;
+  font-size: clamp(3.25rem, 7.2vw, 104px);
+  line-height: 0.8;
+  text-transform: uppercase;
+  color: #292929;
+}
+
+.work-index-intro__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.work-index-intro__chip {
+  margin: 0;
+  padding: 8px;
+  border: 1px solid #000;
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--font-pp-neue-corp-compact), "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #292929;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.work-index-intro__chip:hover,
+.work-index-intro__chip--active {
+  background: #292929;
+  color: #f0ece4;
+}
+
+.work-index-intro__refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  color: #292929;
+  cursor: pointer;
+}
+
+.work-index-intro__refresh-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.work-gallery-vault > .vault {
+  /* Match Figma: vault interstitial sits on the canvas, not a black panel. */
+  background: #f0ece4;
+  scroll-margin-top: 15vh;
+}
+
+.work-gallery-vault > .vault .vault__sticky {
+  background: #f0ece4;
+}
+
+.work-gallery-vault > .vault .vault__cta {
+  /* Figma places the scribble under the right side of THE VAULT. */
+  align-self: flex-end;
+  margin-right: clamp(1rem, 8vw, 6rem);
+  margin-top: -0.5rem;
+}
+
+@media (max-width: 768px) {
+  .work-index-intro {
+    gap: 1.5rem;
+    padding-top: clamp(4.5rem, 10vh, 6rem);
+  }
+
+  .work-index-intro__eyebrow {
+    font-size: 16px;
+  }
+
+  .work-index-intro__headline {
+    font-size: clamp(2.5rem, 12vw, 3.75rem);
+  }
+
+  .work-index-intro__chip {
+    font-size: 13px;
+  }
+
+  .work-gallery-vault > .vault .vault__cta {
+    align-self: center;
+    margin-right: 0;
+  }
+}

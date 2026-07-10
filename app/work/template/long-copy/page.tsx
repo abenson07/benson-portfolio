@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { CaseStudyPage } from "@/components/work/case-study/case-study-page";
+import { WorkPageShell } from "@/components/work/work-page-shell";
 import { workPageTemplateLongCopy } from "@/content/work-page-template";
 
 export const metadata: Metadata = {
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function WorkTemplateLongCopyPage() {
-  return <CaseStudyPage content={workPageTemplateLongCopy} />;
+  return (
+    <WorkPageShell>
+      <CaseStudyPage content={workPageTemplateLongCopy} />
+    </WorkPageShell>
+  );
 }

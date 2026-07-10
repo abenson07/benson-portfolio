@@ -15,6 +15,8 @@ type HighlightLabelProps = {
 };
 
 export function HighlightLabel({ item, onHover }: HighlightLabelProps) {
+  const words = item.label.trim().split(/\s+/).filter(Boolean);
+
   return (
     <Link
       href={`/work/${item.slug}`}
@@ -24,7 +26,16 @@ export function HighlightLabel({ item, onHover }: HighlightLabelProps) {
       onFocus={() => onHover(item.id)}
       onBlur={() => onHover(null)}
     >
-      {item.label}
+      {words.map((word, index) => (
+        <span
+          key={`${word}-${index}`}
+          className="hero-highlights__word"
+          data-hero-load-word
+        >
+          {word}
+          {index < words.length - 1 ? "\u00A0" : null}
+        </span>
+      ))}
     </Link>
   );
 }

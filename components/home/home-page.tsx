@@ -21,7 +21,16 @@ export function HomePage() {
       <HeadlineScrollSection />
       <div className="home-gallery-vault">
         <WorkGallerySection />
-        <VaultSection />
+        <VaultSection
+          support="15 years of experience doesn't fit on one page"
+          heading="MORE SOON"
+          headingHref="/work"
+          cta="Watch This Space"
+          figmaNode="3051:39501"
+          supportFigmaNode="3051:40790"
+          headingFigmaNode="3051:40789"
+          ctaFigmaNode="3051:40791"
+        />
       </div>
       <TestimonialStackSection />
       <RevealFooter />

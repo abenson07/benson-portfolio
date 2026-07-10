@@ -50,7 +50,9 @@ export function useWorkGalleryReveal({ sectionRef }: UseWorkGalleryRevealArgs) {
     }
 
     const scroller =
-      section.closest(".page-wrapper--scrolling-home") ?? undefined;
+      section.closest(
+        ".page-wrapper--scrolling-home, .page-wrapper--scrolling-work",
+      ) ?? undefined;
 
     const delays: number[] = [];
     let pendingSpan1Index: number | null = null;

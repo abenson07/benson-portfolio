@@ -12,8 +12,17 @@ import {
 } from "react";
 import gsap from "gsap";
 
+type CustomCursorLabelOptions = {
+  /** Visual scale of the expanded cursor. Defaults to 1. */
+  scale?: number;
+};
+
 type CustomCursorController = {
-  setLabel: (label: string | null, owner: string) => void;
+  setLabel: (
+    label: string | null,
+    owner: string,
+    options?: CustomCursorLabelOptions,
+  ) => void;
   setSuppressed: (suppressed: boolean) => void;
 };
 
@@ -24,6 +33,7 @@ const MIN_CIRCLE = 160;
 const CIRCLE_PADDING = 56;
 const EXPAND_DURATION = 0.35;
 const FOLLOW_DURATION = 0.35;
+const DEFAULT_SCALE = 1;
 
 const lastPointer = { x: 0, y: 0 };
 let pointerListenerBound = false;
@@ -69,9 +79,11 @@ function measureCircleSize(label: string): number {
 function CustomCursorView({
   label,
   enabled,
+  scale = DEFAULT_SCALE,
 }: {
   label: string | null;
   enabled: boolean;
+  scale?: number;
 }) {
   const cursorRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
@@ -97,6 +109,7 @@ function CustomCursorView({
       yPercent: -50,
       x: lastPointer.x,
       y: lastPointer.y,
+      scale: DEFAULT_SCALE,
       opacity: 0,
     });
 
@@ -147,12 +160,17 @@ function CustomCursorView({
 
       const targetSize = measureCircleSize(label);
       if (!expandedRef.current) {
-        gsap.set(cursor, { width: DOT_SIZE, height: DOT_SIZE });
+        gsap.set(cursor, {
+          width: DOT_SIZE,
+          height: DOT_SIZE,
+          scale: DEFAULT_SCALE,
+        });
       }
 
       gsap.to(cursor, {
         width: targetSize,
         height: targetSize,
+        scale,
         duration,
         ease: "power2.out",
       });
@@ -169,11 +187,12 @@ function CustomCursorView({
     gsap.to(cursor, {
       width: DOT_SIZE,
       height: DOT_SIZE,
+      scale: DEFAULT_SCALE,
       duration,
       ease: "power2.out",
     });
     gsap.to(dot, { scale: 1, opacity: 1, duration, ease: "power2.out" });
-  }, [enabled, label]);
+  }, [enabled, label, scale]);
 
   if (!enabled) {
     return null;
@@ -197,24 +216,30 @@ function CustomCursorView({
 
 export function CustomCursorProvider({ children }: { children: ReactNode }) {
   const [label, setLabelState] = useState<string | null>(null);
+  const [scale, setScale] = useState(DEFAULT_SCALE);
   const [suppressed, setSuppressed] = useState(false);
   const cursorEnabled = useCustomCursorEnabled();
   const ownerRef = useRef<string | null>(null);
 
-  const setLabel = useCallback((next: string | null, owner: string) => {
-    if (next) {
-      ownerRef.current = owner;
-      setLabelState(next);
-      return;
-    }
+  const setLabel = useCallback(
+    (next: string | null, owner: string, options?: CustomCursorLabelOptions) => {
+      if (next) {
+        ownerRef.current = owner;
+        setLabelState(next);
+        setScale(options?.scale ?? DEFAULT_SCALE);
+        return;
+      }
 
-    if (ownerRef.current && ownerRef.current !== owner) {
-      return;
-    }
+      if (ownerRef.current && ownerRef.current !== owner) {
+        return;
+      }
 
-    ownerRef.current = null;
-    setLabelState(null);
-  }, []);
+      ownerRef.current = null;
+      setLabelState(null);
+      setScale(DEFAULT_SCALE);
+    },
+    [],
+  );
 
   const value = useMemo<CustomCursorController>(
     () => ({ setLabel, setSuppressed }),
@@ -226,6 +251,7 @@ export function CustomCursorProvider({ children }: { children: ReactNode }) {
       {children}
       <CustomCursorView
         label={label}
+        scale={scale}
         enabled={cursorEnabled && !suppressed}
       />
     </CustomCursorContext.Provider>
@@ -236,8 +262,8 @@ export function useCustomCursorController(owner: string) {
   const ctx = useContext(CustomCursorContext);
 
   const setLabel = useCallback(
-    (label: string | null) => {
-      ctx?.setLabel(label, owner);
+    (label: string | null, options?: CustomCursorLabelOptions) => {
+      ctx?.setLabel(label, owner, options);
     },
     [ctx, owner],
   );

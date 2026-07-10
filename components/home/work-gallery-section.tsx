@@ -26,7 +26,7 @@ export function WorkGallerySection() {
 
   const handleHover = useCallback(
     (active: boolean) => {
-      setCursorLabel(active ? COMING_SOON_LABEL : null);
+      setCursorLabel(active ? COMING_SOON_LABEL : null, { scale: 0.5 });
     },
     [setCursorLabel],
   );

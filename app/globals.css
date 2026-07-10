@@ -57,14 +57,16 @@ body {
   color: var(--foreground);
 }
 
-.page-wrapper--scrolling-home {
+.page-wrapper--scrolling-home,
+.page-wrapper--scrolling-work {
   overflow-y: auto;
   overflow-x: hidden;
   /* Canvas fill only — do not override --background (hero/masked still need dark). */
   background: #f0ece4;
 }
 
-.home-scroll-content {
+.home-scroll-content,
+.work-scroll-content {
   position: relative;
 }
 
@@ -152,7 +154,7 @@ body {
   .hero-title__char,
   .signature-header,
   .hero-highlights,
-  .hero-highlights [data-hero-load-segment] {
+  .hero-highlights [data-hero-load-word] {
     opacity: 1;
     will-change: auto;
   }
@@ -445,7 +447,12 @@ html.custom-cursor-active * {
 
 .hero-highlights__bullet {
   margin-left: 0.75em;
+  color: var(--color-accent);
   pointer-events: none;
+}
+
+.hero-highlights__word {
+  display: inline-block;
 }
 
 .hero-highlights--packed {
@@ -529,7 +536,7 @@ html.custom-cursor-active * {
   transition: opacity 0.25s ease;
 }
 
-.hero-highlights [data-hero-load-segment] {
+.hero-highlights [data-hero-load-word] {
   display: inline-block;
   opacity: 0;
   will-change: transform, opacity;
@@ -629,18 +636,21 @@ html.custom-cursor-active * {
   }
 
   .hero-portrait--mobile {
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 100dvh;
-    opacity: 1;
+    top: auto;
+    right: auto;
+    bottom: -10%;
+    left: -65%;
+    width: auto;
+    height: 100%;
+    opacity: 0.45;
   }
 
   .hero-portrait--mobile .hero-portrait__image {
-    width: 100%;
-    height: 100dvh;
-    object-fit: cover;
-    object-position: 28% center;
+    width: auto;
+    max-width: none;
+    height: 100%;
+    object-fit: unset;
+    object-position: unset;
     mix-blend-mode: normal;
   }
 
@@ -670,7 +680,7 @@ html.custom-cursor-active * {
 
   @media (prefers-reduced-motion: reduce) {
     .hero-mobile-brand__alex,
-    .hero-mobile-brand__tagline [data-hero-load-segment] {
+    .hero-mobile-brand__tagline [data-hero-load-word] {
       opacity: 1;
     }
   }
@@ -696,7 +706,11 @@ html.custom-cursor-active * {
     white-space: nowrap;
   }
 
-  .hero-mobile-brand__tagline [data-hero-load-segment] {
+  .hero-mobile-brand__bullet {
+    color: var(--color-accent);
+  }
+
+  .hero-mobile-brand__tagline [data-hero-load-word] {
     display: inline-block;
     opacity: 0;
   }

@@ -35,7 +35,7 @@ export function HeadlineScrollSection() {
               data-figma-node="3051:38110"
             >
               <span className="headline-scroll__line">
-                12 years working at the
+                15 years working at the
               </span>{" "}
               <span className="headline-scroll__line">intersection of</span>
             </h2>

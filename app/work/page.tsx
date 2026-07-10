@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { WorkIndexPage } from "@/components/work/work-index-page";
 
 export default function WorkPage() {
-  redirect("/");
+  return <WorkIndexPage />;
 }

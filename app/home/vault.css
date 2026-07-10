@@ -1,14 +1,17 @@
-.home-gallery-vault {
+.home-gallery-vault,
+.work-gallery-vault {
   position: relative;
 }
 
 /* Gallery stays above the vault sticky reveal. */
-.home-gallery-vault > .work-gallery {
+.home-gallery-vault > .work-gallery,
+.work-gallery-vault > .work-gallery {
   position: relative;
   z-index: 2;
 }
 
-.home-gallery-vault > .vault {
+.home-gallery-vault > .vault,
+.work-gallery-vault > .vault {
   position: relative;
   z-index: 1;
 }
@@ -34,7 +37,6 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  background: var(--foreground);
   text-align: center;
 }
 
@@ -74,9 +76,15 @@
   flex-shrink: 0;
 }
 
+.vault__heading:not(a) {
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .home-gallery-vault > .work-gallery,
-  .home-gallery-vault > .vault {
+  .home-gallery-vault > .vault,
+  .work-gallery-vault > .work-gallery,
+  .work-gallery-vault > .vault {
     z-index: auto;
   }
 

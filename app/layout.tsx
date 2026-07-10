@@ -10,11 +10,39 @@ import { site } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
   title: {
-    default: site.name || "Benson",
-    template: site.name ? `%s · ${site.name}` : "%s",
+    default: site.title,
+    template: `%s · ${site.name}`,
   },
   description: site.description,
+  applicationName: site.name,
+  icons: {
+    icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: site.url,
+    siteName: site.name,
+    title: site.title,
+    description: site.description,
+    images: [
+      {
+        url: site.ogImage,
+        width: 1200,
+        height: 630,
+        alt: site.title,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: site.title,
+    description: site.description,
+    images: [site.ogImage],
+  },
 };
 
 export default function RootLayout({
