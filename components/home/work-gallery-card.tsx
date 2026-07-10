@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 
+import { useComingSoonBanner } from "@/components/coming-soon/coming-soon-banner";
 import {
   WORK_CARD_LANDSCAPE_ASPECT,
   WORK_CARD_PORTRAIT_ASPECT,
@@ -16,6 +17,7 @@ type WorkGalleryCardProps = {
 };
 
 export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
+  const { showComingSoon } = useComingSoonBanner();
   const aspect =
     item.span === 2 ? WORK_CARD_LANDSCAPE_ASPECT : WORK_CARD_PORTRAIT_ASPECT;
   const style = {
@@ -56,18 +58,6 @@ export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
           </div>
           <span className="work-gallery-card__category">{item.categoryLabel}</span>
         </div>
-        {!item.href ? (
-          <div className="work-gallery-card__coming-soon" aria-hidden>
-            <Image
-              className="work-gallery-card__coming-soon-placard"
-              src="/case-studies/coming-soon-placard.png"
-              alt=""
-              width={1600}
-              height={400}
-              unoptimized
-            />
-          </div>
-        ) : null}
       </div>
 
       <div className="work-gallery-card__caption">
@@ -87,6 +77,7 @@ export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
         style={style}
         data-figma-node={item.slug}
         href={item.href}
+        scroll={false}
         aria-label={`Open ${item.title} case study`}
         onMouseEnter={() => onHover(true, item.href)}
         onMouseLeave={() => onHover(false)}
@@ -97,15 +88,17 @@ export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
   }
 
   return (
-    <article
+    <button
+      type="button"
       className="work-gallery-card"
       style={style}
       data-figma-node={item.slug}
       aria-label={`${item.title} — coming soon`}
+      onClick={showComingSoon}
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
     >
       {content}
-    </article>
+    </button>
   );
 }

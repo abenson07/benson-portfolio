@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRef } from "react";
 import gsap from "gsap";
 
+import { useComingSoonBanner } from "@/components/coming-soon/coming-soon-banner";
+import { isCaseStudyReady } from "@/content/is-case-study-ready";
 import type { CaseStudy } from "@/content/case-studies";
 
 type WorkRowProps = {
@@ -16,6 +18,8 @@ export function WorkRow({ project, rowRef, onHover }: WorkRowProps) {
   const maskRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const enterFromBottomRef = useRef(true);
+  const { showComingSoon } = useComingSoonBanner();
+  const ready = isCaseStudyReady(project.slug);
 
   const collapseClip = (fromBottom: boolean) =>
     fromBottom ? "inset(100% 0 0 0)" : "inset(0 0 100% 0)";
@@ -50,16 +54,52 @@ export function WorkRow({ project, rowRef, onHover }: WorkRowProps) {
     });
   };
 
-  const handleEnter = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleEnter = (event: React.MouseEvent<HTMLElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const fromBottom = event.clientY - rect.top > rect.height / 2;
     reveal(fromBottom);
     onHover?.(project);
   };
 
+  const rowBody = (
+    <>
+      <span className="work-row__title work-row__title--dim">{project.title}</span>
+      <span className="work-row__accent-mask" ref={maskRef} aria-hidden>
+        <span className="work-row__accent-inner">
+          <span className="work-row__title work-row__title--accent">
+            {project.title}
+          </span>
+          <span className="work-row__meta">{project.categoryLabel}</span>
+        </span>
+      </span>
+    </>
+  );
+
+  if (!ready) {
+    return (
+      <button
+        type="button"
+        className="work-row"
+        ref={rowRef}
+        aria-label={`${project.title} — coming soon`}
+        onClick={showComingSoon}
+        onMouseEnter={handleEnter}
+        onMouseLeave={hide}
+        onFocus={() => {
+          reveal(true);
+          onHover?.(project);
+        }}
+        onBlur={hide}
+      >
+        {rowBody}
+      </button>
+    );
+  }
+
   return (
     <Link
       href={`/work/${project.slug}`}
+      scroll={false}
       className="work-row"
       ref={rowRef}
       onMouseEnter={handleEnter}
@@ -70,15 +110,7 @@ export function WorkRow({ project, rowRef, onHover }: WorkRowProps) {
       }}
       onBlur={hide}
     >
-      <span className="work-row__title work-row__title--dim">{project.title}</span>
-      <span className="work-row__accent-mask" ref={maskRef} aria-hidden>
-        <span className="work-row__accent-inner">
-          <span className="work-row__title work-row__title--accent">
-            {project.title}
-          </span>
-          <span className="work-row__meta">{project.categoryLabel}</span>
-        </span>
-      </span>
+      {rowBody}
     </Link>
   );
 }

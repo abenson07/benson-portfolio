@@ -166,10 +166,17 @@
   grid-template-columns: minmax(6rem, 1.1fr) minmax(10rem, 2fr) auto;
   column-gap: clamp(1rem, 2.5vw, 2.5rem);
   align-items: start;
+  width: 100%;
+  margin: 0;
   padding-block: clamp(1.25rem, 2.5vh, 2rem);
+  border: 0;
   border-bottom: 1px solid var(--foreground);
+  background: none;
+  font: inherit;
+  text-align: inherit;
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 }
 
 .experiences-row--hoverable {
@@ -207,11 +214,13 @@
   white-space: nowrap;
 }
 
-a.experiences-row {
+a.experiences-row,
+button.experiences-row {
   transition: opacity 0.2s ease;
 }
 
-a.experiences-row:hover {
+a.experiences-row:hover,
+button.experiences-row:hover {
   opacity: 0.72;
 }
 
@@ -345,7 +354,8 @@ a.experiences-row:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  a.experiences-row {
+  a.experiences-row,
+  button.experiences-row {
     transition: none;
   }
 }

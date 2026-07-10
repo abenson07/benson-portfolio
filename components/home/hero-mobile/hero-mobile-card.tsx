@@ -3,7 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { useComingSoonBanner } from "@/components/coming-soon/coming-soon-banner";
 import type { ResolvedHeroMobileCard } from "@/content/hero-mobile-cards";
+import { isCaseStudyReady } from "@/content/is-case-study-ready";
 
 import { rockSalt } from "@/lib/fonts/rock-salt";
 
@@ -20,6 +22,7 @@ export function HeroMobileCard({
   stackSize,
   clipPath,
 }: HeroMobileCardProps) {
+  const { showComingSoon } = useComingSoonBanner();
   const stackStyle = {
     zIndex: stackSize - index,
     clipPath,
@@ -55,6 +58,8 @@ export function HeroMobileCard({
   );
 
   if (card.type === "highlight") {
+    const ready = isCaseStudyReady(card.slug);
+
     return (
       <section
         className="hero-mobile-card hero-mobile-card--link"
@@ -62,13 +67,25 @@ export function HeroMobileCard({
         data-index={index}
         style={stackStyle}
       >
-        <Link
-          href={`/work/${card.slug}`}
-          className="hero-mobile-card__link"
-          aria-label={`Open ${card.highlight.label} case study`}
-        >
-          {content}
-        </Link>
+        {ready ? (
+          <Link
+            href={`/work/${card.slug}`}
+            scroll={false}
+            className="hero-mobile-card__link"
+            aria-label={`Open ${card.highlight.label} case study`}
+          >
+            {content}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className="hero-mobile-card__link"
+            aria-label={`${card.highlight.label} — coming soon`}
+            onClick={showComingSoon}
+          >
+            {content}
+          </button>
+        )}
       </section>
     );
   }

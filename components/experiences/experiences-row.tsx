@@ -2,7 +2,9 @@
 
 import { useRef } from "react";
 
+import { useComingSoonBanner } from "@/components/coming-soon/coming-soon-banner";
 import type { ExperienceRow } from "@/content/experiences";
+import { isWorkHrefReady } from "@/content/is-case-study-ready";
 
 type ExperiencesRowProps = {
   row: ExperienceRow;
@@ -18,6 +20,7 @@ export function ExperiencesRow({
   onRowLeave,
 }: ExperiencesRowProps) {
   const rowRef = useRef<HTMLElement>(null);
+  const { onComingSoonClick } = useComingSoonBanner();
 
   const handlePointerMove = (event: React.PointerEvent) => {
     if (!row.hasHoverCard) return;
@@ -43,8 +46,9 @@ export function ExperiencesRow({
   );
 
   const className = `experiences-row${row.hasHoverCard ? " experiences-row--hoverable" : ""}`;
+  const ready = isWorkHrefReady(row.href);
 
-  if (row.href) {
+  if (row.href && ready) {
     return (
       <a
         ref={rowRef as React.RefObject<HTMLAnchorElement>}
@@ -56,6 +60,23 @@ export function ExperiencesRow({
       >
         {content}
       </a>
+    );
+  }
+
+  if (row.href && !ready) {
+    return (
+      <button
+        type="button"
+        ref={rowRef as React.RefObject<HTMLButtonElement>}
+        className={className}
+        aria-label={`${row.title} — coming soon`}
+        onClick={onComingSoonClick}
+        onPointerEnter={handlePointerEnter}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+      >
+        {content}
+      </button>
     );
   }
 

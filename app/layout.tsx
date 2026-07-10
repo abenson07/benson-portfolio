@@ -5,6 +5,7 @@ import { ppNeueCorpCompact } from "@/lib/fonts/pp-neue-corp-compact";
 import { ppNeueCorpCondensed } from "@/lib/fonts/pp-neue-corp-condensed";
 import { ppNeueCorpTight } from "@/lib/fonts/pp-neue-corp-tight";
 import { rockSalt } from "@/lib/fonts/rock-salt";
+import { ComingSoonBannerProvider } from "@/components/coming-soon/coming-soon-banner";
 import { WorkOverlayProvider } from "@/components/work/work-overlay-context";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -64,10 +65,12 @@ export default function RootLayout({
       className={`h-full ${ppMigra.variable} ${ppNeueCorpCompact.variable} ${ppNeueCorpCondensed.variable} ${ppNeueCorpTight.variable} ${rockSalt.variable}`}
     >
       <body className="min-h-full">
-        <WorkOverlayProvider>
-          {children}
-          {modal}
-        </WorkOverlayProvider>
+        <ComingSoonBannerProvider>
+          <WorkOverlayProvider>
+            {children}
+            {modal}
+          </WorkOverlayProvider>
+        </ComingSoonBannerProvider>
       </body>
     </html>
   );
