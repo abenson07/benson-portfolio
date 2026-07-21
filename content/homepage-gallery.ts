@@ -19,7 +19,7 @@ export const homeGalleryItems: HomeGalleryItem[] = [
   {
     slug: "analyze",
     span: 2,
-    year: "'22",
+    year: "'25",
     title: "Analyze",
     categoryLabel: "STRATEGY, DESIGN, RESEARCH",
     backgroundSrc: "/home/analyze-background.png",
