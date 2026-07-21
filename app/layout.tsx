@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 import { ppMigra } from "@/lib/fonts/pp-migra";
 import { ppNeueCorpCompact } from "@/lib/fonts/pp-neue-corp-compact";
@@ -71,6 +72,7 @@ export default function RootLayout({
             {modal}
           </WorkOverlayProvider>
         </ComingSoonBannerProvider>
+        <Analytics />
       </body>
     </html>
   );
