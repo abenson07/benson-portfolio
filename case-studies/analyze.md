@@ -1,23 +1,23 @@
 # Analyze
-**Category:** Product Design — Employer: Webflow
+**Category:** Product Design, Employer: Webflow
 
 ---
 
 ## Case Study
 
-Web analytics is complicated, but it doesn't have to be. We designed Webflow Analyze as a robust but simple, visual-first web analytics platform — one built for everyone touching a website, not just growth teams — and it's held a 97% retention rate since launch. In a category defined by churn, Analyze made web analytics cool for designers and marketers everywhere.
+Web analytics is complicated, but it doesn't have to be. We designed Webflow Analyze as a robust but simple, visual-first web analytics platform built for everyone touching a website, not just growth teams, and it's held a 97% retention rate since launch. In a category defined by churn, Analyze made web analytics cool for designers and marketers everywhere.
 
-Analytics tools have a churn problem: complex setup, steep learning curves, and by the time it's configured, the data you needed is already gone. Google Analytics is free and ubiquitous. To compete, we couldn't just be better — we had to be fundamentally different.
+Analytics tools have a churn problem: complex setup, steep learning curves, and by the time it's configured, the data you needed is already gone. Google Analytics is free and ubiquitous. To compete, we couldn't just be better. We had to be fundamentally different.
 
 I was brought on to take Analyze from zero to launch in three months, shipping it alongside Webflow's A/B testing product at their annual conference. Both were built on one foundation: Webflow had acquired Intelimize, an A/B testing tool, and recognized that the tracking and session data underneath it could power an analytics product too. My job was to build Analyze on that foundation and make it worth paying for in a market where the default is free.
 
-Where competitors split between slim-and-approachable or dense-and-powerful, we held both. Google Analytics is built for growth marketers; Analyze had to work for everyone touching a Webflow site — designers, writers, creative directors — often on the same team. So we made Analyze opinionated: you don't configure a dashboard, we decide what covers 80% of your needs, split across a site-wide overview and focused page- and goal-level reports. Every interactive element is tracked automatically, on by default, from day one.
+Where competitors split between slim-and-approachable or dense-and-powerful, we held both. Google Analytics is built for growth marketers; Analyze had to work for everyone touching a Webflow site, including designers, writers, and creative directors, often on the same team. So we made Analyze opinionated: you don't configure a dashboard, we decide what covers 80% of your needs, split across a site-wide overview and focused page- and goal-level reports. Every interactive element is tracked automatically, on by default, from day one.
 
-The IA was built around a framework my PM brought from a previous company: Glance, Scan, Investigate. Glanceable metrics tell you whether things are working; scannable layers surface patterns — a dip in a chart, a page comparison — without everything open at once; investigative depth is available in context rather than buried in a sidebar. Underneath it, every pathway maps to a test-negative / test-positive mental model: what needs attention versus what you've found and are ready to dig into.
+The IA was built around a framework my PM brought from a previous company: Glance, Scan, Investigate. Glanceable metrics tell you whether things are working; scannable layers surface patterns, like a dip in a chart or a page comparison, without everything open at once; investigative depth is available in context rather than buried in a sidebar. Underneath it, every pathway maps to a test-negative / test-positive mental model: what needs attention versus what you've found and are ready to dig into.
 
-We also pushed back on convention. Scroll maps — the standard heat map of how far people scroll — are imprecise and rarely used. We stripped it out for a single number: exact scroll depth, to the pixel. When pressure came to add the heat map back, we built a ruler instead — a clean, interactive layer over the page. That's where I first pushed into AI-assisted prototyping, building a working Chrome extension when Figma couldn't communicate the idea — one of the first inside Webflow to use that approach.
+We also pushed back on convention. Scroll maps, the standard heat map of how far people scroll, are imprecise and rarely used. We stripped it out for a single number: exact scroll depth, to the pixel. When pressure came to add the heat map back, we built a ruler instead: a clean, interactive layer over the page. That's where I first pushed into AI-assisted prototyping, building a working Chrome extension when Figma couldn't communicate the idea, becoming one of the first inside Webflow to use that approach.
 
-The best feedback wasn't about a specific feature. It was this: *"Webflow just tells me what I need to worry about."* In 2025, Analyze reached $2M in annual recurring revenue and now accounts for 20% of Webflow's enterprise sales — up roughly six times from the year prior.
+The best feedback wasn't about a specific feature. It was this: *"Webflow just tells me what I need to worry about."* In 2025, Analyze reached $2M in annual recurring revenue and now accounts for 20% of Webflow's enterprise sales, up roughly six times from the year prior.
 
 ---
 
@@ -27,10 +27,10 @@ The best feedback wasn't about a specific feature. It was this: *"Webflow just t
 ---
 
 ## Collaboration
-- **PM** — close partnership throughout; she brought the Glance/Scan/Investigate framework that became the backbone of the IA
-- **Intelimize / acquisition team** — provided the technical foundation Analyze was built on
-- **Webflow engineering** — built on the shared A/B testing infrastructure
-- **Internal design teams** — ruler concept emerged in part from observing another team's exploratory work
+- **PM** - close partnership throughout; she brought the Glance/Scan/Investigate framework that became the backbone of the IA
+- **Intelimize / acquisition team** - provided the technical foundation Analyze was built on
+- **Webflow engineering** - built on the shared A/B testing infrastructure
+- **Internal design teams** - ruler concept emerged in part from observing another team's exploratory work
 
 ---
 
