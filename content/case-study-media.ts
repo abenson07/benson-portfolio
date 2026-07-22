@@ -119,19 +119,29 @@ export const caseStudyMediaBySlug: Record<string, CaseStudyMediaBlock[]> = {
       },
     },
     {
-      type: "layered",
-      background: {
-        label: "",
-        aspect: "portrait",
-        imageUrl: "/case-studies/Analyze 06_background.png",
-      },
-      foreground: {
-        label: "Every clickable element tracked by default",
-        aspect: "landscape",
-        imageUrl: "/case-studies/Analyze 06_foreground.gif",
-      },
-      foregroundFit: "wide",
-      foregroundAspectRatio: "1061 / 846",
+      type: "duo",
+      previews: [
+        {
+          label: "Site overview at a glance",
+          aspect: "portrait",
+          imageUrl: "/case-studies/Analyze 05.png",
+        },
+        {
+          type: "layered",
+          background: {
+            label: "",
+            aspect: "portrait",
+            imageUrl: "/case-studies/Analyze 06_background.png",
+          },
+          foreground: {
+            label: "Every clickable element tracked by default",
+            aspect: "landscape",
+            imageUrl: "/case-studies/Analyze 06_foreground.gif",
+          },
+          foregroundFit: "wide",
+          foregroundAspectRatio: "1061 / 846",
+        },
+      ],
     },
     {
       type: "single",

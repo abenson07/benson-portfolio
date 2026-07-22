@@ -29,18 +29,23 @@ export type CaseStudyPreview = {
 /** How the foreground image is sized against its layered background. */
 export type CaseStudyLayeredFit = "wide" | "tall" | "full";
 
+export type CaseStudyLayeredMedia = {
+  type: "layered";
+  background: CaseStudyPreview;
+  foreground: CaseStudyPreview;
+  foregroundFit?: CaseStudyLayeredFit;
+  /** CSS aspect-ratio for the foreground image, e.g. "1061 / 846". */
+  foregroundAspectRatio?: string;
+};
+
+/** A duo slot is either a plain image preview or a layered composite. */
+export type CaseStudyDuoSlot = CaseStudyPreview | CaseStudyLayeredMedia;
+
 export type CaseStudyMediaBlock =
   | { type: "single"; preview: CaseStudyPreview }
-  | { type: "duo"; previews: [CaseStudyPreview, CaseStudyPreview] }
+  | { type: "duo"; previews: [CaseStudyDuoSlot, CaseStudyDuoSlot] }
   | { type: "quote"; quote: string; attribution: string }
-  | {
-      type: "layered";
-      background: CaseStudyPreview;
-      foreground: CaseStudyPreview;
-      foregroundFit?: CaseStudyLayeredFit;
-      /** CSS aspect-ratio for the foreground image, e.g. "1061 / 846". */
-      foregroundAspectRatio?: string;
-    };
+  | CaseStudyLayeredMedia;
 
 export type CaseStudyUpNext = {
   eyebrow: string;
