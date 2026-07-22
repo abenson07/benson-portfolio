@@ -17,7 +17,7 @@ The IA was built around a framework my PM brought from a previous company: Glanc
 
 We also pushed back on convention. Scroll maps, the standard heat map of how far people scroll, are imprecise and rarely used. We stripped it out for a single number: exact scroll depth, to the pixel. When pressure came to add the heat map back, we built a ruler instead: a clean, interactive layer over the page. That's where I first pushed into AI-assisted prototyping, building a working Chrome extension when Figma couldn't communicate the idea, becoming one of the first inside Webflow to use that approach.
 
-The best feedback wasn't about a specific feature. It was this: *"Webflow just tells me what I need to worry about."* In 2025, Analyze reached $2M in annual recurring revenue and now accounts for 20% of Webflow's enterprise sales, up roughly six times from the year prior.
+The best feedback wasn't about a specific feature. It was this: *"Honestly, Analyze just tells me what I need to worry about. It's my secret recipe for success."* In 2025, Analyze reached $2M in annual recurring revenue and now accounts for 20% of Webflow's enterprise sales, up roughly six times from the year prior.
 
 ---
 

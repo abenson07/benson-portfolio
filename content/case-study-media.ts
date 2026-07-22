@@ -119,6 +119,12 @@ export const caseStudyMediaBySlug: Record<string, CaseStudyMediaBlock[]> = {
       },
     },
     {
+      type: "quote",
+      quote:
+        "Honestly, Analyze just tells me what I need to worry about. It's my secret recipe for success.",
+      attribution: "Analyze customer",
+    },
+    {
       type: "duo",
       previews: [
         {
