@@ -86,4 +86,68 @@ export const caseStudyMediaBySlug: Record<string, CaseStudyMediaBlock[]> = {
     "Touchpoint detail",
     "Prototype",
   ]),
+  analyze: [
+    {
+      type: "single",
+      preview: {
+        label: "Site overview, tracked automatically",
+        aspect: "landscape",
+        imageUrl: "/case-studies/Analyze 01.png",
+      },
+    },
+    {
+      type: "duo",
+      previews: [
+        {
+          label: "The scroll ruler — precise depth, not a heat map",
+          aspect: "portrait",
+          imageUrl: "/case-studies/Analyze 02.png",
+        },
+        {
+          label: "Glanceable session stats",
+          aspect: "portrait",
+          imageUrl: "/case-studies/Analyze 03.png",
+        },
+      ],
+    },
+    {
+      type: "single",
+      preview: {
+        label: "Traffic sources and audience detail",
+        aspect: "landscape",
+        imageUrl: "/case-studies/Analyze 04.png",
+      },
+    },
+    {
+      type: "layered",
+      background: {
+        label: "",
+        aspect: "portrait",
+        imageUrl: "/case-studies/Analyze 06_background.png",
+      },
+      foreground: {
+        label: "Every clickable element tracked by default",
+        aspect: "landscape",
+        imageUrl: "/case-studies/Analyze 06_foreground.gif",
+      },
+      foregroundFit: "wide",
+      foregroundAspectRatio: "1061 / 846",
+    },
+    {
+      type: "single",
+      preview: {
+        label: "AI-prototyped Chrome extension",
+        aspect: "landscape",
+        imageUrl: "/case-studies/Analyze 07.png",
+      },
+    },
+    {
+      type: "single",
+      preview: {
+        label: "Investigate view — conversion opportunities",
+        aspect: "landscape",
+        imageUrl: "/case-studies/Analyze 08.png",
+      },
+    },
+  ],
 };

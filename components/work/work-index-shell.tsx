@@ -8,8 +8,6 @@ import {
   prefersReducedMotion,
   type LenisScrollerHandle,
 } from "@/lib/motion/lenis-gsap";
-import { CustomCursorProvider } from "@/components/home/custom-cursor";
-
 type WorkIndexShellProps = {
   children: ReactNode;
 };
@@ -43,10 +41,8 @@ export function WorkIndexShell({ children }: WorkIndexShellProps) {
   }, []);
 
   return (
-    <CustomCursorProvider>
-      <div ref={pageRef} className="page-wrapper page-wrapper--scrolling-work">
-        <div className="work-scroll-content">{children}</div>
-      </div>
-    </CustomCursorProvider>
+    <div ref={pageRef} className="page-wrapper page-wrapper--scrolling-work">
+      <div className="work-scroll-content">{children}</div>
+    </div>
   );
 }

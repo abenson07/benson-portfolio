@@ -1,4 +1,9 @@
-import type { CaseStudyMediaBlock } from "@/content/work-page-template";
+import Image from "next/image";
+
+import {
+  CASE_STUDY_ASPECT_RATIOS,
+  type CaseStudyMediaBlock,
+} from "@/content/work-page-template";
 
 import { CaseStudyPreview } from "./case-study-preview";
 
@@ -33,6 +38,56 @@ export function CaseStudyMedia({ blocks }: CaseStudyMediaProps) {
           return (
             <div key={`single-${index}`} className="case-study-media__frame">
               <CaseStudyPreview {...block.preview} />
+            </div>
+          );
+        }
+
+        if (block.type === "layered") {
+          const {
+            background,
+            foreground,
+            foregroundFit = "wide",
+            foregroundAspectRatio,
+          } = block;
+          const aspect = background.aspect ?? "landscape";
+
+          return (
+            <div
+              key={`layered-${index}`}
+              className="case-study-media__frame case-study-media__frame--layered"
+              style={{ aspectRatio: CASE_STUDY_ASPECT_RATIOS[aspect] }}
+            >
+              {background.imageUrl ? (
+                <Image
+                  src={background.imageUrl}
+                  alt=""
+                  fill
+                  aria-hidden
+                  className="case-study-media__background"
+                  sizes="(max-width: 960px) 100vw, 72rem"
+                />
+              ) : null}
+              {foreground.imageUrl ? (
+                <div className="case-study-media__foreground">
+                  <div
+                    className={`case-study-media__foreground-box case-study-media__foreground-box--${foregroundFit}`}
+                    style={{
+                      aspectRatio:
+                        foregroundAspectRatio ??
+                        CASE_STUDY_ASPECT_RATIOS[foreground.aspect ?? "landscape"],
+                    }}
+                  >
+                    <Image
+                      src={foreground.imageUrl}
+                      alt={foreground.label}
+                      fill
+                      unoptimized={foreground.imageUrl.endsWith(".gif")}
+                      className="case-study-media__foreground-image"
+                      sizes="(max-width: 960px) 60vw, 30rem"
+                    />
+                  </div>
+                </div>
+              ) : null}
             </div>
           );
         }

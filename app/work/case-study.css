@@ -334,6 +334,46 @@
   object-fit: cover;
 }
 
+.case-study-media__frame--layered {
+  position: relative;
+  width: 100%;
+}
+
+.case-study-media__background {
+  object-fit: cover;
+  object-position: center;
+}
+
+.case-study-media__foreground {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.case-study-media__foreground-box {
+  position: relative;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+}
+
+.case-study-media__foreground-image {
+  object-fit: contain;
+}
+
+.case-study-media__foreground-box--wide {
+  width: 80%;
+}
+
+.case-study-media__foreground-box--tall {
+  width: 42%;
+}
+
+.case-study-media__foreground-box--full {
+  width: 100%;
+}
+
 /* Quote */
 
 .case-study-quote {

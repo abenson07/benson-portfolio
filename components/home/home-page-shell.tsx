@@ -9,8 +9,6 @@ import {
 } from "@/lib/motion/lenis-gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { CustomCursorProvider } from "./custom-cursor";
-
 type HomePageShellProps = {
   children: ReactNode;
 };
@@ -44,10 +42,8 @@ export function HomePageShell({ children }: HomePageShellProps) {
   }, []);
 
   return (
-    <CustomCursorProvider>
-      <div ref={pageRef} className="page-wrapper page-wrapper--scrolling-home">
-        <div className="home-scroll-content">{children}</div>
-      </div>
-    </CustomCursorProvider>
+    <div ref={pageRef} className="page-wrapper page-wrapper--scrolling-home">
+      <div className="home-scroll-content">{children}</div>
+    </div>
   );
 }

@@ -1,18 +1,22 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { notFound } from "next/navigation";
 
 import { CaseStudyPage } from "@/components/work/case-study/case-study-page";
 import { WorkPageShell } from "@/components/work/work-page-shell";
 import { getEnrichedWorkPage } from "@/content/enrich-work-page";
-import { getWorkPageSlugs } from "@/content/work-pages";
 
 type WorkProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  return getWorkPageSlugs().map((slug) => ({ slug }));
-}
+/**
+ * Request-time rendering keeps hard navigations from baking
+ * `couldBeIntercepted: false` into the RSC payload (Next.js #94533).
+ * Static prerenders of these pages poison the client router cache so
+ * later soft-navs from the homepage skip the work modal.
+ */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -31,6 +35,7 @@ export async function generateMetadata({
 }
 
 export default async function WorkProjectPage({ params }: WorkProjectPageProps) {
+  await connection();
   const { slug } = await params;
   const page = getEnrichedWorkPage(slug);
 

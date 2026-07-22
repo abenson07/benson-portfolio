@@ -51,7 +51,7 @@ export function WorkCard({
       style={style}
     >
       {href ? (
-        <Link href={href} className="work-card work-card--landscape">
+        <Link href={href} scroll={false} className="work-card work-card--landscape">
           {cardBody}
         </Link>
       ) : (

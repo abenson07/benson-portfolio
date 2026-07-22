@@ -161,10 +161,6 @@ body.work-modal-open .hero-status-indicator__message {
   );
 }
 
-body.work-modal-open .custom-cursor {
-  display: none;
-}
-
 @media (max-width: 640px) {
   .work-modal__panel {
     padding-inline: 16px;

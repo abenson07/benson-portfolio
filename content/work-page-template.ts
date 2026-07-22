@@ -26,10 +26,21 @@ export type CaseStudyPreview = {
   imageUrl?: string;
 };
 
+/** How the foreground image is sized against its layered background. */
+export type CaseStudyLayeredFit = "wide" | "tall" | "full";
+
 export type CaseStudyMediaBlock =
   | { type: "single"; preview: CaseStudyPreview }
   | { type: "duo"; previews: [CaseStudyPreview, CaseStudyPreview] }
-  | { type: "quote"; quote: string; attribution: string };
+  | { type: "quote"; quote: string; attribution: string }
+  | {
+      type: "layered";
+      background: CaseStudyPreview;
+      foreground: CaseStudyPreview;
+      foregroundFit?: CaseStudyLayeredFit;
+      /** CSS aspect-ratio for the foreground image, e.g. "1061 / 846". */
+      foregroundAspectRatio?: string;
+    };
 
 export type CaseStudyUpNext = {
   eyebrow: string;

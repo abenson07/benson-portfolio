@@ -7,8 +7,6 @@ import { homepageFooter } from "@/content/homepage-footer";
 // import { useFooterHeadline } from "@/lib/motion/use-footer-headline";
 import { useFooterReveal } from "@/lib/motion/use-footer-reveal";
 
-import { useComingSoonBanner } from "@/components/coming-soon/coming-soon-banner";
-
 import {
   useCustomCursorController,
   useCustomCursorEnabled,
@@ -26,7 +24,6 @@ export function RevealFooter() {
   const innerRef = useRef<HTMLDivElement>(null);
   const cursorEnabled = useCustomCursorEnabled();
   const { setLabel: setCursorLabel } = useCustomCursorController("footer");
-  const { showComingSoon } = useComingSoonBanner();
 
   useFooterReveal({ footerRef, innerRef });
 
@@ -89,7 +86,6 @@ export function RevealFooter() {
                   type="button"
                   className="reveal-footer__nav-item"
                   aria-label={`${item.prefix} ${item.label} — coming soon`}
-                  onClick={showComingSoon}
                   onMouseEnter={() => handleNavHover(true)}
                   onMouseLeave={() => handleNavHover(false)}
                   onFocus={() => handleNavHover(true)}

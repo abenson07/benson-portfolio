@@ -25,6 +25,7 @@ export const homeGalleryItems: HomeGalleryItem[] = [
     backgroundSrc: "/home/analyze-background.png",
     imageSrc: "/home/analyze-image.png",
     imageFit: "wide",
+    href: "/work/analyze",
   },
   {
     slug: "flexcard",

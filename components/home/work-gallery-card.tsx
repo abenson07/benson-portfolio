@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 
-import { useComingSoonBanner } from "@/components/coming-soon/coming-soon-banner";
 import {
   WORK_CARD_LANDSCAPE_ASPECT,
   WORK_CARD_PORTRAIT_ASPECT,
@@ -17,7 +16,6 @@ type WorkGalleryCardProps = {
 };
 
 export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
-  const { showComingSoon } = useComingSoonBanner();
   const aspect =
     item.span === 2 ? WORK_CARD_LANDSCAPE_ASPECT : WORK_CARD_PORTRAIT_ASPECT;
   const style = {
@@ -94,7 +92,6 @@ export function WorkGalleryCard({ item, onHover }: WorkGalleryCardProps) {
       style={style}
       data-figma-node={item.slug}
       aria-label={`${item.title} — coming soon`}
-      onClick={showComingSoon}
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
     >

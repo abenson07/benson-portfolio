@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRef } from "react";
 import gsap from "gsap";
 
-import { useComingSoonBanner } from "@/components/coming-soon/coming-soon-banner";
 import { isCaseStudyReady } from "@/content/is-case-study-ready";
 import type { CaseStudy } from "@/content/case-studies";
 
@@ -18,7 +17,6 @@ export function WorkRow({ project, rowRef, onHover }: WorkRowProps) {
   const maskRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const enterFromBottomRef = useRef(true);
-  const { showComingSoon } = useComingSoonBanner();
   const ready = isCaseStudyReady(project.slug);
 
   const collapseClip = (fromBottom: boolean) =>
@@ -82,7 +80,6 @@ export function WorkRow({ project, rowRef, onHover }: WorkRowProps) {
         className="work-row"
         ref={rowRef}
         aria-label={`${project.title} — coming soon`}
-        onClick={showComingSoon}
         onMouseEnter={handleEnter}
         onMouseLeave={hide}
         onFocus={() => {

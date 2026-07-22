@@ -178,6 +178,9 @@ const workPageDefinitions: CreateWorkPageInput[] = [
     primaryTag: "Product Design",
     coverImageUrl: "/work/analyze.png",
     category: "product-design",
+    overrides: {
+      media: caseStudyMediaBySlug.analyze,
+    },
   },
   {
     slug: "agency",
@@ -284,6 +287,7 @@ export const readyCaseStudySlugOrder = [
   "nutrilyze",
   "flight-pro",
   "journey-map",
+  "analyze",
 ] as const;
 
 const galleryBySlug = Object.fromEntries(
