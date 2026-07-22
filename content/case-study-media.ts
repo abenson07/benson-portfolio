@@ -96,6 +96,11 @@ export const caseStudyMediaBySlug: Record<string, CaseStudyMediaBlock[]> = {
       },
     },
     {
+      type: "quote",
+      quote: "This is the best designed product from Webflow in years.",
+      attribution: "Quote from the livestream during Webflow Conf 25",
+    },
+    {
       type: "duo",
       previews: [
         {
